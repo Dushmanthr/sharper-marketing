@@ -1,6 +1,6 @@
 import Section, { SectionHeading } from "@/components/Section";
 import PageHero from "@/components/PageHero";
-import CaseStudyCard from "@/components/CaseStudyCard";
+import CaseStudiesShowcase from "@/components/CaseStudiesShowcase";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
 import { caseStudies } from "@/lib/site";
@@ -79,10 +79,8 @@ export default function CaseStudiesPage() {
           description="Every case study below follows our standardized 5-part structure: clear client context, specific pre-project problems, the strategic actions delivered, verified before-and-after metrics, and key takeaways for growing businesses."
         />
 
-        <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {caseStudies.map((study, i) => (
-            <CaseStudyCard key={study.slug} study={study} index={i} />
-          ))}
+        <div className="mt-12">
+          <CaseStudiesShowcase />
         </div>
       </Section>
 

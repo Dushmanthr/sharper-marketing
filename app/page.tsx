@@ -31,7 +31,7 @@ import CurvedHero from "@/components/CurvedHero";
 import JsonLd from "@/components/JsonLd";
 import ServicesExplorer from "@/components/ServicesExplorer";
 import InteractiveAudit from "@/components/InteractiveAudit";
-import CaseStudyCard from "@/components/CaseStudyCard";
+import CaseStudiesShowcase from "@/components/CaseStudiesShowcase";
 import { caseStudies, site, targetKeywords } from "@/lib/site";
 import { faqJsonLd, pageMeta, webPageJsonLd, localBusinessJsonLd } from "@/lib/seo";
 
@@ -388,11 +388,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {caseStudies.map((study, i) => (
-            <CaseStudyCard key={study.slug} study={study} index={i} />
-          ))}
-        </div>
+        <CaseStudiesShowcase />
       </Section>
 
       {/* 08. Parallax Statement */}
