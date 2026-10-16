@@ -94,17 +94,23 @@ export default function Button({
   // 1. External link
   if (href && external) {
     return (
-      <motion.a
-        href={href}
-        className={classes}
-        onClick={onClick}
+      <motion.div
+        className="inline-block"
         whileHover={{ scale: 1.03, y: -2 }}
         whileTap={{ scale: 0.97 }}
         transition={{ type: "spring", stiffness: 450, damping: 25 }}
-        {...(rest as ComponentProps<"a">)}
       >
-        {buttonContent}
-      </motion.a>
+        <a
+          href={href}
+          className={classes}
+          onClick={onClick as MouseEventHandler<HTMLAnchorElement>}
+          target="_blank"
+          rel="noopener noreferrer"
+          {...(rest as Omit<ComponentProps<"a">, "href" | "className" | "children" | "onClick">)}
+        >
+          {buttonContent}
+        </a>
+      </motion.div>
     );
   }
 
@@ -120,7 +126,7 @@ export default function Button({
         <Link
           href={href}
           className={classes}
-          onClick={onClick}
+          onClick={onClick as MouseEventHandler<HTMLAnchorElement>}
           {...(rest as Omit<ComponentProps<typeof Link>, "href" | "className" | "children" | "onClick">)}
         >
           {buttonContent}
@@ -134,7 +140,7 @@ export default function Button({
     <motion.button
       type={type}
       disabled={disabled}
-      onClick={onClick}
+      onClick={onClick as MouseEventHandler<HTMLButtonElement>}
       className={classes}
       whileHover={{ scale: disabled ? 1 : 1.03, y: disabled ? 0 : -2 }}
       whileTap={{ scale: disabled ? 1 : 0.97 }}
