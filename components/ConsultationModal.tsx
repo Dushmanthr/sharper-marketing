@@ -13,7 +13,6 @@ import {
   ArrowRight,
   Loader2,
   AlertCircle,
-  Building2,
   Send,
 } from "lucide-react";
 import { services, site } from "@/lib/site";
@@ -207,52 +206,60 @@ Notes / Competitors: ${notes || "None"}`;
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-8">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={resetAndClose}
-            className="fixed inset-0 bg-navy-950/80 backdrop-blur-md"
+            className="fixed inset-0 bg-navy-950/70 backdrop-blur-sm"
             aria-hidden="true"
           />
 
           {/* Modal Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: "spring", duration: 0.45, bounce: 0.15 }}
-            className="relative flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-navy-700 bg-navy-900 text-white shadow-2xl"
+            exit={{ opacity: 0, scale: 0.96, y: 16 }}
+            transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
+            className="relative flex max-h-[92vh] sm:max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-navy-100 bg-white text-navy-900 shadow-2xl"
             role="dialog"
             aria-modal="true"
           >
+            {/* Top decorative gradient accent */}
+            <div
+              className="h-1.5 w-full bg-gradient-to-r from-orange-500 via-amber-400 to-orange-600 shrink-0"
+              aria-hidden="true"
+            />
+
             {/* Header */}
-            <div className="relative border-b border-navy-800 bg-navy-950/70 px-6 py-5 sm:px-8">
+            <div className="relative border-b border-navy-100 bg-surface-muted/80 px-5 pt-5 pb-4 sm:px-8 sm:pt-6 sm:pb-5 backdrop-blur-xs shrink-0">
               <motion.button
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.08, rotate: 90 }}
+                whileTap={{ scale: 0.92 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 onClick={resetAndClose}
                 aria-label="Close modal"
-                className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full border border-navy-700 bg-navy-800 text-navy-200 transition-colors hover:border-orange-500 hover:text-white"
+                className="absolute right-4 top-4 sm:right-6 sm:top-5 flex h-9 w-9 items-center justify-center rounded-full border border-navy-200 bg-white text-navy-600 shadow-xs transition-colors hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600"
               >
                 <X className="h-4 w-4" />
               </motion.button>
 
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-orange-400">
-                <Globe2 className="h-3.5 w-3.5" /> Direct Agency Connect · UK & International
-              </span>
-              <h2 className="mt-1 font-display text-xl font-bold sm:text-2xl">
-                Let&apos;s Accelerate Your Business Growth
-              </h2>
-              <p className="mt-1 text-xs text-navy-200 sm:text-sm">
-                Discuss your goals with our UK marketing consultants. Free, confidential, and tailored to your market.
-              </p>
+              <div className="pr-10 sm:pr-12">
+                <span className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-orange-600">
+                  <Globe2 className="h-3.5 w-3.5" /> Direct Agency Connect · UK & International
+                </span>
+                <h2 className="mt-1 font-display text-lg sm:text-2xl font-bold text-navy-950 leading-tight">
+                  Let&apos;s Accelerate Your Business Growth
+                </h2>
+                <p className="mt-1 text-xs sm:text-sm text-ink-muted leading-relaxed">
+                  Discuss your goals with our UK marketing consultants. Free, confidential, and tailored to your market.
+                </p>
+              </div>
 
               {/* Tabs with animated layout indicator */}
-              <div className="mt-5 flex gap-2 rounded-xl bg-navy-900/90 p-1 border border-navy-800">
+              <div className="mt-4 sm:mt-5 flex gap-1.5 sm:gap-2 rounded-2xl bg-navy-100/70 p-1 border border-navy-200/60">
                 {(
                   [
                     { id: "consultation", label: "Strategy Call", icon: Calendar },
@@ -272,20 +279,20 @@ Notes / Competitors: ${notes || "None"}`;
                         setTab(item.id);
                         setError("");
                       }}
-                      className={`relative flex flex-1 items-center justify-center gap-2 rounded-lg py-2 text-xs font-semibold transition-colors sm:text-sm ${
-                        isActive ? "text-white" : "text-navy-300 hover:text-white"
+                      className={`relative flex flex-1 items-center justify-center gap-1.5 sm:gap-2 rounded-xl py-2 px-2 text-xs sm:text-sm font-semibold transition-colors duration-200 min-h-[40px] ${
+                        isActive ? "text-white" : "text-navy-700 hover:text-navy-950 hover:bg-white/60"
                       }`}
                     >
                       {isActive && (
                         <motion.div
                           layoutId="modalActiveTab"
-                          className="absolute inset-0 rounded-lg bg-orange-500 shadow-md"
+                          className="absolute inset-0 rounded-xl bg-orange-500 shadow-sm"
                           transition={{ type: "spring", duration: 0.35, bounce: 0.2 }}
                         />
                       )}
                       <span className="relative z-10 flex items-center gap-1.5">
-                        <IconComponent className="h-4 w-4" />
-                        {item.label}
+                        <IconComponent className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                        <span className="truncate">{item.label}</span>
                       </span>
                     </motion.button>
                   );
@@ -294,21 +301,21 @@ Notes / Competitors: ${notes || "None"}`;
             </div>
 
             {/* Body */}
-            <div className="flex-1 overflow-y-auto px-6 py-6 sm:px-8">
+            <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-5 sm:px-8 sm:py-6">
               {submitted ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center justify-center py-10 text-center"
+                  className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
                 >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-500/20 text-orange-400">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200/80 shadow-xs">
                     <CheckCircle2 className="h-10 w-10" />
                   </div>
-                  <h3 className="mt-5 font-display text-2xl font-bold text-white">
+                  <h3 className="mt-5 font-display text-xl sm:text-2xl font-bold text-navy-950">
                     Request Received Successfully!
                   </h3>
-                  <p className="mt-2 max-w-md text-sm leading-relaxed text-navy-200">
-                    Thank you, <strong className="text-white">{name}</strong>. Our senior marketing team has received
+                  <p className="mt-2 max-w-md text-sm leading-relaxed text-ink-muted">
+                    Thank you, <strong className="text-navy-900">{name}</strong>. Our senior marketing team has received
                     your enquiry and will review your requirements. We will be in touch within 24 business hours.
                   </p>
                   <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
@@ -318,38 +325,38 @@ Notes / Competitors: ${notes || "None"}`;
                       whileTap={{ scale: 0.97 }}
                       transition={{ type: "spring", stiffness: 450, damping: 25 }}
                       onClick={resetAndClose}
-                      className="rounded-full bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-orange-600"
+                      className="rounded-full bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md shadow-orange-500/20 transition-colors hover:bg-orange-600"
                     >
                       Return to Website
                     </motion.button>
                     <a
                       href={site.phoneHref}
-                      className="inline-flex items-center gap-2 rounded-full border border-navy-700 bg-navy-800 px-5 py-2.5 text-sm font-semibold text-navy-100 hover:border-orange-500"
+                      className="inline-flex items-center gap-2 rounded-full border border-navy-200 bg-surface-muted px-5 py-2.5 text-sm font-semibold text-navy-800 transition-colors hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600"
                     >
-                      <Clock className="h-4 w-4 text-orange-400" /> Immediate? Call {site.phone}
+                      <Clock className="h-4 w-4 text-orange-500" /> Immediate? Call {site.phone}
                     </a>
                   </div>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
                   {error && (
-                    <div className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 text-xs text-red-300">
-                      <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
+                    <div className="flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 font-medium">
+                      <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
                       <span>{error}</span>
                     </div>
                   )}
 
                   {/* Tab-Specific Selectors */}
                   {tab === "consultation" && (
-                    <div className="space-y-4 rounded-2xl border border-navy-800 bg-navy-950/40 p-4">
+                    <div className="space-y-3.5 rounded-2xl border border-navy-100 bg-surface-muted/70 p-4 sm:p-5">
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-orange-400">
+                        <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-orange-600">
                           Primary Area of Discussion
                         </label>
                         <select
                           value={selectedService}
                           onChange={(e) => setSelectedService(e.target.value)}
-                          className="mt-1.5 w-full rounded-xl border border-navy-700 bg-navy-900 px-4 py-2.5 text-sm text-white outline-none focus:border-orange-500"
+                          className="mt-1.5 w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                         >
                           {services.map((s) => (
                             <option key={s.slug} value={s.slug}>
@@ -362,13 +369,13 @@ Notes / Competitors: ${notes || "None"}`;
 
                       <div className="grid gap-3 sm:grid-cols-2">
                         <div>
-                          <label className="block text-xs font-semibold uppercase tracking-wider text-navy-300">
+                          <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700">
                             Your Timezone
                           </label>
                           <select
                             value={preferredTimezone}
                             onChange={(e) => setPreferredTimezone(e.target.value)}
-                            className="mt-1.5 w-full rounded-xl border border-navy-700 bg-navy-900 px-4 py-2.5 text-sm text-white outline-none focus:border-orange-500"
+                            className="mt-1.5 w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                           >
                             {timezones.map((tz) => (
                               <option key={tz.value} value={tz.value}>
@@ -378,7 +385,7 @@ Notes / Competitors: ${notes || "None"}`;
                           </select>
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold uppercase tracking-wider text-navy-300">
+                          <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700">
                             Preferred Day / Time
                           </label>
                           <input
@@ -386,7 +393,7 @@ Notes / Competitors: ${notes || "None"}`;
                             placeholder="e.g. Next Tuesday morning"
                             value={preferredDate}
                             onChange={(e) => setPreferredDate(e.target.value)}
-                            className="mt-1.5 w-full rounded-xl border border-navy-700 bg-navy-900 px-4 py-2.5 text-sm text-white placeholder-navy-500 outline-none focus:border-orange-500"
+                            className="mt-1.5 w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                           />
                         </div>
                       </div>
@@ -394,9 +401,9 @@ Notes / Competitors: ${notes || "None"}`;
                   )}
 
                   {tab === "quotation" && (
-                    <div className="space-y-4 rounded-2xl border border-navy-800 bg-navy-950/40 p-4">
+                    <div className="space-y-3.5 rounded-2xl border border-navy-100 bg-surface-muted/70 p-4 sm:p-5">
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-orange-400">
+                        <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-orange-600">
                           Services to Include (Select all that apply)
                         </label>
                         <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -409,14 +416,14 @@ Notes / Competitors: ${notes || "None"}`;
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => toggleQuotationService(s.slug)}
-                                className={`flex items-center justify-between rounded-xl border p-2.5 text-left text-xs font-medium transition-all ${
+                                className={`flex items-center justify-between rounded-xl border p-2.5 text-left text-xs font-medium transition-all min-h-[44px] ${
                                   isChecked
-                                    ? "border-orange-500 bg-orange-500/15 text-orange-300 shadow-sm"
-                                    : "border-navy-700 bg-navy-900 text-navy-300 hover:border-navy-600"
+                                    ? "border-orange-500 bg-orange-50 text-orange-950 font-semibold shadow-xs ring-1 ring-orange-500/30"
+                                    : "border-navy-200 bg-white text-navy-700 hover:border-orange-300 hover:bg-orange-50/30 shadow-2xs"
                                 }`}
                               >
-                                <span>{s.short}</span>
-                                {isChecked && <CheckCircle2 className="h-3.5 w-3.5 text-orange-400" />}
+                                <span className="truncate pr-1">{s.short}</span>
+                                {isChecked && <CheckCircle2 className="h-4 w-4 shrink-0 text-orange-600" />}
                               </motion.button>
                             );
                           })}
@@ -424,13 +431,13 @@ Notes / Competitors: ${notes || "None"}`;
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-navy-300">
+                        <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700">
                           Estimated Monthly Budget or Project Scope
                         </label>
                         <select
                           value={budget}
                           onChange={(e) => setBudget(e.target.value)}
-                          className="mt-1.5 w-full rounded-xl border border-navy-700 bg-navy-900 px-4 py-2.5 text-sm text-white outline-none focus:border-orange-500"
+                          className="mt-1.5 w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                         >
                           {budgetRanges.map((b) => (
                             <option key={b} value={b}>
@@ -443,9 +450,9 @@ Notes / Competitors: ${notes || "None"}`;
                   )}
 
                   {tab === "audit" && (
-                    <div className="space-y-4 rounded-2xl border border-navy-800 bg-navy-950/40 p-4">
+                    <div className="space-y-3.5 rounded-2xl border border-navy-100 bg-surface-muted/70 p-4 sm:p-5">
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-orange-400">
+                        <label className="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-orange-600">
                           Website URL to Audit
                         </label>
                         <input
@@ -454,22 +461,22 @@ Notes / Competitors: ${notes || "None"}`;
                           placeholder="https://yourcompany.com"
                           value={website}
                           onChange={(e) => setWebsite(e.target.value)}
-                          className="mt-1.5 w-full rounded-xl border border-navy-700 bg-navy-900 px-4 py-2.5 text-sm text-white placeholder-navy-500 outline-none focus:border-orange-500"
+                          className="mt-1.5 w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-navy-300">
+                        <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700">
                           What is your primary commercial challenge right now?
                         </label>
-                        <div className="mt-2 space-y-1.5">
+                        <div className="mt-2 space-y-2">
                           {auditPriorities.map((item) => (
                             <label
                               key={item}
-                              className={`flex cursor-pointer items-center gap-2.5 rounded-xl border p-2 text-xs transition-colors ${
+                              className={`flex cursor-pointer items-center gap-3 rounded-xl border p-2.5 text-xs transition-colors min-h-[40px] ${
                                 auditPriority === item
-                                  ? "border-orange-500 bg-orange-500/10 text-white"
-                                  : "border-navy-800 bg-navy-900/60 text-navy-300 hover:border-navy-700"
+                                  ? "border-orange-500 bg-orange-50/80 text-navy-950 font-medium shadow-2xs ring-1 ring-orange-500/30"
+                                  : "border-navy-200 bg-white text-navy-700 hover:border-navy-300 hover:bg-surface-muted shadow-2xs"
                               }`}
                             >
                               <input
@@ -477,7 +484,7 @@ Notes / Competitors: ${notes || "None"}`;
                                 name="auditPriority"
                                 checked={auditPriority === item}
                                 onChange={() => setAuditPriority(item)}
-                                className="text-orange-500"
+                                className="h-4 w-4 accent-orange-500 text-orange-500 focus:ring-orange-400"
                               />
                               <span>{item}</span>
                             </label>
@@ -490,37 +497,37 @@ Notes / Competitors: ${notes || "None"}`;
                   {/* Contact Information */}
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="block text-xs font-medium text-navy-300">Your Full Name *</label>
+                      <label className="block text-xs font-semibold text-navy-800">Your Full Name *</label>
                       <input
                         type="text"
                         required
                         placeholder="John Smith"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-navy-700 bg-navy-900 px-3.5 py-2.5 text-sm text-white placeholder-navy-500 outline-none focus:border-orange-500"
+                        className="mt-1 w-full rounded-xl border border-navy-200 bg-surface-muted/50 px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-all duration-200 focus:bg-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-navy-300">Business Email *</label>
+                      <label className="block text-xs font-semibold text-navy-800">Business Email *</label>
                       <input
                         type="email"
                         required
                         placeholder="john@company.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-navy-700 bg-navy-900 px-3.5 py-2.5 text-sm text-white placeholder-navy-500 outline-none focus:border-orange-500"
+                        className="mt-1 w-full rounded-xl border border-navy-200 bg-surface-muted/50 px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-all duration-200 focus:bg-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                       />
                     </div>
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="block text-xs font-medium text-navy-300">Phone Number *</label>
+                      <label className="block text-xs font-semibold text-navy-800">Phone Number *</label>
                       <div className="mt-1 flex gap-2">
                         <select
                           value={countryIso}
                           onChange={(e) => setCountryIso(e.target.value)}
-                          className="w-24 rounded-xl border border-navy-700 bg-navy-900 px-2 py-2.5 text-xs text-white outline-none focus:border-orange-500"
+                          className="w-24 sm:w-26 shrink-0 rounded-xl border border-navy-200 bg-surface-muted/50 px-2 py-2.5 text-xs text-navy-900 shadow-2xs outline-none transition-colors focus:bg-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
                         >
                           {countries.map((c) => (
                             <option key={c.iso} value={c.iso}>
@@ -534,37 +541,37 @@ Notes / Competitors: ${notes || "None"}`;
                           placeholder="Phone number"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          className="flex-1 rounded-xl border border-navy-700 bg-navy-900 px-3.5 py-2.5 text-sm text-white placeholder-navy-500 outline-none focus:border-orange-500"
+                          className="flex-1 rounded-xl border border-navy-200 bg-surface-muted/50 px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-all duration-200 focus:bg-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-navy-300">Company Name</label>
+                      <label className="block text-xs font-semibold text-navy-800">Company Name</label>
                       <input
                         type="text"
                         placeholder="Company Ltd"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-navy-700 bg-navy-900 px-3.5 py-2.5 text-sm text-white placeholder-navy-500 outline-none focus:border-orange-500"
+                        className="mt-1 w-full rounded-xl border border-navy-200 bg-surface-muted/50 px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-all duration-200 focus:bg-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                       />
                     </div>
                   </div>
 
                   {tab !== "audit" && (
                     <div>
-                      <label className="block text-xs font-medium text-navy-300">Company Website</label>
+                      <label className="block text-xs font-semibold text-navy-800">Company Website</label>
                       <input
                         type="url"
                         placeholder="https://company.com"
                         value={website}
                         onChange={(e) => setWebsite(e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-navy-700 bg-navy-900 px-3.5 py-2.5 text-sm text-white placeholder-navy-500 outline-none focus:border-orange-500"
+                        className="mt-1 w-full rounded-xl border border-navy-200 bg-surface-muted/50 px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-all duration-200 focus:bg-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                       />
                     </div>
                   )}
 
                   <div>
-                    <label className="block text-xs font-medium text-navy-300">
+                    <label className="block text-xs font-semibold text-navy-800">
                       Additional Notes or Key Objectives
                     </label>
                     <textarea
@@ -572,7 +579,7 @@ Notes / Competitors: ${notes || "None"}`;
                       placeholder="Tell us briefly about your current marketing goals, challenges, or timeline..."
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
-                      className="mt-1 w-full rounded-xl border border-navy-700 bg-navy-900 px-3.5 py-2.5 text-sm text-white placeholder-navy-500 outline-none focus:border-orange-500"
+                      className="mt-1 w-full rounded-xl border border-navy-200 bg-surface-muted/50 px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-all duration-200 focus:bg-white focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 resize-none"
                     />
                   </div>
 
@@ -583,7 +590,7 @@ Notes / Competitors: ${notes || "None"}`;
                       whileHover={{ scale: loading ? 1 : 1.02, y: loading ? 0 : -2 }}
                       whileTap={{ scale: loading ? 1 : 0.98 }}
                       transition={{ type: "spring", stiffness: 450, damping: 25 }}
-                      className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-orange-500 py-3.5 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-orange-600 disabled:opacity-60"
+                      className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-orange-500 py-3.5 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition-all duration-200 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/35 active:scale-[0.99] disabled:opacity-60 cursor-pointer"
                     >
                       {/* Ambient blur glow */}
                       <span
@@ -617,7 +624,7 @@ Notes / Competitors: ${notes || "None"}`;
                         )}
                       </span>
                     </motion.button>
-                    <p className="mt-2.5 text-center text-[11px] text-navy-400">
+                    <p className="mt-2.5 text-center text-[11px] text-ink-muted">
                       🔒 No obligations. Your business data is handled in strict compliance with UK GDPR.
                     </p>
                   </div>
