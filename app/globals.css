@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+/*
+  Sharper Labs Group design system.
+  Brand: deep navy + sharp orange (shared across all Sharper Labs divisions).
+  Fonts: Sora (display/headings) + Inter (body), self-hosted via next/font.
+*/
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), sans-serif;
+
+  /* Navy — primary brand colour */
+  --color-navy-50: #eef3fb;
+  --color-navy-100: #d9e3f5;
+  --color-navy-200: #b4c6ea;
+  --color-navy-300: #88a3da;
+  --color-navy-400: #5c7cc5;
+  --color-navy-500: #3a5aab;
+  --color-navy-600: #2c478e;
+  --color-navy-700: #233a74;
+  --color-navy-800: #1b2e5d;
+  --color-navy-900: #16264c;
+  --color-navy-950: #0d1730;
+
+  /* Orange — accent */
+  --color-orange-50: #fff5ec;
+  --color-orange-100: #ffe7d2;
+  --color-orange-200: #ffcaa3;
+  --color-orange-300: #ffa869;
+  --color-orange-400: #fb8a3d;
+  --color-orange-500: #f47b20;
+  --color-orange-600: #e2680f;
+  --color-orange-700: #bb4f0f;
+  --color-orange-800: #943f14;
+  --color-orange-900: #783514;
+
+  /* Neutral surfaces */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f7fb;
+  --color-ink: #1a2233;
+  --color-ink-muted: #56607a;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: var(--color-ink);
+}
+
+* {
+  border-color: var(--color-navy-100);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--color-orange-500);
+  color: #fff;
+}
+
+/* Shared layout container */
+.container-page {
+  width: 100%;
+  max-width: 80rem; /* 1280px */
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-page {
+    padding-inline: 2rem;
+  }
+}
+
+/* Subtle diagonal texture for hero panels (no heavy gradients) */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Section heading kicker underline */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--color-orange-600);
+}
+.kicker::before {
+  content: "";
+  width: 1.6rem;
+  height: 2px;
+  background: var(--color-orange-500);
+}
+
+/* Custom scrollbar (desktop) */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-navy-300);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-navy-500);
+  }
+}
+
+/* Eclipse-style curved hero media: the concave clip only applies on desktop,
+   where the image bleeds full-height to the right edge. On mobile the media is
+   a simple rounded card (see CurvedHero). */
+@media (min-width: 1024px) {
+  .hero-curve-media {
+    clip-path: url(#heroCurveClip);
+  }
+}
+
+/* Parallax band: fixed background image behind an overlay. Disabled on touch/
+   small screens (background-attachment: fixed is janky on mobile), where it
+   falls back to a normal scrolling cover image. */
+.parallax-band {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+@media (min-width: 1024px) and (hover: hover) {
+  .parallax-band {
+    background-attachment: fixed;
+  }
+}
+
+/* Prose styling for Privacy/Terms body copy */
+.prose-legal {
+  color: var(--color-ink);
+  line-height: 1.75;
+}
+.prose-legal h2 {
+  font-size: 1.6rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.85rem;
+  color: var(--color-navy-800);
+}
+.prose-legal h3 {
+  font-size: 1.25rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.6rem;
+  color: var(--color-navy-800);
+}
+.prose-legal p {
+  margin-bottom: 1.1rem;
+}
+.prose-legal ul,
+.prose-legal ol {
+  margin: 0 0 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.prose-legal ul {
+  list-style: disc;
+}
+.prose-legal ol {
+  list-style: decimal;
+}
+.prose-legal a {
+  color: var(--color-orange-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-legal strong {
+  color: var(--color-navy-900);
+}
