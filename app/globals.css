@@ -221,3 +221,48 @@ h1, h2, h3, h4, h5 {
   box-shadow: 0 10px 30px -5px rgba(22, 38, 76, 0.08);
 }
 
+/* Infinite Ticker Animation */
+@keyframes ticker-slide {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker-slide 38s linear infinite;
+  will-change: transform;
+}
+
+.animate-ticker:hover,
+.animate-ticker:focus-within {
+  animation-play-state: paused;
+}
+
+.ticker-fade-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 4%,
+    black 96%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 4%,
+    black 96%,
+    transparent 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ticker {
+    animation-duration: 90s;
+  }
+}
+

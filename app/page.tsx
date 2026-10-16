@@ -28,6 +28,7 @@ import FAQ from "@/components/FAQ";
 import CTASection from "@/components/CTASection";
 import ImageCarousel from "@/components/ImageCarousel";
 import CurvedHero from "@/components/CurvedHero";
+import ServicesTicker from "@/components/ServicesTicker";
 import JsonLd from "@/components/JsonLd";
 import ServicesExplorer from "@/components/ServicesExplorer";
 import InteractiveAudit from "@/components/InteractiveAudit";
@@ -213,6 +214,9 @@ export default function Home() {
           </div>
         </Reveal>
       </CurvedHero>
+
+      {/* Ticker Animation Strip: Core Specialist Disciplines */}
+      <ServicesTicker />
 
       {/* 02. Recommended Supporting Section: Local Expertise. Global Perspective. */}
       <section className="border-b border-navy-100 bg-surface-muted py-12 sm:py-16">
