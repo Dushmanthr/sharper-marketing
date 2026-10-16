@@ -6,9 +6,21 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
-  { src: "/images/marketing-landing-1.jpeg", alt: "Digital marketing strategy concept", pos: "object-center" },
-  { src: "/images/key-principle-2.jpg", alt: "Marketing team hitting their target", pos: "object-center" },
-  { src: "/images/key-principle-3.jpg", alt: "Marketing strategy planned on screen", pos: "object-center" },
+  {
+    src: "/images/hero-marketing-team.jpg",
+    alt: "Sharper Labs Marketing consultancy team in London office reviewing growth dashboard",
+    pos: "object-center",
+  },
+  {
+    src: "/images/hero-data-analytics.jpg",
+    alt: "Senior digital marketing strategist analyzing global performance analytics and search data",
+    pos: "object-center",
+  },
+  {
+    src: "/images/hero-brand-design.jpg",
+    alt: "Brand marketing and UI/UX design strategists collaborating on campaign prototypes",
+    pos: "object-center",
+  },
 ];
 
 const SLIDE_DURATION = 4200; // ms, must match the interval below
