@@ -31,7 +31,7 @@ import CurvedHero from "@/components/CurvedHero";
 import ServicesTicker from "@/components/ServicesTicker";
 import JsonLd from "@/components/JsonLd";
 import ServicesExplorer from "@/components/ServicesExplorer";
-import InteractiveAudit from "@/components/InteractiveAudit";
+//import InteractiveAudit from "@/components/InteractiveAudit";
 import CaseStudiesShowcase from "@/components/CaseStudiesShowcase";
 import { caseStudies, site, targetKeywords } from "@/lib/site";
 import { faqJsonLd, pageMeta, webPageJsonLd, localBusinessJsonLd } from "@/lib/seo";
@@ -322,7 +322,7 @@ export default function Home() {
       {/* 05. Interactive Growth Scorecard & Lead Review (Requested by Gobi) */}
       <section className="py-12 sm:py-16">
         <div className="container-page">
-          <InteractiveAudit />
+         {/*  <InteractiveAudit /> */}
         </div>
       </section>
 
