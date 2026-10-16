@@ -29,11 +29,14 @@ export default function CaseStudiesShowcase() {
         {categories.map((cat) => {
           const isSelected = selectedCategory === cat.id;
           return (
-            <button
+            <motion.button
               key={cat.id}
               type="button"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 450, damping: 25 }}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`relative rounded-full px-4 py-2 text-xs font-semibold sm:text-sm transition-all duration-200 ${
+              className={`relative rounded-full px-4 py-2 text-xs font-semibold sm:text-sm transition-colors duration-200 ${
                 isSelected ? "text-white" : "bg-white text-navy-700 hover:text-navy-900 border border-navy-100 hover:border-orange-300"
               }`}
             >
@@ -45,7 +48,7 @@ export default function CaseStudiesShowcase() {
                 />
               )}
               <span className="relative z-10">{cat.label}</span>
-            </button>
+            </motion.button>
           );
         })}
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Star, TrendingUp, ShieldCheck } from "lucide-react";
+import { motion } from "framer-motion";
 
 export type Testimonial = {
   quote: string;
@@ -98,20 +99,26 @@ export default function Testimonials({
           </div>
 
           <div className="mt-6 flex gap-3 sm:mt-1" role="group" aria-label="Testimonial navigation">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 450, damping: 25 }}
               onClick={prev}
               aria-label="Previous testimonial"
-              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/8 text-white transition-all hover:border-orange-500 hover:bg-orange-500 active:scale-95"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/8 text-white transition-colors hover:border-orange-500 hover:bg-orange-500"
             >
               <ChevronLeft className="h-5 w-5" aria-hidden />
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 450, damping: 25 }}
               onClick={next}
               aria-label="Next testimonial"
-              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/8 text-white transition-all hover:border-orange-500 hover:bg-orange-500 active:scale-95"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/8 text-white transition-colors hover:border-orange-500 hover:bg-orange-500"
             >
               <ChevronRight className="h-5 w-5" aria-hidden />
-            </button>
+            </motion.button>
           </div>
         </div>
 

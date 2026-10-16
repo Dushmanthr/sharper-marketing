@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { ChevronDown, Menu, X, Phone, Globe, Calendar, Clock } from "lucide-react";
 import { services, site, socials } from "@/lib/site";
 import Button from "./Button";
@@ -239,20 +240,24 @@ export default function Header() {
 
             {/* Desktop Actions */}
             <div className="hidden items-center gap-3 lg:flex">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={() => openConsultation("quotation")}
                 className="text-xs font-semibold text-navy-700 hover:text-orange-600 transition-colors px-2 py-1"
               >
                 Request Quote
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -1 }}
+                whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={() => openConsultation("consultation")}
-                className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-orange-600 active:scale-95"
+                className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-orange-500/20 transition-all hover:bg-orange-600 hover:shadow-orange-500/35 active:scale-95"
               >
                 <Calendar className="h-3.5 w-3.5" /> Book Consultation
-              </button>
+              </motion.button>
             </div>
 
             {/* Mobile Toggle */}
@@ -372,20 +377,24 @@ export default function Header() {
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
-              <button
+              <motion.button
                 type="button"
+                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.02 }}
                 onClick={() => openConsultation("consultation")}
                 className="w-full rounded-xl bg-orange-500 py-3 text-center text-sm font-semibold text-white shadow-md hover:bg-orange-600"
               >
                 Book Free Consultation
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 type="button"
+                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.02 }}
                 onClick={() => openConsultation("quotation")}
                 className="w-full rounded-xl border border-navy-200 py-2.5 text-center text-sm font-semibold text-navy-800 hover:border-orange-500"
               >
                 Request Quotation
-              </button>
+              </motion.button>
               <a
                 href={site.phoneHref}
                 className="flex items-center justify-center gap-2 text-center text-xs font-semibold text-navy-600 pt-2"

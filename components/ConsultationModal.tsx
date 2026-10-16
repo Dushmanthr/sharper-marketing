@@ -230,13 +230,16 @@ Notes / Competitors: ${notes || "None"}`;
           >
             {/* Header */}
             <div className="relative border-b border-navy-800 bg-navy-950/70 px-6 py-5 sm:px-8">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 onClick={resetAndClose}
                 aria-label="Close modal"
                 className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full border border-navy-700 bg-navy-800 text-navy-200 transition-colors hover:border-orange-500 hover:text-white"
               >
                 <X className="h-4 w-4" />
-              </button>
+              </motion.button>
 
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-orange-400">
                 <Globe2 className="h-3.5 w-3.5" /> Direct Agency Connect · UK & International
@@ -260,9 +263,11 @@ Notes / Competitors: ${notes || "None"}`;
                   const IconComponent = item.icon;
                   const isActive = tab === item.id;
                   return (
-                    <button
+                    <motion.button
                       key={item.id}
                       type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => {
                         setTab(item.id);
                         setError("");
@@ -282,7 +287,7 @@ Notes / Competitors: ${notes || "None"}`;
                         <IconComponent className="h-4 w-4" />
                         {item.label}
                       </span>
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -307,13 +312,16 @@ Notes / Competitors: ${notes || "None"}`;
                     your enquiry and will review your requirements. We will be in touch within 24 business hours.
                   </p>
                   <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                    <button
+                    <motion.button
                       type="button"
+                      whileHover={{ scale: 1.03, y: -1 }}
+                      whileTap={{ scale: 0.97 }}
+                      transition={{ type: "spring", stiffness: 450, damping: 25 }}
                       onClick={resetAndClose}
-                      className="rounded-full bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:bg-orange-600"
+                      className="rounded-full bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-orange-600"
                     >
                       Return to Website
-                    </button>
+                    </motion.button>
                     <a
                       href={site.phoneHref}
                       className="inline-flex items-center gap-2 rounded-full border border-navy-700 bg-navy-800 px-5 py-2.5 text-sm font-semibold text-navy-100 hover:border-orange-500"
@@ -395,19 +403,21 @@ Notes / Competitors: ${notes || "None"}`;
                           {services.map((s) => {
                             const isChecked = selectedServices.includes(s.slug);
                             return (
-                              <button
+                              <motion.button
                                 key={s.slug}
                                 type="button"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 onClick={() => toggleQuotationService(s.slug)}
                                 className={`flex items-center justify-between rounded-xl border p-2.5 text-left text-xs font-medium transition-all ${
                                   isChecked
-                                    ? "border-orange-500 bg-orange-500/15 text-orange-300"
+                                    ? "border-orange-500 bg-orange-500/15 text-orange-300 shadow-sm"
                                     : "border-navy-700 bg-navy-900 text-navy-300 hover:border-navy-600"
                                 }`}
                               >
                                 <span>{s.short}</span>
                                 {isChecked && <CheckCircle2 className="h-3.5 w-3.5 text-orange-400" />}
-                              </button>
+                              </motion.button>
                             );
                           })}
                         </div>
@@ -567,29 +577,46 @@ Notes / Competitors: ${notes || "None"}`;
                   </div>
 
                   <div className="pt-2">
-                    <button
+                    <motion.button
                       type="submit"
                       disabled={loading}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 py-3.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-orange-600 active:scale-[0.99] disabled:opacity-60"
+                      whileHover={{ scale: loading ? 1 : 1.02, y: loading ? 0 : -2 }}
+                      whileTap={{ scale: loading ? 1 : 0.98 }}
+                      transition={{ type: "spring", stiffness: 450, damping: 25 }}
+                      className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-orange-500 py-3.5 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-orange-600 disabled:opacity-60"
                     >
-                      {loading ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" /> Submitting request...
-                        </>
-                      ) : tab === "consultation" ? (
-                        <>
-                          Confirm Strategy Call Request <ArrowRight className="h-4 w-4" />
-                        </>
-                      ) : tab === "quotation" ? (
-                        <>
-                          Request Custom Quotation <Send className="h-4 w-4" />
-                        </>
-                      ) : (
-                        <>
-                          Generate Free Marketing Review <Sparkles className="h-4 w-4" />
-                        </>
-                      )}
-                    </button>
+                      {/* Ambient blur glow */}
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -inset-px -z-10 rounded-xl bg-gradient-to-r from-orange-500 via-amber-400 to-orange-600 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-70"
+                      />
+                      {/* Subtle light sweep */}
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 -z-0 overflow-hidden rounded-xl"
+                      >
+                        <span className="absolute -inset-full top-0 block -translate-x-full transform bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                      </span>
+                      <span className="relative z-10 flex items-center gap-2">
+                        {loading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" /> Submitting request...
+                          </>
+                        ) : tab === "consultation" ? (
+                          <>
+                            Confirm Strategy Call Request <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                          </>
+                        ) : tab === "quotation" ? (
+                          <>
+                            Request Custom Quotation <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                          </>
+                        ) : (
+                          <>
+                            Generate Free Marketing Review <Sparkles className="h-4 w-4" />
+                          </>
+                        )}
+                      </span>
+                    </motion.button>
                     <p className="mt-2.5 text-center text-[11px] text-navy-400">
                       🔒 No obligations. Your business data is handled in strict compliance with UK GDPR.
                     </p>

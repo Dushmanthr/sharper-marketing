@@ -6,6 +6,7 @@ import { submitEnquiry, type EnquiryData } from "@/lib/enquiry";
 import { countries, defaultCountry, getCountryByIso } from "@/lib/countries";
 import { services, site } from "@/lib/site";
 import { trackEvent } from "@/lib/analytics";
+import Button from "./Button";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -160,13 +161,15 @@ export default function EnquiryForm({ defaultSubjectSlug }: EnquiryFormProps) {
           We&apos;ve emailed you a confirmation and our team will be in touch shortly. For anything
           urgent, call us on <span className="font-medium text-navy-800">{site.phone}</span>.
         </p>
-        <button
+        <Button
           type="button"
           onClick={() => setStatus("idle")}
-          className="mt-6 rounded-full border border-navy-200 px-5 py-2 text-sm font-semibold text-navy-800 hover:border-orange-400 hover:text-orange-600"
+          variant="outline"
+          size="sm"
+          className="mt-6"
         >
           Send another message
-        </button>
+        </Button>
       </div>
     );
   }
@@ -309,11 +312,11 @@ export default function EnquiryForm({ defaultSubjectSlug }: EnquiryFormProps) {
         </p>
       ) : null}
 
-      <button
+      <Button
         type="submit"
-        suppressHydrationWarning
         disabled={status === "sending"}
-        className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-7 py-3.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-orange-600 disabled:translate-y-0 disabled:opacity-60"
+        variant="primary"
+        size="lg"
       >
         {status === "sending" ? (
           <>
@@ -321,10 +324,10 @@ export default function EnquiryForm({ defaultSubjectSlug }: EnquiryFormProps) {
           </>
         ) : (
           <>
-            <Send className="h-4 w-4" /> Submit
+            <Send className="h-4 w-4" /> Submit Enquiry
           </>
         )}
-      </button>
+      </Button>
       <p className="text-xs text-ink-muted">
         This data will only be used by {site.name} to respond to your enquiry and for no other
         purpose.

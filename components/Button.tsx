@@ -1,23 +1,26 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import clsx from "clsx";
-import type { ComponentProps, ReactNode } from "react";
+import type { ComponentProps, ReactNode, MouseEventHandler } from "react";
 
 type Variant = "primary" | "secondary" | "outline" | "ghost" | "white";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-orange-500 disabled:opacity-60 disabled:cursor-not-allowed";
+  "group relative inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-orange-500 disabled:opacity-60 disabled:cursor-not-allowed select-none";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-orange-500 text-white shadow-md shadow-orange-500/25 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/35 hover:-translate-y-0.5 active:scale-[0.98]",
+    "bg-orange-500 text-white shadow-md shadow-orange-500/25 hover:bg-orange-600 hover:shadow-lg hover:shadow-orange-500/40",
   secondary:
-    "bg-navy-900 text-white shadow-sm hover:bg-navy-950 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]",
+    "bg-navy-900 text-white shadow-sm hover:bg-navy-950 hover:shadow-md",
   outline:
-    "border border-navy-200 text-navy-800 hover:border-orange-500 hover:text-orange-600 active:scale-[0.98]",
-  ghost: "text-navy-800 hover:text-orange-600 active:scale-[0.98]",
+    "border border-navy-200 text-navy-800 hover:border-orange-500 hover:text-orange-600 bg-transparent",
+  ghost: "text-navy-800 hover:text-orange-600 bg-transparent",
   white:
-    "bg-white text-navy-900 hover:bg-orange-50 hover:-translate-y-0.5 shadow-sm active:scale-[0.98]",
+    "bg-white text-navy-900 hover:bg-orange-50 shadow-sm",
 };
 
 const sizes: Record<Size, string> = {
@@ -35,10 +38,21 @@ type CommonProps = {
 
 type ButtonAsLink = CommonProps & {
   href: string;
-  /** Use a plain <a> instead of next/link — required for links that leave this
-   * static app (e.g. other Sharper Labs divisions hosted as separate builds). */
   external?: boolean;
-} & Omit<ComponentProps<typeof Link>, "href" | "className" | "children">;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+  type?: never;
+  disabled?: never;
+} & Omit<ComponentProps<typeof Link>, "href" | "className" | "children" | "onClick">;
+
+type ButtonAsButton = CommonProps & {
+  href?: never;
+  external?: never;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+};
+
+export type ButtonProps = ButtonAsLink | ButtonAsButton;
 
 export default function Button({
   variant = "primary",
@@ -47,19 +61,86 @@ export default function Button({
   children,
   href,
   external,
+  onClick,
+  type = "button",
+  disabled,
   ...rest
-}: ButtonAsLink) {
+}: ButtonProps) {
   const classes = clsx(base, variants[variant], sizes[size], className);
-  if (external) {
-    return (
-      <a href={href} className={classes}>
+
+  // Animated CTA Content with ambient primary glow & shimmer flare
+  const buttonContent = (
+    <>
+      {variant === "primary" && (
+        <>
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-px -z-10 rounded-full bg-gradient-to-r from-orange-500 via-amber-400 to-orange-600 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-70"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 -z-0 overflow-hidden rounded-full"
+          >
+            <span className="absolute -inset-full top-0 block -translate-x-full transform bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+          </span>
+        </>
+      )}
+      <span className="relative z-10 inline-flex items-center gap-2">
         {children}
-      </a>
+      </span>
+    </>
+  );
+
+  // 1. External link
+  if (href && external) {
+    return (
+      <motion.a
+        href={href}
+        className={classes}
+        onClick={onClick}
+        whileHover={{ scale: 1.03, y: -2 }}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 450, damping: 25 }}
+        {...(rest as ComponentProps<"a">)}
+      >
+        {buttonContent}
+      </motion.a>
     );
   }
+
+  // 2. Internal Next.js Link
+  if (href) {
+    return (
+      <motion.div
+        className="inline-block"
+        whileHover={{ scale: 1.03, y: -2 }}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 450, damping: 25 }}
+      >
+        <Link
+          href={href}
+          className={classes}
+          onClick={onClick}
+          {...(rest as Omit<ComponentProps<typeof Link>, "href" | "className" | "children" | "onClick">)}
+        >
+          {buttonContent}
+        </Link>
+      </motion.div>
+    );
+  }
+
+  // 3. Regular Button (with onClick / submit)
   return (
-    <Link href={href} className={classes} {...rest}>
-      {children}
-    </Link>
+    <motion.button
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      className={classes}
+      whileHover={{ scale: disabled ? 1 : 1.03, y: disabled ? 0 : -2 }}
+      whileTap={{ scale: disabled ? 1 : 0.97 }}
+      transition={{ type: "spring", stiffness: 450, damping: 25 }}
+    >
+      {buttonContent}
+    </motion.button>
   );
 }

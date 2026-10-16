@@ -116,11 +116,13 @@ export default function InteractiveAudit() {
               {goals.map((g) => {
                 const isSelected = selectedGoal === g.id;
                 return (
-                  <button
+                  <motion.button
                     key={g.id}
                     type="button"
+                    whileHover={{ scale: 1.015 }}
+                    whileTap={{ scale: 0.985 }}
                     onClick={() => setSelectedGoal(g.id)}
-                    className={`flex flex-col rounded-2xl border p-3.5 text-left transition-all ${
+                    className={`flex flex-col rounded-2xl border p-3.5 text-left transition-colors ${
                       isSelected
                         ? "border-orange-500 bg-orange-500/20 text-white shadow-lg ring-1 ring-orange-500"
                         : "border-navy-800 bg-navy-900/80 text-navy-300 hover:border-navy-700 hover:text-white"
@@ -135,7 +137,7 @@ export default function InteractiveAudit() {
                       )}
                     </div>
                     <span className="mt-1 text-[11px] text-navy-300">{g.tagline}</span>
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -176,18 +178,20 @@ export default function InteractiveAudit() {
               {markets.map((m) => {
                 const isSelected = selectedMarket === m.id;
                 return (
-                  <button
+                  <motion.button
                     key={m.id}
                     type="button"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
                     onClick={() => setSelectedMarket(m.id)}
-                    className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${
+                    className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
                       isSelected
-                        ? "border-orange-500 bg-orange-500 text-white font-semibold"
+                        ? "border-orange-500 bg-orange-500 text-white font-semibold shadow-sm"
                         : "border-navy-800 bg-navy-900 text-navy-300 hover:border-navy-700"
                     }`}
                   >
                     {m.label}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -258,13 +262,30 @@ export default function InteractiveAudit() {
             </div>
 
             {/* Action Button */}
-            <button
+            <motion.button
               type="button"
+              whileHover={{ scale: 1.02, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 450, damping: 25 }}
               onClick={handleOpenAudit}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-orange-500 py-3.5 text-sm font-semibold text-white shadow-xl transition-all hover:bg-orange-600 active:scale-[0.98]"
+              className="group relative mt-6 flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-orange-500 py-3.5 text-sm font-semibold text-white shadow-xl transition-colors hover:bg-orange-600"
             >
-              Claim Your Free Strategic Review <ArrowRight className="h-4 w-4" />
-            </button>
+              {/* Ambient blur glow */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-px -z-10 rounded-2xl bg-gradient-to-r from-orange-500 via-amber-400 to-orange-600 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-70"
+              />
+              {/* Subtle light sweep */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 -z-0 overflow-hidden rounded-2xl"
+              >
+                <span className="absolute -inset-full top-0 block -translate-x-full transform bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+              </span>
+              <span className="relative z-10 flex items-center gap-2">
+                Claim Your Free Strategic Review <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </motion.button>
 
             <p className="mt-3 text-center text-[11px] text-navy-400">
               Includes competitor benchmark, search intent audit & tailored proposal.

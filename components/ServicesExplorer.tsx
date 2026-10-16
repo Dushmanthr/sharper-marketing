@@ -42,11 +42,14 @@ export default function ServicesExplorer() {
           const isSelected = activeSlug === service.slug;
           const ServiceIcon = iconMap[service.icon] || Sparkles;
           return (
-            <button
+            <motion.button
               key={service.slug}
               type="button"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 450, damping: 25 }}
               onClick={() => setActiveSlug(service.slug)}
-              className={`relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold sm:text-sm transition-all duration-200 ${
+              className={`relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold sm:text-sm transition-colors duration-200 ${
                 isSelected ? "text-white" : "text-navy-700 hover:text-navy-900 hover:bg-white/60"
               }`}
             >
@@ -61,7 +64,7 @@ export default function ServicesExplorer() {
                 <ServiceIcon className={`h-4 w-4 ${isSelected ? "text-orange-400" : "text-orange-500"}`} />
                 {service.short}
               </span>
-            </button>
+            </motion.button>
           );
         })}
       </div>
@@ -118,20 +121,29 @@ export default function ServicesExplorer() {
 
               {/* Action Buttons */}
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   type="button"
                   onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-orange-600 active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition-all hover:bg-orange-600 hover:shadow-orange-500/40 active:scale-95"
                 >
                   Discuss {activeService.short} Goals <ArrowRight className="h-4 w-4" />
-                </button>
+                </motion.button>
 
-                <Link
-                  href={`/services/${activeService.slug}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-navy-200 px-5 py-3 text-sm font-semibold text-navy-800 transition-colors hover:border-orange-400 hover:text-orange-600"
+                <motion.div
+                  whileHover={{ scale: 1.03, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
                 >
-                  Full Service Blueprint
-                </Link>
+                  <Link
+                    href={`/services/${activeService.slug}`}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-navy-200 px-5 py-3 text-sm font-semibold text-navy-800 transition-colors hover:border-orange-400 hover:text-orange-600"
+                  >
+                    Full Service Blueprint
+                  </Link>
+                </motion.div>
               </div>
             </div>
 
