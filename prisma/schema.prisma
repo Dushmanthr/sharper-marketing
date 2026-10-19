@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------
+// 1. Admin & Authentication
+// ----------------------------------------------------
+enum AdminRole {
+  SUPER_ADMIN
+  EDITOR
+  CONSULTANT
+}
+
+model AdminUser {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         AdminRole     @default(EDITOR)
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  blogs        BlogPost[]
+  enquiryNotes EnquiryNote[]
+
+  @@map("admin_users")
+}
+
+// ----------------------------------------------------
+// 2. Enquiries, Consultations & Quotations
+// ----------------------------------------------------
+enum EnquiryType {
+  CONTACT          // Standard contact page form
+  CONSULTATION     // Book consultation with timezone & date
+  QUOTATION        // Request quotation with budget & multi-services
+  AUDIT            // Free marketing audit / review request
+}
+
+enum EnquiryStatus {
+  NEW              // Newly received, unread
+  IN_REVIEW        // Viewed by team
+  CONTACTED        // Replied / consultation scheduled
+  PROPOSAL_SENT    // Quotation or audit report sent
+  WON              // Converted client
+  CLOSED           // Archived / Not interested
+  SPAM             // Filtered out
+}
+
+model Enquiry {
+  id                String         @id @default(cuid())
+  type              EnquiryType    @default(CONTACT)
+  status            EnquiryStatus  @default(NEW)
+
+  // Submitter details
+  name              String
+  email             String
+  phone             String?
+  countryIso        String?        @default("GB") // e.g., "GB", "US", "DE"
+  company           String?
+  website           String?
+
+  // Specific form metadata
+  service           String?        // e.g., "brand-marketing", "organic-seo"
+  selectedServices  Json?          // Stores string array of services for quotation: ["Brand", "SEO"]
+  budgetRange       String?        // e.g., "£1,500 – £3,500 / mo"
+  preferredTimezone String?        // e.g., "Europe/London", "America/New_York"
+  preferredDate     DateTime?      // chosen consultation date
+  subject           String?
+  message           String?        @db.Text
+  auditPriority     String?        // audit focus area
+
+  // Attribution & tracking
+  sourceUrl         String?        // page from which enquiry originated
+  ipAddress         String?
+  userAgent         String?
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  notes             EnquiryNote[]
+
+  @@index([type, status])
+  @@index([email])
+  @@index([createdAt])
+  @@map("enquiries")
+}
+
+// Internal team notes on enquiries
+model EnquiryNote {
+  id        String    @id @default(cuid())
+  enquiryId String
+  enquiry   Enquiry   @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id])
+  content   String    @db.Text
+  createdAt DateTime  @default(now())
+
+  @@map("enquiry_notes")
+}
+
+// ----------------------------------------------------
+// 3. Blog & Content Engine
+// ----------------------------------------------------
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model BlogPost {
+  id              String      @id @default(cuid())
+  slug            String      @unique
+  title           String
+  excerpt         String      @db.Text
+  category        String      // "Data & ROI", "SME Growth", "Web & Conversion", etc.
+  coverImage      String      // URL / path
+  coverImageAlt   String?
+
+  // Rich content stored as structured JSON (paragraphs, headings, quotes, key takeaways)
+  content         Json
+
+  readTime        String      @default("5 min read")
+  tags            Json?       // Stores array of tags e.g. ["SEO", "Marketing ROI"]
+  metaDescription String?     @db.Text
+  status          PostStatus  @default(DRAFT)
+  featured        Boolean     @default(false)
+  viewCount       Int         @default(0)
+
+  // Author relationship
+  authorId        String
+  author          AdminUser   @relation(fields: [authorId], references: [id])
+
+  publishedAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([slug])
+  @@index([status, publishedAt])
+  @@index([category])
+  @@map("blog_posts")
+}

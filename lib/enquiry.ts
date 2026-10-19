@@ -77,21 +77,37 @@ export async function submitEnquiry(data: EnquiryData): Promise<void> {
     // Honeypot tripped, pretend success, send nothing.
     return;
   }
-  if (!enquiryConfigured) {
-    throw new Error(
-      "Enquiry delivery is not configured yet. Add EmailJS / Google Sheets keys to .env (see DEPLOYMENT.md).",
-    );
+
+  let dbSaved = false;
+  try {
+    const apiRes = await fetch("/api/enquiry", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (apiRes.ok) {
+      dbSaved = true;
+    }
+  } catch (e) {
+    console.warn("[Enquiry] Backend API submission skipped or offline:", e);
   }
 
-  const params = templateParams(data);
+  // If EmailJS or Google Sheets is configured, dispatch notifications
+  if (enquiryConfigured) {
+    const params = templateParams(data);
+    const [sheetRes, teamRes] = await Promise.allSettled([sendToSheet(data), notifyTeam(params)]);
+    await Promise.allSettled([acknowledgeUser(params)]);
 
-  // The Google Sheet is the system of record + team notification must succeed;
-  // the acknowledgement to the user is best-effort (don't fail the whole submit
-  // if only the courtesy email bounces).
-  const [sheetRes, teamRes] = await Promise.allSettled([sendToSheet(data), notifyTeam(params)]);
-  await Promise.allSettled([acknowledgeUser(params)]);
+    if (!dbSaved && sheetRes.status === "rejected" && teamRes.status === "rejected") {
+      throw new Error("We could not send your message. Please try again or email us directly.");
+    }
+    return;
+  }
 
-  if (sheetRes.status === "rejected" && teamRes.status === "rejected") {
-    throw new Error("We could not send your message. Please try again or email us directly.");
+  // If neither database nor third-party is configured
+  if (!dbSaved) {
+    throw new Error(
+      "Enquiry delivery is not configured yet. Configure PostgreSQL or EmailJS keys in .env.",
+    );
   }
 }

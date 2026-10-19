@@ -19,9 +19,9 @@ function deriveBasePath(): string {
 const basePath = deriveBasePath();
 
 const nextConfig: NextConfig = {
-  // Produce a fully static site in `out/` that can be hosted on any shared
-  // hosting (cPanel/Apache) with no Node server. See DEPLOYMENT.md.
-  output: "export",
+  // Support static export when explicitly requested (e.g., cPanel shared hosting),
+  // otherwise default to standard dynamic Next.js server to support backend API routes.
+  ...(process.env.NEXT_STATIC_EXPORT === "true" ? { output: "export" } : {}),
 
   // Every route is emitted as `route/index.html` so Apache serves it directly
   // without rewrite rules.
