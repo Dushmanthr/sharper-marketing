@@ -257,3 +257,44 @@ export function webPageJsonLd(input: {
     },
   };
 }
+
+/**
+ * BlogPosting schema for SEO & AEO (Google, Perplexity, ChatGPT).
+ */
+export function blogPostingJsonLd(input: {
+  title: string;
+  description: string;
+  path: string;
+  image: string;
+  publishedAt: string;
+  authorName: string;
+  category: string;
+  keywords: string[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${routeUrl(input.path)}#article`,
+    headline: input.title,
+    description: input.description,
+    datePublished: input.publishedAt,
+    dateModified: input.publishedAt,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": routeUrl(input.path),
+    },
+    author: {
+      "@type": "Organization",
+      name: site.name,
+      url: site.url,
+    },
+    publisher: {
+      "@id": `${site.url}#organization`,
+    },
+    image: assetUrl(input.image),
+    articleSection: input.category,
+    keywords: input.keywords.join(", "),
+    inLanguage: "en-GB",
+  };
+}
+

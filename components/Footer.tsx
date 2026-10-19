@@ -138,6 +138,12 @@ export default function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link href="/blog" className="inline-flex items-center gap-1 hover:text-orange-400">
+                <ChevronRight className="h-3.5 w-3.5 text-orange-400" />
+                Blog & Insights
+              </Link>
+            </li>
           </ul>
         </div>
 

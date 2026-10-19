@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { services, caseStudies, routeUrl } from "@/lib/site";
+import { blogPosts } from "@/lib/blog";
 
 /** Generates sitemap.xml at build time (compatible with output: 'export'). */
 export const dynamic = "force-static";
@@ -11,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/", priority: 1.0 },
     { path: "/services", priority: 0.9 },
     { path: "/case-studies", priority: 0.9 },
+    { path: "/blog", priority: 0.8 },
     { path: "/about", priority: 0.8 },
     { path: "/contact", priority: 0.8 },
     { path: "/privacy", priority: 0.3 },
@@ -36,5 +38,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...serviceRoutes, ...caseStudyRoutes];
+  const blogRoutes = blogPosts.map((b) => ({
+    url: routeUrl(`/blog/${b.slug}`),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...serviceRoutes, ...caseStudyRoutes, ...blogRoutes];
 }
+
