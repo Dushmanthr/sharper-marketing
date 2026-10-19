@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,6 +18,9 @@ import {
   Clock,
   Layers,
   ChevronDown,
+  UploadCloud,
+  X,
+  Image as ImageIcon,
 } from "lucide-react";
 
 export interface BlogSectionItem {
@@ -78,6 +81,48 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [tagInput, setTagInput] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleImageFile = async (file: File) => {
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Please upload a valid image file (PNG, JPG, WEBP, GIF, SVG).");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError("Image size exceeds the 10MB limit.");
+      return;
+    }
+
+    setUploadingImage(true);
+    setUploadError("");
+
+    try {
+      const uploadData = new FormData();
+      uploadData.append("file", file);
+
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: uploadData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to upload image.");
+      }
+
+      setFormData((prev) => ({ ...prev, coverImage: data.url }));
+    } catch (err: unknown) {
+      setUploadError(err instanceof Error ? err.message : "Failed to upload image.");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const [formData, setFormData] = useState<BlogFormData>(
     initialData || {
@@ -507,24 +552,110 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
               </div>
             </div>
 
-            {/* Cover Image Picker */}
+            {/* Cover Image Uploader & Picker */}
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-navy-900 block border-b border-slate-100 pb-2">
-                Cover Image
-              </span>
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-navy-900">
+                  Article Cover Image
+                </span>
+                {formData.coverImage?.startsWith("/uploads/") ? (
+                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+                    Uploaded File
+                  </span>
+                ) : (
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-500">
+                    Preset Graphic
+                  </span>
+                )}
+              </div>
 
-              <div className="relative aspect-16/9 w-full overflow-hidden rounded-2xl bg-navy-950 border border-slate-200">
+              {/* Cover Preview */}
+              <div className="relative aspect-16/9 w-full overflow-hidden rounded-2xl bg-navy-950 border border-slate-200 shadow-inner group">
                 <Image
                   src={formData.coverImage || PRESET_IMAGES[0]}
                   alt="Cover Preview"
                   fill
                   className="object-cover"
                 />
+                <div className="absolute inset-0 bg-navy-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center gap-1.5 rounded-xl bg-white/90 px-3 py-1.5 text-xs font-bold text-navy-900 shadow-lg hover:bg-white backdrop-blur-xs transition-colors"
+                  >
+                    <UploadCloud className="h-3.5 w-3.5 text-orange-600" /> Replace Image
+                  </button>
+                </div>
               </div>
 
+              {/* Upload Dropzone */}
               <div>
-                <label className="block text-[11px] font-semibold text-slate-500 mb-1">
-                  Select Preset Graphic
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/avif"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleImageFile(f);
+                  }}
+                />
+
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDragging(false);
+                    const f = e.dataTransfer.files?.[0];
+                    if (f) handleImageFile(f);
+                  }}
+                  className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-4 text-center cursor-pointer transition-all ${
+                    isDragging
+                      ? "border-orange-500 bg-orange-50/50"
+                      : "border-slate-200 bg-slate-50/60 hover:border-orange-400 hover:bg-orange-50/20"
+                  }`}
+                >
+                  {uploadingImage ? (
+                    <div className="flex flex-col items-center gap-2 py-2">
+                      <Loader2 className="h-6 w-6 animate-spin text-orange-500" />
+                      <span className="text-xs font-semibold text-slate-600">
+                        Uploading image to media library...
+                      </span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-2xs text-orange-500 border border-slate-100">
+                        <UploadCloud className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-navy-900">
+                          Click or drag & drop to upload image
+                        </p>
+                        <p className="mt-0.5 text-[11px] text-slate-400">
+                          PNG, JPG, WEBP, SVG or AVIF (up to 10MB)
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {uploadError && (
+                  <div className="mt-2 flex items-center gap-1.5 rounded-xl border border-red-200 bg-red-50 p-2 text-xs font-medium text-red-700">
+                    <AlertCircle className="h-3.5 w-3.5 shrink-0 text-red-600" />
+                    <span>{uploadError}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Preset Graphic Picker Collapsible/Accordion */}
+              <div className="border-t border-slate-100 pt-3">
+                <label className="block text-[11px] font-semibold text-slate-500 mb-2">
+                  Or select standard brand preset:
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   {PRESET_IMAGES.map((img) => (
