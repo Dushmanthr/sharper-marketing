@@ -17,6 +17,7 @@ import {
   ChevronRight,
   Building,
   Mail,
+  BarChart3,
 } from "lucide-react";
 
 interface EnquiryItem {
@@ -131,6 +132,12 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/admin/analytics"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold text-navy-900 shadow-xs hover:bg-slate-50 transition-colors"
+          >
+            <BarChart3 className="h-4 w-4 text-orange-500" /> Business Analytics
+          </Link>
           <Link
             href="/admin/blogs/new"
             className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 transition-colors"

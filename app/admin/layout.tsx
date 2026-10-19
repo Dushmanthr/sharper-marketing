@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   LayoutDashboard,
+  BarChart3,
   Inbox,
   FileText,
   LogOut,
@@ -115,6 +116,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       href: "/admin",
       icon: LayoutDashboard,
       exact: true,
+    },
+    {
+      name: "Analytics & Reports",
+      href: "/admin/analytics",
+      icon: BarChart3,
+      exact: false,
     },
     {
       name: "Enquiries & Leads",
