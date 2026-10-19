@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { MapPin, Phone, Mail, Clock, ChevronRight } from "lucide-react";
 import { mainNav, offices, otherDivisions, services, site, socials } from "@/lib/site";
 import SocialIcon from "./SocialIcon";
@@ -36,6 +39,9 @@ function OfficeBlock({ office }: { office: Office }) {
 }
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/admin") || pathname?.includes("/admin")) return null;
+
   return (
     <footer className="bg-navy-950 text-white">
       {/* Top CTA strip */}

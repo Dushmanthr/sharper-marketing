@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
   // Every route is emitted as `route/index.html` so Apache serves it directly
   // without rewrite rules.
   trailingSlash: true,
+  skipTrailingSlashRedirect: true,
 
   // Host under a subdirectory when NEXT_PUBLIC_SITE_URL has a path.
   // Without this, assets are requested from the domain root and the page

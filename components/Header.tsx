@@ -15,6 +15,8 @@ import { trackEvent } from "@/lib/analytics";
 
 export default function Header() {
   const pathname = usePathname();
+  if (pathname?.startsWith("/admin") || pathname?.includes("/admin")) return null;
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
