@@ -11,7 +11,7 @@ export const site = {
   shortDescription:
     "Sharper Labs Marketing is a UK-based digital marketing consultancy serving UK and international clients. We build stronger brands, reach the right audiences, and achieve sustainable growth through brand strategy, web development, paid advertising, social media, data analysis, and SEO.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://dev.sharper-labs.com/marketing",
-  email: "info@sharper-labs.com",
+  email: "marketing@sharper-labs.com",
   phone: "0203 8193999",
   phoneIntl: "+44 (0)203 8193999",
   phoneHref: "tel:+442038193999",
