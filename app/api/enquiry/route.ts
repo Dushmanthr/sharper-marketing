@@ -42,6 +42,15 @@ export async function POST(req: Request) {
     const validTypes: EnquiryType[] = ["CONTACT", "CONSULTATION", "QUOTATION", "AUDIT"];
     const enquiryType: EnquiryType = validTypes.includes(type) ? type : "CONTACT";
 
+    // Safely parse preferred date if provided and valid ISO/timestamp
+    let safePreferredDate: Date | null = null;
+    if (preferredDate) {
+      const parsed = new Date(preferredDate);
+      if (!isNaN(parsed.getTime())) {
+        safePreferredDate = parsed;
+      }
+    }
+
     // Create enquiry record in PostgreSQL
     const enquiry = await prisma.enquiry.create({
       data: {
@@ -56,7 +65,7 @@ export async function POST(req: Request) {
         selectedServices: Array.isArray(selectedServices) ? selectedServices : [],
         budgetRange: budgetRange ? String(budgetRange).trim() : null,
         preferredTimezone: preferredTimezone ? String(preferredTimezone).trim() : null,
-        preferredDate: preferredDate ? new Date(preferredDate) : null,
+        preferredDate: safePreferredDate,
         subject: subject ? String(subject).trim() : null,
         message: message ? String(message).trim() : "",
         auditPriority: auditPriority ? String(auditPriority).trim() : null,

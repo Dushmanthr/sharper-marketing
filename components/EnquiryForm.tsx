@@ -123,13 +123,15 @@ export default function EnquiryForm({ defaultSubjectSlug }: EnquiryFormProps) {
     const country = getCountryByIso(values.countryIso);
     const serviceLabel = services.find((s) => s.slug === values.subject)?.short || "General enquiry";
     const data: EnquiryData = {
+      type: "CONTACT",
       name: values.name.trim(),
+      countryIso: values.countryIso,
       service: serviceLabel,
       subject: serviceLabel,
       phone: `${country.dial} ${values.phone.trim()}`,
       email: values.email.trim(),
       message: values.message.trim() || `Enquiry about ${serviceLabel}.`,
-      website: honey,
+      botField: honey,
     };
 
     setStatus("sending");

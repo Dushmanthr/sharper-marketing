@@ -9,17 +9,28 @@ import emailjs from "@emailjs/browser";
  * See DEPLOYMENT.md for how to provision all three. All env vars are NEXT_PUBLIC_*.
  */
 
+export type EnquiryType = "CONTACT" | "CONSULTATION" | "QUOTATION" | "AUDIT";
+
 export type EnquiryData = {
   name: string;
+  type?: EnquiryType;
   company?: string;
   audience?: string; // "Employee" | "Employer"
   service?: string; // selected topic
+  selectedServices?: string[];
+  budgetRange?: string;
+  preferredTimezone?: string;
+  preferredDate?: string;
+  auditPriority?: string;
+  countryIso?: string;
   phone?: string;
   email: string;
   subject?: string;
   message: string;
-  /** anti-spam honeypot, must stay empty */
   website?: string;
+  /** anti-spam honeypot, must stay empty */
+  botField?: string;
+  honeypot?: string;
 };
 
 const SHEETS_URL = process.env.NEXT_PUBLIC_SHEETS_WEBAPP_URL;
@@ -45,6 +56,7 @@ function templateParams(data: EnquiryData) {
     service: data.service || "General enquiry",
     phone: data.phone || "—",
     subject: data.subject || "Website enquiry",
+    type: data.type || "CONTACT",
     message: data.message,
     submitted_at: new Date().toLocaleString("en-GB", { timeZone: "Europe/London" }),
   };
@@ -73,7 +85,7 @@ async function acknowledgeUser(params: ReturnType<typeof templateParams>) {
 }
 
 export async function submitEnquiry(data: EnquiryData): Promise<void> {
-  if (data.website) {
+  if (data.botField || data.honeypot) {
     // Honeypot tripped, pretend success, send nothing.
     return;
   }

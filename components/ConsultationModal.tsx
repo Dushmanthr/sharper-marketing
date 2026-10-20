@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { services, site } from "@/lib/site";
 import { countries, defaultCountry, getCountryByIso } from "@/lib/countries";
-import { submitEnquiry, type EnquiryData } from "@/lib/enquiry";
+import { submitEnquiry, type EnquiryData, type EnquiryType } from "@/lib/enquiry";
 import { trackEvent } from "@/lib/analytics";
 
 type TabMode = "consultation" | "quotation" | "audit";
@@ -163,14 +163,35 @@ Company: ${company || "Not specified"}
 Notes / Competitors: ${notes || "None"}`;
     }
 
+    const enquiryType: EnquiryType =
+      tab === "consultation" ? "CONSULTATION" : tab === "quotation" ? "QUOTATION" : "AUDIT";
+
     const enquiryData: EnquiryData = {
+      type: enquiryType,
       name: name.trim(),
       email: email.trim(),
       phone: fullPhone,
-      company: company.trim(),
+      countryIso,
+      company: company.trim() || undefined,
+      website: website.trim() || undefined,
       service: subject,
       subject,
       message: messageBody,
+      ...(tab === "consultation"
+        ? {
+            preferredTimezone,
+            preferredDate: preferredDate.trim() || undefined,
+          }
+        : tab === "quotation"
+        ? {
+            selectedServices: selectedServices.map(
+              (slug) => services.find((s) => s.slug === slug)?.title || slug,
+            ),
+            budgetRange: budget,
+          }
+        : {
+            auditPriority,
+          }),
     };
 
     setLoading(true);
