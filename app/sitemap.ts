@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
 import { services, caseStudies, routeUrl } from "@/lib/site";
-import { blogPosts } from "@/lib/blog";
+import { getAllBlogPosts } from "@/lib/blog";
 
 /** Generates sitemap.xml at build time (compatible with output: 'export'). */
 export const dynamic = "force-static";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes = [
@@ -38,7 +38,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const blogRoutes = blogPosts.map((b) => ({
+  const posts = await getAllBlogPosts();
+  const blogRoutes = posts.map((b) => ({
     url: routeUrl(`/blog/${b.slug}`),
     lastModified: now,
     changeFrequency: "monthly" as const,

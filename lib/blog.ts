@@ -1,3 +1,5 @@
+import { prisma } from "@/lib/prisma";
+
 export interface BlogSection {
   id: string;
   heading: string;
@@ -14,7 +16,14 @@ export interface BlogPost {
   slug: string;
   title: string;
   excerpt: string;
-  category: "Data & ROI" | "SME Growth" | "Web & Conversion" | "International Strategy" | "Consultancy" | "Brand Strategy";
+  category:
+    | "Data & ROI"
+    | "SME Growth"
+    | "Web & Conversion"
+    | "International Strategy"
+    | "Consultancy"
+    | "Brand Strategy"
+    | (string & {});
   publishedAt: string;
   dateIso: string;
   readTime: string;
@@ -573,23 +582,196 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
-export function getAllBlogPosts(): BlogPost[] {
+function formatPublishedDate(date: Date | string | null | undefined): string {
+  if (!date) return "Recently published";
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "Recently published";
+  return d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function mapPrismaPostToBlogPost(post: {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  coverImage: string;
+  coverImageAlt: string | null;
+  content: unknown;
+  readTime: string;
+  tags: unknown;
+  metaDescription: string | null;
+  status: string;
+  featured: boolean;
+  publishedAt: Date | null;
+  createdAt: Date;
+  author?: {
+    name: string;
+    role?: string;
+  } | null;
+}): BlogPost {
+  let rawSections: Array<{
+    id?: string;
+    heading?: string;
+    paragraphs?: string[] | string;
+    bulletPoints?: string[];
+    keyTakeaways?: string[];
+    quote?: { text: string; author?: string };
+  }> = [];
+
+  if (Array.isArray(post.content)) {
+    rawSections = post.content as typeof rawSections;
+  } else if (typeof post.content === "string") {
+    try {
+      const parsed = JSON.parse(post.content);
+      if (Array.isArray(parsed)) rawSections = parsed;
+    } catch {
+      rawSections = [{ id: "section-1", heading: post.title, paragraphs: [post.content] }];
+    }
+  }
+
+  const sections: BlogSection[] = rawSections.map((sec, idx) => ({
+    id: sec.id || `section-${idx + 1}`,
+    heading: sec.heading || `Strategic Insight ${idx + 1}`,
+    paragraphs: Array.isArray(sec.paragraphs)
+      ? sec.paragraphs
+      : typeof sec.paragraphs === "string"
+      ? sec.paragraphs.split("\n\n").filter(Boolean)
+      : [String(sec.paragraphs || "")],
+    bulletPoints: Array.isArray(sec.bulletPoints) ? sec.bulletPoints : undefined,
+    keyTakeaways: Array.isArray(sec.keyTakeaways) ? sec.keyTakeaways : undefined,
+    quote: sec.quote?.text ? sec.quote : undefined,
+  }));
+
+  const tableOfContents = sections.map((s, idx) => ({
+    id: s.id || `section-${idx + 1}`,
+    title: s.heading,
+  }));
+
+  let tags: string[] = [];
+  if (Array.isArray(post.tags)) {
+    tags = post.tags as string[];
+  } else if (typeof post.tags === "string") {
+    try {
+      const parsed = JSON.parse(post.tags);
+      if (Array.isArray(parsed)) tags = parsed;
+      else tags = [post.tags];
+    } catch {
+      tags = [post.tags];
+    }
+  }
+
+  const publishedDate = post.publishedAt || post.createdAt;
+  const dateIso = publishedDate ? new Date(publishedDate).toISOString() : new Date().toISOString();
+  const publishedAt = formatPublishedDate(publishedDate);
+
+  const relatedServices = [
+    { name: "Brand Marketing", slug: "brand-marketing" },
+    { name: "Organic SEO", slug: "organic-seo" },
+    { name: "Website Design & Development", slug: "website-design-and-development" },
+  ];
+
+  return {
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt || "",
+    category: post.category || "Consultancy",
+    publishedAt,
+    dateIso,
+    readTime: post.readTime || "5 min read",
+    author: {
+      name: post.author?.name || "Sharper Labs Advisory",
+      role: post.author?.role === "SUPER_ADMIN" ? "Senior Strategic Practice" : "Digital Strategy Practice",
+      avatar: "/images/hero-marketing-team.jpg",
+    },
+    image: post.coverImage || "/images/marketing-landing-1.jpeg",
+    imageAlt: post.coverImageAlt || post.title,
+    featured: Boolean(post.featured),
+    tags,
+    metaDescription: post.metaDescription || post.excerpt || post.title,
+    tableOfContents,
+    sections,
+    relatedServices,
+  };
+}
+
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
+  try {
+    const dbPosts = await prisma.blogPost.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: [
+        { publishedAt: "desc" },
+        { createdAt: "desc" },
+      ],
+      include: {
+        author: {
+          select: { name: true, role: true },
+        },
+      },
+    });
+
+    if (dbPosts && dbPosts.length > 0) {
+      const mappedDbPosts = dbPosts.map(mapPrismaPostToBlogPost);
+      const dbSlugs = new Set(mappedDbPosts.map((p) => p.slug));
+
+      // Append any static fallback posts not present in the database
+      const remainingStatic = blogPosts.filter((p) => !dbSlugs.has(p.slug));
+      return [...mappedDbPosts, ...remainingStatic];
+    }
+  } catch (err) {
+    console.warn("[Blog] Database query skipped or failed, using static fallback:", err);
+  }
+
   return blogPosts;
 }
 
-export function getFeaturedBlogPost(): BlogPost | undefined {
-  return blogPosts.find((p) => p.featured) || blogPosts[0];
-}
+export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
+  try {
+    const dbPost = await prisma.blogPost.findFirst({
+      where: {
+        slug,
+        status: "PUBLISHED",
+      },
+      include: {
+        author: {
+          select: { name: true, role: true },
+        },
+      },
+    });
 
-export function getBlogPost(slug: string): BlogPost | undefined {
+    if (dbPost) {
+      return mapPrismaPostToBlogPost(dbPost);
+    }
+  } catch (err) {
+    console.warn(`[Blog] Failed to fetch post "${slug}" from database:`, err);
+  }
+
   return blogPosts.find((p) => p.slug === slug);
 }
 
-export function getRelatedBlogPosts(slug: string, limit: number = 2): BlogPost[] {
-  return blogPosts.filter((p) => p.slug !== slug).slice(0, limit);
+export async function getRelatedBlogPosts(slug: string, limit: number = 2): Promise<BlogPost[]> {
+  const all = await getAllBlogPosts();
+  return all.filter((p) => p.slug !== slug).slice(0, limit);
 }
 
-export function getAllBlogCategories(): string[] {
-  const categories = new Set(blogPosts.map((p) => p.category));
+export async function getFeaturedBlogPost(): Promise<BlogPost | undefined> {
+  const all = await getAllBlogPosts();
+  return all.find((p) => p.featured) || all[0];
+}
+
+export async function getAllBlogCategories(): Promise<string[]> {
+  const all = await getAllBlogPosts();
+  const categories = new Set(all.map((p) => p.category));
   return ["All", ...Array.from(categories)];
+}
+
+export function getAllBlogPostsSync(): BlogPost[] {
+  return blogPosts;
+}
+
+export function getBlogPostSync(slug: string): BlogPost | undefined {
+  return blogPosts.find((p) => p.slug === slug);
 }

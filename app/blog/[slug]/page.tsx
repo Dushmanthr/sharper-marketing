@@ -31,15 +31,19 @@ import {
 } from "@/lib/seo";
 import { site } from "@/lib/site";
 
-export function generateStaticParams() {
-  return getAllBlogPosts().map((p) => ({ slug: p.slug }));
+export const dynamicParams = true;
+export const revalidate = 0;
+
+export async function generateStaticParams() {
+  const posts = await getAllBlogPosts();
+  return posts.map((p) => ({ slug: p.slug }));
 }
 
 type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params) {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = await getBlogPost(slug);
   if (!post) return {};
 
   return pageMeta({
@@ -54,10 +58,10 @@ export async function generateMetadata({ params }: Params) {
 
 export default async function BlogPostDetailPage({ params }: Params) {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = await getBlogPost(slug);
   if (!post) notFound();
 
-  const related = getRelatedBlogPosts(post.slug, 2);
+  const related = await getRelatedBlogPosts(post.slug, 2);
   const path = `/blog/${post.slug}`;
 
   return (

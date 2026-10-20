@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getSessionAdmin } from "@/lib/auth";
 import type { PostStatus } from "@prisma/client";
@@ -98,6 +99,12 @@ export async function POST(req: Request) {
         publishedAt: status === "PUBLISHED" ? new Date() : null,
       },
     });
+
+    if (status === "PUBLISHED") {
+      revalidatePath("/blog");
+      revalidatePath(`/blog/${post.slug}`);
+      revalidatePath("/sitemap.xml");
+    }
 
     return NextResponse.json({ success: true, post }, { status: 201 });
   } catch (error) {

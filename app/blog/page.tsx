@@ -23,9 +23,11 @@ export const metadata = pageMeta({
   ],
 });
 
-export default function BlogListingPage() {
-  const posts = getAllBlogPosts();
-  const categories = getAllBlogCategories();
+export const dynamic = "force-dynamic";
+
+export default async function BlogListingPage() {
+  const posts = await getAllBlogPosts();
+  const categories = await getAllBlogCategories();
 
   return (
     <>
