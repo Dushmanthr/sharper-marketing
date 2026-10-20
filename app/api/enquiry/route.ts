@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type { EnquiryType } from "@prisma/client";
+import { sendEnquiryEmails } from "@/lib/mail";
 
 export async function POST(req: Request) {
   try {
@@ -72,6 +73,30 @@ export async function POST(req: Request) {
         sourceUrl: sourceUrl ? String(sourceUrl).trim() : null,
       },
     });
+
+    // 3. Dispatch dual-notification emails (Team Alert + Customer Confirmation)
+    try {
+      await sendEnquiryEmails({
+        id: enquiry.id,
+        type: enquiryType,
+        name: String(name).trim(),
+        email: String(email).trim().toLowerCase(),
+        phone: phone ? String(phone).trim() : null,
+        countryIso: countryIso ? String(countryIso).trim() : "GB",
+        company: company ? String(company).trim() : null,
+        website: website ? String(website).trim() : null,
+        service: service ? String(service).trim() : null,
+        selectedServices: Array.isArray(selectedServices) ? selectedServices : [],
+        budgetRange: budgetRange ? String(budgetRange).trim() : null,
+        preferredTimezone: preferredTimezone ? String(preferredTimezone).trim() : null,
+        preferredDate: safePreferredDate,
+        subject: subject ? String(subject).trim() : null,
+        message: message ? String(message).trim() : "",
+        auditPriority: auditPriority ? String(auditPriority).trim() : null,
+      });
+    } catch (mailError) {
+      console.warn("[API Mail Warning] Failed to dispatch emails:", mailError);
+    }
 
     return NextResponse.json(
       {

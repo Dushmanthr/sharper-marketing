@@ -99,8 +99,16 @@ export async function submitEnquiry(data: EnquiryData): Promise<void> {
     });
     if (apiRes.ok) {
       dbSaved = true;
+    } else {
+      const errorData = await apiRes.json().catch(() => ({}));
+      if (errorData.error) {
+        throw new Error(errorData.error);
+      }
     }
   } catch (e) {
+    if (e instanceof Error && e.message && !e.message.includes("fetch")) {
+      throw e;
+    }
     console.warn("[Enquiry] Backend API submission skipped or offline:", e);
   }
 
