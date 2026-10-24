@@ -148,11 +148,11 @@ export default function AboutPage() {
                 commitment to measurable progress not empty promises.
               </p>
             </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/contact" variant="primary">
+            <div className="mt-8 flex flex-col xs:flex-row flex-wrap gap-3">
+              <Button href="/contact" variant="primary" className="w-full xs:w-auto">
                 Discuss Your Marketing Goals <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button href={site.phoneHref} external variant="outline">
+              <Button href={site.phoneHref} external variant="outline" className="w-full xs:w-auto">
                 <Phone className="h-4 w-4" /> {site.phoneIntl}
               </Button>
             </div>
@@ -163,15 +163,15 @@ export default function AboutPage() {
       {/* Philosophy / Mission / Vision */}
       <Section tone="muted">
         <SectionHeading kicker="What Drives Us" title="Our Philosophy, Mission and Vision" />
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-3 2xl:gap-8">
           {pillars.map((p, i) => (
             <Reveal key={p.title} index={i}>
-              <div className="h-full rounded-3xl border border-navy-100 bg-white p-8 shadow-xs">
+              <div className="h-full rounded-3xl border border-navy-100 bg-white p-6 xs:p-8 2xl:p-10 shadow-xs">
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
                   <p.icon className="h-6 w-6" />
                 </span>
                 <h3 className="mt-5 font-display text-lg font-bold text-navy-900">{p.title}</h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-ink-muted">{p.text}</p>
+                <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-ink-muted">{p.text}</p>
               </div>
             </Reveal>
           ))}
@@ -186,17 +186,17 @@ export default function AboutPage() {
           description="Here is what makes us different from conventional agencies: genuine commercial focus, data-informed strategy, and execution under one roof."
         />
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3 2xl:gap-8">
           {whyPartnerPillars.map((p, i) => (
             <Reveal key={p.title} index={i} className="h-full">
-              <div className="flex h-full flex-col rounded-3xl border border-navy-100 bg-surface-muted/50 p-7 transition-all hover:bg-white hover:shadow-md">
+              <div className="flex h-full flex-col rounded-3xl border border-navy-100 bg-surface-muted/50 p-5 xs:p-7 2xl:p-8 transition-all hover:bg-white hover:shadow-md">
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-orange-400">
                   <p.icon className="h-5 w-5" />
                 </span>
                 <h3 className="mt-5 font-display text-base font-bold text-navy-900 sm:text-lg">
                   {p.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-muted">
                   {p.text}
                 </p>
               </div>
@@ -239,18 +239,18 @@ export default function AboutPage() {
           title="Our Six Core Digital Marketing Services"
           description="Explore the full range of ways Sharper Labs Marketing can help your business grow across the UK and internationally."
         />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:gap-8">
           {services.map((service, i) => (
             <Reveal key={service.slug} index={i} className="h-full">
               <Link
                 href={`/services/${service.slug}`}
-                className="group flex h-full flex-col justify-between rounded-3xl border border-navy-100 bg-white p-7 shadow-xs transition-all hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
+                className="group flex h-full flex-col justify-between rounded-3xl border border-navy-100 bg-white p-5 xs:p-7 2xl:p-8 shadow-xs transition-all hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg"
               >
                 <div>
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50 text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-colors">
                     <Icon name={service.icon} className="h-5 w-5" />
                   </span>
-                  <h3 className="mt-4 font-display text-lg font-bold text-navy-900 group-hover:text-orange-600 transition-colors">
+                  <h3 className="mt-4 font-display text-base xs:text-lg font-bold text-navy-900 group-hover:text-orange-600 transition-colors">
                     {service.short}
                   </h3>
                   <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-muted">

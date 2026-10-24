@@ -162,25 +162,25 @@ export default function Home() {
         </Reveal>
 
         <Reveal delay={0.05}>
-          <h1 className="mt-5 text-4xl font-bold leading-[1.12] sm:text-5xl lg:text-5xl">
+          <h1 className="mt-4 sm:mt-5 text-3xl xs:text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.12] tracking-tight">
             Digital Marketing That{" "}
             <span className="text-orange-400">Moves Your Business Forward</span>
           </h1>
         </Reveal>
 
         <Reveal delay={0.1}>
-          <p className="mt-5 text-base sm:text-lg leading-relaxed text-navy-100">
+          <p className="mt-4 sm:mt-5 text-sm xs:text-base sm:text-lg leading-relaxed text-navy-100">
             Sharper Labs Marketing is a UK-based digital marketing consultancy helping
             businesses build stronger brands, reach the right audiences, and achieve sustainable
             growth across the UK and internationally.
           </p>
-          <p className="mt-3 text-sm text-navy-200 hidden sm:block">
+          <p className="mt-3 text-xs sm:text-sm text-navy-200 hidden sm:block">
             From brand strategy and website development to paid advertising, social media, data analysis, and SEO, we bring strategy, creativity, and performance measurement together to help businesses make smarter marketing decisions.
           </p>
         </Reveal>
 
         <Reveal delay={0.15}>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 sm:mt-8 flex flex-wrap gap-2.5 sm:gap-3">
             <Button href="/services" variant="primary" size="lg">
               Explore Our Services <ArrowRight className="h-4 w-4" />
             </Button>
@@ -198,18 +198,18 @@ export default function Home() {
 
         {/* Live Trust Metrics */}
         <Reveal delay={0.2}>
-          <div className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
+          <div className="mt-8 sm:mt-10 grid grid-cols-3 gap-2 sm:gap-4 border-t border-white/10 pt-5 sm:pt-6">
             <div>
-              <span className="font-display text-2xl font-bold text-white">6 Core</span>
-              <p className="text-[11px] text-navy-300">Specialist Disciplines</p>
+              <span className="font-display text-lg xs:text-2xl lg:text-3xl font-bold text-white">6 Core</span>
+              <p className="text-[10px] xs:text-[11px] text-navy-300">Specialist Disciplines</p>
             </div>
             <div>
-              <span className="font-display text-2xl font-bold text-orange-400">+214%</span>
-              <p className="text-[11px] text-navy-300">Peak Lead Uplift</p>
+              <span className="font-display text-lg xs:text-2xl lg:text-3xl font-bold text-orange-400">+214%</span>
+              <p className="text-[10px] xs:text-[11px] text-navy-300">Peak Lead Uplift</p>
             </div>
             <div>
-              <span className="font-display text-2xl font-bold text-white">100%</span>
-              <p className="text-[11px] text-navy-300">Evidence-Based ROI</p>
+              <span className="font-display text-lg xs:text-2xl lg:text-3xl font-bold text-white">100%</span>
+              <p className="text-[10px] xs:text-[11px] text-navy-300">Evidence-Based ROI</p>
             </div>
           </div>
         </Reveal>

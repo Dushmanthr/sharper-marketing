@@ -77,7 +77,7 @@ export default async function CaseStudyDetailPage({ params }: Params) {
 
       {/* Main Case Study Article following Management 5-Point Format */}
       <article className="py-12 sm:py-16">
-        <div className="container-page max-w-5xl">
+        <div className="container-page max-w-5xl 2xl:max-w-6xl">
           {/* Back link */}
           <div className="mb-8">
             <Link
@@ -90,11 +90,11 @@ export default async function CaseStudyDetailPage({ params }: Params) {
 
           {/* 1. Client Overview Box */}
           <Reveal>
-            <div className="overflow-hidden rounded-3xl border border-navy-100 bg-surface-muted p-6 sm:p-8 shadow-sm">
+            <div className="overflow-hidden rounded-3xl border border-navy-100 bg-surface-muted p-5 xs:p-6 sm:p-8 2xl:p-10 shadow-sm">
               <span className="text-xs font-semibold uppercase tracking-wider text-orange-600">
                 01. Client Overview
               </span>
-              <h2 className="mt-2 font-display text-2xl font-bold text-navy-900">
+              <h2 className="mt-2 font-display text-xl xs:text-2xl font-bold text-navy-900">
                 Context & Background
               </h2>
 
@@ -129,14 +129,14 @@ export default async function CaseStudyDetailPage({ params }: Params) {
 
           {/* 2. The Challenge */}
           <Reveal className="mt-12">
-            <div className="rounded-3xl border border-red-100 bg-red-50/40 p-6 sm:p-8">
+            <div className="rounded-3xl border border-red-100 bg-red-50/40 p-5 xs:p-6 sm:p-8 2xl:p-10">
               <span className="text-xs font-semibold uppercase tracking-wider text-red-600">
                 02. The Challenge
               </span>
-              <h2 className="mt-2 font-display text-2xl font-bold text-navy-900">
+              <h2 className="mt-2 font-display text-xl xs:text-2xl font-bold text-navy-900">
                 What Was Happening Before the Project?
               </h2>
-              <p className="mt-4 text-base leading-relaxed text-navy-800">
+              <p className="mt-4 text-sm sm:text-base leading-relaxed text-navy-800">
                 {study.challenge}
               </p>
             </div>
@@ -144,11 +144,11 @@ export default async function CaseStudyDetailPage({ params }: Params) {
 
           {/* 3. Our Strategy and Work */}
           <Reveal className="mt-12">
-            <div className="rounded-3xl border border-navy-100 bg-white p-6 sm:p-8 shadow-sm">
+            <div className="rounded-3xl border border-navy-100 bg-white p-5 xs:p-6 sm:p-8 2xl:p-10 shadow-sm">
               <span className="text-xs font-semibold uppercase tracking-wider text-orange-600">
                 03. Our Strategy and Work
               </span>
-              <h2 className="mt-2 font-display text-2xl font-bold text-navy-900">
+              <h2 className="mt-2 font-display text-xl xs:text-2xl font-bold text-navy-900">
                 Actions Taken & Strategic Services Delivered
               </h2>
 
@@ -179,8 +179,8 @@ export default async function CaseStudyDetailPage({ params }: Params) {
 
           {/* 4. The Results */}
           <Reveal className="mt-12">
-            <div className="rounded-3xl border border-emerald-100 bg-emerald-50/40 p-6 sm:p-8">
-              <div className="flex items-center justify-between">
+            <div className="rounded-3xl border border-emerald-100 bg-emerald-50/40 p-5 xs:p-6 sm:p-8 2xl:p-10">
+              <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2">
                 <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
                   04. The Results
                 </span>
@@ -189,7 +189,7 @@ export default async function CaseStudyDetailPage({ params }: Params) {
                 </span>
               </div>
 
-              <h2 className="mt-2 font-display text-2xl font-bold text-navy-900">
+              <h2 className="mt-2 font-display text-xl xs:text-2xl font-bold text-navy-900">
                 Verified Before-and-After Metrics
               </h2>
 
@@ -197,9 +197,9 @@ export default async function CaseStudyDetailPage({ params }: Params) {
                 {study.results.map((r, i) => (
                   <div
                     key={i}
-                    className="rounded-2xl border border-emerald-200 bg-white p-5 shadow-xs"
+                    className="rounded-2xl border border-emerald-200 bg-white p-4 xs:p-5 shadow-xs"
                   >
-                    <span className="font-display text-3xl font-extrabold text-emerald-700 sm:text-4xl">
+                    <span className="font-display text-2xl xs:text-3xl font-extrabold text-emerald-700 sm:text-4xl">
                       {r.metric}
                     </span>
                     <p className="mt-2 font-display text-sm font-semibold text-navy-900">
@@ -234,22 +234,22 @@ export default async function CaseStudyDetailPage({ params }: Params) {
 
           {/* 5. Key Takeaway */}
           <Reveal className="mt-12">
-            <div className="rounded-3xl border border-orange-200 bg-orange-50/50 p-6 sm:p-8">
+            <div className="rounded-3xl border border-orange-200 bg-orange-50/50 p-5 xs:p-6 sm:p-8 2xl:p-10">
               <span className="text-xs font-semibold uppercase tracking-wider text-orange-700">
                 05. Key Takeaway
               </span>
-              <h2 className="mt-2 font-display text-2xl font-bold text-navy-900">
+              <h2 className="mt-2 font-display text-xl xs:text-2xl font-bold text-navy-900">
                 What This Demonstrates for Growing Businesses
               </h2>
-              <p className="mt-4 text-base leading-relaxed text-navy-900 font-medium">
+              <p className="mt-4 text-sm sm:text-base leading-relaxed text-navy-900 font-medium">
                 {study.keyTakeaway}
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button href="/contact" variant="primary">
+              <div className="mt-8 flex flex-col xs:flex-row flex-wrap gap-3">
+                <Button href="/contact" variant="primary" className="w-full xs:w-auto">
                   Discuss Your Business Goals <ArrowRight className="h-4 w-4" />
                 </Button>
-                <Button href="/case-studies" variant="outline">
+                <Button href="/case-studies" variant="outline" className="w-full xs:w-auto">
                   More Case Studies
                 </Button>
               </div>

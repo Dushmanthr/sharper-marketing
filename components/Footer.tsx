@@ -48,21 +48,21 @@ export default function Footer() {
       <div className="border-b border-white/10">
         <div className="container-page flex flex-col items-center gap-4 py-8 text-center md:flex-row md:justify-between md:text-left">
           <div>
-            <p className="font-display text-xl font-semibold">Ready to make your marketing work harder?</p>
-            <p className="text-sm text-navy-200">
+            <p className="font-display text-lg xs:text-xl font-semibold">Ready to make your marketing work harder?</p>
+            <p className="text-xs xs:text-sm text-navy-200 mt-1">
               Book a free consultation to discuss your goals with our UK marketing consultants.
             </p>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex flex-col xs:flex-row items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto">
             <a
               href={site.phoneHref}
-              className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-navy-900 transition-colors hover:bg-orange-50"
+              className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs xs:text-sm font-semibold text-navy-900 transition-colors hover:bg-orange-50"
             >
-              <Phone className="h-4 w-4" /> {site.phoneIntl}
+              <Phone className="h-4 w-4 text-orange-500" /> {site.phoneIntl}
             </a>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold transition-colors hover:border-orange-400 hover:text-orange-400"
+              className="inline-flex w-full xs:w-auto items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-xs xs:text-sm font-semibold transition-colors hover:border-orange-400 hover:text-orange-400"
             >
               Discuss Your Marketing Goals
             </Link>
@@ -71,7 +71,7 @@ export default function Footer() {
       </div>
 
       {/* Main footer */}
-      <div className="container-page grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-5">
+      <div className="container-page grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-5 2xl:gap-14 2xl:py-16">
         <div className="lg:col-span-2">
           <Image
             src="/logo/footer-logo.png"
@@ -80,20 +80,20 @@ export default function Footer() {
             height={56}
             loading="lazy"
             sizes="180px"
-            className="h-12 w-auto"
+            className="h-10 sm:h-12 w-auto"
           />
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-navy-200">
+          <p className="mt-4 max-w-sm text-xs sm:text-sm leading-relaxed text-navy-200">
             {site.shortDescription}
           </p>
-          <div className="mt-5 space-y-2 text-sm text-navy-100">
-            <a href={`mailto:${site.email}`} className="flex items-center gap-2 hover:text-orange-400">
-              <Mail className="h-4 w-4 text-orange-400" /> {site.email}
+          <div className="mt-5 space-y-2 text-xs sm:text-sm text-navy-100">
+            <a href={`mailto:${site.email}`} className="flex items-center gap-2 hover:text-orange-400 break-all">
+              <Mail className="h-4 w-4 shrink-0 text-orange-400" /> {site.email}
             </a>
             <a href={site.phoneHref} className="flex items-center gap-2 hover:text-orange-400">
-              <Phone className="h-4 w-4 text-orange-400" /> {site.phoneIntl} (UK: {site.phone})
+              <Phone className="h-4 w-4 shrink-0 text-orange-400" /> {site.phoneIntl} (UK: {site.phone})
             </a>
             <p className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-orange-400" /> {site.hours}
+              <Clock className="h-4 w-4 shrink-0 text-orange-400" /> {site.hours}
             </p>
           </div>
           <div className="mt-5 flex items-center gap-3">

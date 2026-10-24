@@ -36,7 +36,7 @@ export default function ServicesExplorer() {
   return (
     <div className="relative">
       {/* Category Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-surface-muted border border-navy-100 max-w-4xl mx-auto mb-10">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-1.5 rounded-2xl bg-surface-muted border border-navy-100 max-w-5xl mx-auto mb-8 sm:mb-10">
         {services.map((service) => {
           const isSelected = activeSlug === service.slug;
           const ServiceIcon = iconMap[service.icon] || CheckCircle2;
@@ -48,7 +48,7 @@ export default function ServicesExplorer() {
               whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 450, damping: 25 }}
               onClick={() => setActiveSlug(service.slug)}
-              className={`relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-semibold sm:text-sm transition-colors duration-200 ${
+              className={`relative flex items-center gap-1.5 sm:gap-2 rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-xs font-semibold sm:text-sm transition-colors duration-200 ${
                 isSelected ? "text-white" : "text-navy-700 hover:text-navy-900 hover:bg-white/60"
               }`}
             >
@@ -59,7 +59,7 @@ export default function ServicesExplorer() {
                   transition={{ type: "spring", stiffness: 350, damping: 30 }}
                 />
               )}
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
                 <ServiceIcon className={`h-4 w-4 ${isSelected ? "text-orange-400" : "text-orange-500"}`} />
                 {service.short}
               </span>
@@ -80,7 +80,7 @@ export default function ServicesExplorer() {
         >
           <div className="grid lg:grid-cols-12">
             {/* Left Column: Hook, Lead, What We Do */}
-            <div className="p-8 lg:col-span-7 lg:p-12">
+            <div className="p-5 xs:p-7 sm:p-9 lg:col-span-7 lg:p-12">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-orange-600">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-50 text-orange-600">
                   <IconComponent className="h-4 w-4" />
@@ -119,16 +119,16 @@ export default function ServicesExplorer() {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="mt-8 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-3">
                 <motion.button
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ type: "spring", stiffness: 400, damping: 20 }}
                   type="button"
                   onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition-all hover:bg-orange-600 hover:shadow-orange-500/40 active:scale-95"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-orange-500 px-5 sm:px-6 py-3 text-xs sm:text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition-all hover:bg-orange-600 hover:shadow-orange-500/40 active:scale-95 text-center"
                 >
-                  Discuss {activeService.short} Goals <ArrowRight className="h-4 w-4" />
+                  Discuss {activeService.short} Goals <ArrowRight className="h-4 w-4 shrink-0" />
                 </motion.button>
 
                 <motion.div
@@ -138,7 +138,7 @@ export default function ServicesExplorer() {
                 >
                   <Link
                     href={`/services/${activeService.slug}`}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-navy-200 px-5 py-3 text-sm font-semibold text-navy-800 transition-colors hover:border-orange-400 hover:text-orange-600"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-full border border-navy-200 px-5 py-3 text-xs sm:text-sm font-semibold text-navy-800 transition-colors hover:border-orange-400 hover:text-orange-600 w-full text-center"
                   >
                     Full Service Blueprint
                   </Link>
@@ -147,7 +147,7 @@ export default function ServicesExplorer() {
             </div>
 
             {/* Right Column: Approach & What You Can Expect */}
-            <div className="border-t border-navy-100 bg-navy-900 p-8 text-white lg:col-span-5 lg:border-t-0 lg:border-l lg:p-12">
+            <div className="border-t border-navy-100 bg-navy-900 p-5 xs:p-7 sm:p-9 text-white lg:col-span-5 lg:border-t-0 lg:border-l lg:p-12">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs">
                 <span className="text-xs font-semibold uppercase tracking-wider text-orange-400">
                   Our Approach

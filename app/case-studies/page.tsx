@@ -41,32 +41,32 @@ export default function CaseStudiesPage() {
       />
 
       {/* Aggregate Proof Bar */}
-      <div className="border-b border-navy-100 bg-surface-muted py-8">
+      <div className="border-b border-navy-100 bg-surface-muted py-6 sm:py-8">
         <div className="container-page">
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 text-center">
+          <div className="grid grid-cols-2 gap-3 xs:gap-4 sm:gap-6 sm:grid-cols-4 text-center">
             <div>
-              <span className="font-display text-3xl font-bold text-navy-900 sm:text-4xl">
+              <span className="font-display text-2xl xs:text-3xl sm:text-4xl font-bold text-navy-900">
                 +214%
               </span>
-              <p className="mt-1 text-xs text-ink-muted">Peak Inbound Lead Growth</p>
+              <p className="mt-1 text-[11px] sm:text-xs text-ink-muted">Peak Inbound Lead Growth</p>
             </div>
             <div>
-              <span className="font-display text-3xl font-bold text-orange-500 sm:text-4xl">
+              <span className="font-display text-2xl xs:text-3xl sm:text-4xl font-bold text-orange-500">
                 3.8x
               </span>
-              <p className="mt-1 text-xs text-ink-muted">Verified Return on Ad Spend</p>
+              <p className="mt-1 text-[11px] sm:text-xs text-ink-muted">Verified Return on Ad Spend</p>
             </div>
             <div>
-              <span className="font-display text-3xl font-bold text-navy-900 sm:text-4xl">
+              <span className="font-display text-2xl xs:text-3xl sm:text-4xl font-bold text-navy-900">
                 48+
               </span>
-              <p className="mt-1 text-xs text-ink-muted">Top-3 Commercial Rankings</p>
+              <p className="mt-1 text-[11px] sm:text-xs text-ink-muted">Top-3 Commercial Rankings</p>
             </div>
             <div>
-              <span className="font-display text-3xl font-bold text-orange-500 sm:text-4xl">
+              <span className="font-display text-2xl xs:text-3xl sm:text-4xl font-bold text-orange-500">
                 100%
               </span>
-              <p className="mt-1 text-xs text-ink-muted">Verified Client Data Sources</p>
+              <p className="mt-1 text-[11px] sm:text-xs text-ink-muted">Verified Client Data Sources</p>
             </div>
           </div>
         </div>

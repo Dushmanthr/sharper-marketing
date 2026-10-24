@@ -30,19 +30,19 @@ function Counter({ stat }: { stat: Stat }) {
 
   return (
     <div ref={ref} className="text-center">
-      <div className="font-display text-4xl font-bold text-orange-500 sm:text-5xl">
+      <div className="font-display text-2xl xs:text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-bold text-orange-500">
         {stat.prefix}
         {n}
         {stat.suffix}
       </div>
-      <div className="mt-1 text-sm font-medium text-navy-200">{stat.label}</div>
+      <div className="mt-1 text-xs xs:text-sm font-medium text-navy-200">{stat.label}</div>
     </div>
   );
 }
 
 export default function Stats({ items }: { items: Stat[] }) {
   return (
-    <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 xs:gap-6 sm:gap-8 lg:grid-cols-4 2xl:gap-12">
       {items.map((s) => (
         <Counter key={s.label} stat={s} />
       ))}

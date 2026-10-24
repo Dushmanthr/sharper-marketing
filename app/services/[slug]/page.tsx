@@ -125,11 +125,11 @@ export default async function ServicePage({ params }: Params) {
               ))}
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/contact" variant="primary">
+            <div className="mt-8 flex flex-col xs:flex-row flex-wrap gap-3">
+              <Button href="/contact" variant="primary" className="w-full xs:w-auto">
                 Discuss Your {service.short} Goals <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button href={site.phoneHref} external variant="outline">
+              <Button href={site.phoneHref} external variant="outline" className="w-full xs:w-auto">
                 <Phone className="h-4 w-4" /> {site.phoneIntl}
               </Button>
             </div>
@@ -145,10 +145,10 @@ export default async function ServicePage({ params }: Params) {
           description={`Comprehensive, data-driven ${service.short} capabilities delivered by our UK and international marketing consultants.`}
         />
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4 2xl:gap-8">
           {service.whatWeDo.map((item, idx) => (
             <Reveal key={idx} index={idx} className="h-full">
-              <div className="flex h-full flex-col rounded-3xl border border-navy-100 bg-white p-6 shadow-xs transition-all hover:border-orange-300 hover:shadow-md">
+              <div className="flex h-full flex-col rounded-3xl border border-navy-100 bg-white p-5 sm:p-6 2xl:p-7 shadow-xs transition-all hover:border-orange-300 hover:shadow-md">
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50 text-orange-600 font-bold">
                   {idx + 1}
                 </span>
@@ -173,8 +173,8 @@ export default async function ServicePage({ params }: Params) {
             <h2 className="mt-3 font-display text-2xl font-bold text-navy-900 sm:text-3xl">
               Our Approach
             </h2>
-            <div className="mt-5 rounded-3xl border border-navy-100 bg-surface-muted p-7 sm:p-8">
-              <p className="text-base leading-relaxed text-navy-800">
+            <div className="mt-5 rounded-3xl border border-navy-100 bg-surface-muted p-5 xs:p-7 sm:p-8 2xl:p-10">
+              <p className="text-sm sm:text-base leading-relaxed text-navy-800">
                 {service.approach}
               </p>
               <p className="mt-4 text-xs font-medium text-navy-600">
@@ -211,7 +211,7 @@ export default async function ServicePage({ params }: Params) {
               What You Can Expect
             </h2>
 
-            <div className="mt-5 rounded-3xl border border-emerald-100 bg-emerald-50/40 p-7 sm:p-8">
+            <div className="mt-5 rounded-3xl border border-emerald-100 bg-emerald-50/40 p-5 xs:p-7 sm:p-8 2xl:p-10">
               <ul className="space-y-4">
                 {service.whatYouCanExpect.map((expectItem, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-navy-900 font-medium">
@@ -234,18 +234,18 @@ export default async function ServicePage({ params }: Params) {
               )}
             </div>
 
-            <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-6 shadow-xs">
+            <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5 xs:p-6 shadow-xs">
               <h4 className="font-display text-sm font-semibold text-navy-900">
                 Ready to review your {service.short} requirements?
               </h4>
               <p className="mt-1 text-xs text-ink-muted">
                 Our UK consultancy provides complimentary initial assessments with transparent pricing.
               </p>
-              <div className="mt-4 flex gap-3">
-                <Button href="/contact" variant="primary" size="sm">
+              <div className="mt-4 flex flex-col xs:flex-row gap-2.5 sm:gap-3">
+                <Button href="/contact" variant="primary" size="sm" className="w-full xs:w-auto">
                   Request Consultation
                 </Button>
-                <Button href={site.phoneHref} external variant="outline" size="sm">
+                <Button href={site.phoneHref} external variant="outline" size="sm" className="w-full xs:w-auto">
                   Call {site.phone}
                 </Button>
               </div>

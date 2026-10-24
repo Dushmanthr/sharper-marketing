@@ -75,7 +75,7 @@ export default function InteractiveAudit() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-navy-950 via-navy-900 to-navy-950 p-6 sm:p-10 lg:p-12 text-white border border-navy-800 shadow-2xl">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-navy-950 via-navy-900 to-navy-950 p-5 xs:p-7 sm:p-10 lg:p-12 text-white border border-navy-800 shadow-2xl">
       {/* Decorative gradient glow */}
       <div
         className="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-orange-500/15 blur-3xl"
@@ -86,7 +86,7 @@ export default function InteractiveAudit() {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 grid gap-10 lg:grid-cols-12 items-center">
+      <div className="relative z-10 grid gap-8 sm:gap-10 lg:grid-cols-12 items-center">
         {/* Left Column: Interactive Selectors & Slider */}
         <div className="lg:col-span-7">
           <div className="flex flex-wrap items-center gap-2">
@@ -163,7 +163,7 @@ export default function InteractiveAudit() {
               className="mt-3.5 h-2 w-full cursor-pointer appearance-none rounded-lg bg-navy-800 accent-orange-500"
             />
 
-            <div className="mt-2 flex justify-between text-[10px] text-navy-400">
+            <div className="mt-2 flex justify-between text-[9px] xs:text-[10px] text-navy-400 gap-1">
               <span>£1,500/mo (Focused Service)</span>
               <span>£7,500/mo (Multi-Channel)</span>
               <span>£15,000+/mo (Full Scale)</span>
@@ -171,9 +171,9 @@ export default function InteractiveAudit() {
           </div>
 
           {/* 3. Geographical Reach */}
-          <div className="mt-5 flex items-center gap-3">
+          <div className="mt-5 flex flex-col xs:flex-row xs:items-center gap-2 xs:gap-3">
             <span className="text-xs font-semibold text-navy-400">Target Reach:</span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {markets.map((m) => {
                 const isSelected = selectedMarket === m.id;
                 return (
@@ -204,7 +204,7 @@ export default function InteractiveAudit() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.25 }}
-            className="rounded-3xl border border-navy-700 bg-navy-900/90 p-6 sm:p-8 backdrop-blur-md shadow-2xl"
+            className="rounded-3xl border border-navy-700 bg-navy-900/90 p-5 sm:p-8 backdrop-blur-md shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-navy-800 pb-4">
               <span className="text-xs font-semibold uppercase tracking-wider text-orange-400">
@@ -230,15 +230,15 @@ export default function InteractiveAudit() {
 
             {/* Grid of Estimated Leads & Pipeline */}
             <div className="mt-6 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-navy-800 bg-navy-950/70 p-4">
-                <span className="text-[11px] font-medium text-navy-400">Est. New Enquiries</span>
-                <div className="mt-1 font-display text-2xl font-bold text-white">
+              <div className="rounded-2xl border border-navy-800 bg-navy-950/70 p-3.5 sm:p-4">
+                <span className="text-[10px] xs:text-[11px] font-medium text-navy-400">Est. New Enquiries</span>
+                <div className="mt-1 font-display text-xl sm:text-2xl font-bold text-white">
                   +{estimatedNewLeads} <span className="text-xs font-normal text-navy-300">/ mo</span>
                 </div>
               </div>
-              <div className="rounded-2xl border border-navy-800 bg-navy-950/70 p-4">
-                <span className="text-[11px] font-medium text-navy-400">Est. Pipeline Uplift</span>
-                <div className="mt-1 font-display text-2xl font-bold text-emerald-400">
+              <div className="rounded-2xl border border-navy-800 bg-navy-950/70 p-3.5 sm:p-4">
+                <span className="text-[10px] xs:text-[11px] font-medium text-navy-400">Est. Pipeline Uplift</span>
+                <div className="mt-1 font-display text-xl sm:text-2xl font-bold text-emerald-400">
                   £{estimatedPipeline.toLocaleString("en-GB")}
                 </div>
               </div>

@@ -81,15 +81,15 @@ export default function ContactPage() {
         />
 
         {/* 3 Channels Strip */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-3">
-          <Reveal className="rounded-3xl border border-navy-100 bg-surface-muted p-7 shadow-xs">
+        <div className="mt-12 grid gap-5 sm:gap-6 sm:grid-cols-3 2xl:gap-8">
+          <Reveal className="rounded-3xl border border-navy-100 bg-surface-muted p-5 xs:p-6 sm:p-7 2xl:p-8 shadow-xs">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-orange-400">
               <Clock className="h-5 w-5" />
             </span>
             <span className="mt-4 block text-xs font-semibold uppercase tracking-wider text-orange-600">
               Office Hours & Timezone
             </span>
-            <p className="mt-1 font-display text-lg font-bold text-navy-900">
+            <p className="mt-1 font-display text-base xs:text-lg font-bold text-navy-900">
               Mon – Fri: 09:00 – 17:00
             </p>
             <p className="mt-1 text-xs text-ink-muted">
@@ -97,14 +97,14 @@ export default function ContactPage() {
             </p>
           </Reveal>
 
-          <Reveal index={1} className="rounded-3xl border border-navy-100 bg-surface-muted p-7 shadow-xs">
+          <Reveal index={1} className="rounded-3xl border border-navy-100 bg-surface-muted p-5 xs:p-6 sm:p-7 2xl:p-8 shadow-xs">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-orange-400">
               <Phone className="h-5 w-5" />
             </span>
             <span className="mt-4 block text-xs font-semibold uppercase tracking-wider text-orange-600">
               Telephone Presentation
             </span>
-            <p className="mt-1 font-display text-lg font-bold text-navy-900">
+            <p className="mt-1 font-display text-base xs:text-lg font-bold text-navy-900">
               <a href={site.phoneHref} className="hover:text-orange-600 transition-colors">
                 {site.phoneIntl}
               </a>
@@ -114,14 +114,14 @@ export default function ContactPage() {
             </p>
           </Reveal>
 
-          <Reveal index={2} className="rounded-3xl border border-navy-100 bg-surface-muted p-7 shadow-xs">
+          <Reveal index={2} className="rounded-3xl border border-navy-100 bg-surface-muted p-5 xs:p-6 sm:p-7 2xl:p-8 shadow-xs">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-orange-400">
               <Mail className="h-5 w-5" />
             </span>
             <span className="mt-4 block text-xs font-semibold uppercase tracking-wider text-orange-600">
               Email & International RFPs
             </span>
-            <p className="mt-1 font-display text-lg font-bold text-navy-900 truncate">
+            <p className="mt-1 font-display text-base xs:text-lg font-bold text-navy-900 break-all sm:break-normal">
               <a href={`mailto:${site.email}`} className="hover:text-orange-600 transition-colors">
                 {site.email}
               </a>
@@ -135,15 +135,15 @@ export default function ContactPage() {
 
       {/* Main Enquiry Form Section */}
       <Section tone="navy">
-        <div className="grid items-start gap-12 lg:grid-cols-12">
+        <div className="grid items-start gap-8 lg:gap-12 lg:grid-cols-12 2xl:gap-16">
           <div className="lg:col-span-5">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-3.5 py-1 text-xs font-semibold text-orange-400">
               <Globe className="h-3.5 w-3.5" /> International Enquiries Welcome
             </span>
-            <h2 className="mt-4 font-display text-3xl font-bold text-white sm:text-4xl">
+            <h2 className="mt-4 font-display text-2xl xs:text-3xl font-bold text-white sm:text-4xl 2xl:text-5xl leading-tight">
               Arrange a Free Consultation or Request a Quotation
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-navy-100">
+            <p className="mt-4 text-xs xs:text-sm leading-relaxed text-navy-100">
               Share your marketing objectives with our consultants. We evaluate your current market presence, review your competitor landscape, and recommend an actionable roadmap.
             </p>
 
@@ -173,7 +173,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <Reveal delay={0.1} className="rounded-3xl bg-white p-6 shadow-2xl sm:p-8 lg:col-span-7">
+          <Reveal delay={0.1} className="rounded-3xl bg-white p-5 xs:p-7 sm:p-8 lg:col-span-7 2xl:p-10 shadow-2xl">
             <EnquiryForm />
           </Reveal>
         </div>

@@ -13,13 +13,13 @@ export default function NotFound() {
           Sorry, the page you&apos;re looking for doesn&apos;t exist or has moved. Let&apos;s get
           you back on track.
         </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Button href="/" variant="primary" size="lg">
+        <div className="mt-8 flex flex-col xs:flex-row items-center justify-center gap-3 w-full sm:w-auto">
+          <Button href="/" variant="primary" size="lg" className="w-full xs:w-auto justify-center">
             <Home className="h-4 w-4" /> Back to home
           </Button>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold transition-colors hover:bg-white/10"
+            className="inline-flex w-full xs:w-auto items-center justify-center gap-1.5 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold transition-colors hover:bg-white/10"
           >
             Contact us <ArrowRight className="h-4 w-4" />
           </Link>

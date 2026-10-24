@@ -27,10 +27,12 @@ export default function PageHero({ title, crumbs = [], showTagline = true }: Pag
         aria-hidden
         className="absolute -right-16 bottom-0 h-48 w-48 rotate-12 border border-white/10"
       />
-      <div className="container-page relative py-16 text-center sm:py-20">
-        <h1 className="text-3xl font-bold sm:text-4xl lg:text-5xl">{title}</h1>
+      <div className="container-page relative py-12 sm:py-16 lg:py-20 xl:py-24 text-center">
+        <h1 className="text-2xl xs:text-3xl font-bold sm:text-4xl lg:text-5xl 2xl:text-6xl tracking-tight break-words max-w-5xl mx-auto leading-tight">
+          {title}
+        </h1>
         {showTagline ? (
-          <p className="mt-3 font-display font-semibold text-orange-400">{site.tagline}</p>
+          <p className="mt-3 font-display text-sm sm:text-base font-semibold text-orange-400 max-w-2xl mx-auto">{site.tagline}</p>
         ) : null}
         {crumbs.length ? (
           <nav

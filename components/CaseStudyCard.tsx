@@ -35,8 +35,8 @@ export default function CaseStudyCard({
         <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent" />
 
         {/* Category Pill */}
-        <div className="absolute left-5 top-5">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-navy-900/80 px-3 py-1 text-xs font-semibold text-white backdrop-blur-xs">
+        <div className="absolute left-3.5 top-3.5 sm:left-5 sm:top-5">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-navy-900/80 px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold text-white backdrop-blur-xs">
             <Building2 className="h-3 w-3 text-orange-400" />
             {study.category}
           </span>
@@ -44,20 +44,20 @@ export default function CaseStudyCard({
 
         {/* Primary Metric Badge */}
         {topResult && (
-          <div className="absolute bottom-4 left-5 right-5 flex items-baseline justify-between rounded-xl border border-white/10 bg-white/10 px-4 py-2.5 backdrop-blur-md">
+          <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-5 right-3 sm:right-5 flex items-baseline justify-between rounded-xl border border-white/10 bg-white/10 px-3 sm:px-4 py-2 sm:py-2.5 backdrop-blur-md">
             <div>
-              <span className="font-display text-2xl font-bold text-orange-400">
+              <span className="font-display text-xl sm:text-2xl font-bold text-orange-400">
                 {topResult.metric}
               </span>
-              <p className="text-[11px] font-medium text-white/90">{topResult.label}</p>
+              <p className="text-[10px] sm:text-[11px] font-medium text-white/90">{topResult.label}</p>
             </div>
-            <span className="text-[10px] text-white/60">{topResult.period}</span>
+            <span className="text-[9px] sm:text-[10px] text-white/60">{topResult.period}</span>
           </div>
         )}
       </div>
 
       {/* Body Content */}
-      <div className="flex flex-1 flex-col p-6 sm:p-7">
+      <div className="flex flex-1 flex-col p-5 sm:p-7">
         <div className="flex flex-wrap gap-1.5 mb-3">
           {study.services.map((s) => (
             <span

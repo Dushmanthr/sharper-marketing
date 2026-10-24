@@ -34,8 +34,8 @@ export default function ServiceCard({ service, index = 0 }: { service: Service; 
             <Icon name={service.icon} className="h-5 w-5" />
           </span>
         </div>
-        <div className="flex flex-1 flex-col p-6 sm:p-7">
-          <h3 className="font-display text-lg font-bold text-navy-900 group-hover:text-orange-600 transition-colors">
+        <div className="flex flex-1 flex-col p-5 xs:p-6 sm:p-7 2xl:p-8">
+          <h3 className="font-display text-base xs:text-lg font-bold text-navy-900 group-hover:text-orange-600 transition-colors">
             {service.short}
           </h3>
           <p className="mt-2 flex-1 text-xs sm:text-sm leading-relaxed text-ink-muted">

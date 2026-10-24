@@ -23,7 +23,7 @@ export function SectionHeading({
   return (
     <Reveal
       className={clsx(
-        "max-w-2xl",
+        "max-w-2xl 2xl:max-w-3xl",
         align === "center" ? "mx-auto text-center" : "text-left",
         className,
       )}
@@ -35,7 +35,7 @@ export function SectionHeading({
       ) : null}
       <h2
         className={clsx(
-          "mt-3 text-3xl font-bold leading-tight sm:text-4xl",
+          "mt-3 text-2xl xs:text-3xl font-bold leading-tight sm:text-4xl 2xl:text-5xl break-words",
           light ? "text-white" : "text-navy-900",
         )}
       >
@@ -44,7 +44,7 @@ export function SectionHeading({
       {description ? (
         <p
           className={clsx(
-            "mt-4 text-base leading-relaxed sm:text-lg",
+            "mt-3 sm:mt-4 text-sm sm:text-base leading-relaxed 2xl:text-lg",
             light ? "text-navy-100" : "text-ink-muted",
           )}
         >
@@ -73,7 +73,7 @@ export default function Section({
     <section
       id={id}
       className={clsx(
-        "py-16 sm:py-20 lg:py-24",
+        "py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28",
         tone === "muted" && "bg-surface-muted",
         tone === "navy" && "bg-navy-900 text-white",
         className,

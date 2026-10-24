@@ -14,7 +14,7 @@ export default function FAQ({ items }: { items: FaqItem[] }) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div className="mx-auto max-w-3xl divide-y divide-navy-100 rounded-3xl border border-navy-100 bg-white shadow-xs">
+    <div className="mx-auto max-w-3xl 2xl:max-w-4xl divide-y divide-navy-100 rounded-3xl border border-navy-100 bg-white shadow-xs">
       {items.map((item, i) => {
         const isOpen = open === i;
         const panelId = `faq-panel-${i}`;
@@ -25,15 +25,15 @@ export default function FAQ({ items }: { items: FaqItem[] }) {
             <button
               id={buttonId}
               type="button"
-              className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left transition-colors hover:bg-navy-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/30"
+              className="flex w-full items-center justify-between gap-3 sm:gap-4 px-4 py-4 sm:px-6 sm:py-5 text-left transition-colors hover:bg-navy-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/30"
               aria-expanded={isOpen}
               aria-controls={panelId}
               onClick={() => setOpen(isOpen ? null : i)}
             >
-              <span className="font-display text-base font-semibold text-navy-900 sm:text-lg">
+              <span className="font-display text-sm xs:text-base font-semibold text-navy-900 sm:text-lg break-words">
                 {item.question}
               </span>
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 shrink-0">
                 <span className="hidden text-xs font-semibold uppercase tracking-[0.2em] text-navy-400 sm:inline">
                   {isOpen ? "Close" : "Open"}
                 </span>
@@ -55,7 +55,7 @@ export default function FAQ({ items }: { items: FaqItem[] }) {
               )}
             >
               <div className="overflow-hidden">
-                <p className="px-5 pb-5 text-base leading-7 text-ink-muted">
+                <p className="px-4 pb-4 sm:px-6 sm:pb-5 text-xs sm:text-sm md:text-base leading-relaxed text-ink-muted">
                   {item.answer}
                 </p>
               </div>

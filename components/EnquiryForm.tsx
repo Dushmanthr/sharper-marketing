@@ -319,6 +319,7 @@ export default function EnquiryForm({ defaultSubjectSlug }: EnquiryFormProps) {
         disabled={status === "sending"}
         variant="primary"
         size="lg"
+        className="w-full sm:w-auto"
       >
         {status === "sending" ? (
           <>

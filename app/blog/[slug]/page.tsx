@@ -95,7 +95,7 @@ export default async function BlogPostDetailPage({ params }: Params) {
       />
 
       <article className="py-10 sm:py-16">
-        <div className="container-page max-w-6xl">
+        <div className="container-page max-w-6xl 2xl:max-w-7xl">
           {/* Back link */}
           <div className="mb-6">
             <Link
@@ -108,7 +108,7 @@ export default async function BlogPostDetailPage({ params }: Params) {
 
           {/* Article Header Meta */}
           <div className="border-b border-navy-100 pb-8">
-            <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-ink-muted">
+            <div className="flex flex-wrap items-center gap-2.5 xs:gap-3 text-xs font-medium text-ink-muted">
               <span className="rounded-full bg-orange-50 border border-orange-200/80 px-3 py-1 font-semibold text-orange-600">
                 {post.category}
               </span>
@@ -121,7 +121,7 @@ export default async function BlogPostDetailPage({ params }: Params) {
               </span>
             </div>
 
-            <h1 className="mt-4 font-display text-2xl font-bold tracking-tight text-navy-950 sm:text-3xl lg:text-4xl leading-tight">
+            <h1 className="mt-4 font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-bold tracking-tight text-navy-950 leading-tight break-words">
               {post.title}
             </h1>
 
@@ -172,7 +172,7 @@ export default async function BlogPostDetailPage({ params }: Params) {
           </div>
 
           {/* 2-Column Content Layout (Article + Sticky Sidebar) */}
-          <div className="grid gap-12 lg:grid-cols-12">
+          <div className="grid gap-8 lg:gap-12 lg:grid-cols-12 2xl:gap-16">
             {/* Main Content Area */}
             <div className="lg:col-span-8">
               {/* Standfirst / Excerpt Lead */}

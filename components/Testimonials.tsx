@@ -152,7 +152,7 @@ export default function Testimonials({
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setIsPaused(false)}
-      className="relative overflow-hidden rounded-3xl border border-navy-100 bg-gradient-to-b from-surface-muted/80 via-white to-surface-muted/50 py-10 px-4 sm:py-14 sm:px-8 lg:px-10 shadow-xs"
+      className="relative overflow-hidden rounded-3xl border border-navy-100 bg-gradient-to-b from-surface-muted/80 via-white to-surface-muted/50 py-8 px-3.5 xs:py-10 xs:px-4 sm:py-14 sm:px-8 lg:px-10 2xl:py-18 2xl:px-14 shadow-xs"
       role="region"
       aria-label="Client testimonials carousel"
     >
@@ -163,10 +163,10 @@ export default function Testimonials({
             <ShieldCheck className="h-3.5 w-3.5 text-orange-500" />
             <span>Verified Client Evidence</span>
           </div>
-          <h2 className="mt-2.5 font-display text-2xl font-bold tracking-tight text-navy-950 sm:text-3xl lg:text-4xl">
+          <h2 className="mt-2.5 font-display text-xl xs:text-2xl font-bold tracking-tight text-navy-950 sm:text-3xl lg:text-4xl 2xl:text-5xl">
             Trusted by Growing Brands
           </h2>
-          <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-ink-muted">
+          <p className="mt-1.5 max-w-xl text-xs sm:text-sm leading-relaxed text-ink-muted">
             Explore authentic feedback and verified commercial outcomes across UK and international campaigns.
           </p>
         </div>
@@ -239,10 +239,10 @@ export default function Testimonials({
               <div
                 key={index}
                 ref={isFirst ? firstCardRef : undefined}
-                className="w-[84vw] max-w-[340px] sm:w-[380px] lg:w-[410px] shrink-0"
+                className="w-[86vw] max-w-[340px] sm:w-[380px] lg:w-[410px] 2xl:w-[450px] shrink-0"
               >
                 <div
-                  className={`group relative flex h-full flex-col justify-between rounded-3xl border bg-white p-6 sm:p-8 transition-all duration-300 ${
+                  className={`group relative flex h-full flex-col justify-between rounded-3xl border bg-white p-5 xs:p-6 sm:p-8 2xl:p-9 transition-all duration-300 ${
                     isCurrent
                       ? "border-orange-400 shadow-xl shadow-orange-500/5 ring-2 ring-orange-500/15"
                       : "border-navy-100 shadow-sm hover:border-orange-200 hover:shadow-md"

@@ -35,7 +35,7 @@ export default function CaseStudiesShowcase() {
               whileTap={{ scale: 0.96 }}
               transition={{ type: "spring", stiffness: 450, damping: 25 }}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`relative rounded-full px-4 py-2 text-xs font-semibold sm:text-sm transition-colors duration-200 ${
+              className={`relative rounded-full px-3.5 py-1.5 xs:px-4 xs:py-2 text-xs font-semibold sm:text-sm transition-colors duration-200 ${
                 isSelected ? "text-white" : "bg-white text-navy-700 hover:text-navy-900 border border-navy-100 hover:border-orange-300"
               }`}
             >
@@ -53,7 +53,7 @@ export default function CaseStudiesShowcase() {
       </div>
 
       {/* Grid with Framer Motion AnimatePresence */}
-      <motion.div layout className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <motion.div layout className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 2xl:gap-10">
         <AnimatePresence mode="popLayout">
           {filteredStudies.map((study, i) => (
             <motion.div

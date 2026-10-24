@@ -23,7 +23,7 @@ export default function ParallaxBand({
         backgroundImage: `linear-gradient(to bottom, rgba(13,23,48,0.82), rgba(13,23,48,0.82)), url(${src})`,
       }}
     >
-      <div className="container-page relative py-20 text-center text-white sm:py-24 lg:py-28">
+      <div className="container-page relative py-14 xs:py-16 sm:py-24 lg:py-28 2xl:py-32 text-center text-white">
         {children}
       </div>
     </section>
