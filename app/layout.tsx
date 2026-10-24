@@ -82,7 +82,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <Header />
-        <main id="main">{children}</main>
+        <main id="main" className="overflow-x-clip">{children}</main>
         <Footer />
       </body>
     </html>

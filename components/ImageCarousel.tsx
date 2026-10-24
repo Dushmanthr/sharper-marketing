@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion, type PanInfo } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
@@ -125,32 +124,6 @@ export default function ImageCarousel({ fill = false }: { fill?: boolean }) {
           );
         })}
       </motion.div>
-
-      <motion.button
-        type="button"
-        onClick={goToPrevious}
-        whileHover={{ scale: 1.12 }}
-        whileTap={{ scale: 0.88 }}
-        transition={{ type: "spring", stiffness: 450, damping: 25 }}
-        suppressHydrationWarning
-        className="absolute left-4 top-1/2 z-20 -translate-y-1/2 cursor-pointer rounded-full bg-white/80 p-2 text-navy-900 shadow-md backdrop-blur transition-colors hover:bg-white"
-        aria-label="Previous image"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </motion.button>
-
-      <motion.button
-        type="button"
-        onClick={goToNext}
-        whileHover={{ scale: 1.12 }}
-        whileTap={{ scale: 0.88 }}
-        transition={{ type: "spring", stiffness: 450, damping: 25 }}
-        suppressHydrationWarning
-        className="absolute right-4 top-1/2 z-20 -translate-y-1/2 cursor-pointer rounded-full bg-white/80 p-2 text-navy-900 shadow-md backdrop-blur transition-colors hover:bg-white"
-        aria-label="Next image"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </motion.button>
 
       <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-1">
         {slides.map((slide, index) => (
