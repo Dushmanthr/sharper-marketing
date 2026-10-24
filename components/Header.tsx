@@ -131,7 +131,7 @@ export default function Header() {
           <div
             className={clsx(
               "container-page flex items-center justify-between transition-all duration-300",
-              scrolled ? "h-20" : "h-24",
+              scrolled ? "h-16 lg:h-20" : "h-20 lg:h-24",
             )}
           >
             <Link href="/" className="flex items-center gap-2" aria-label={`${site.name} home`}>
@@ -143,7 +143,10 @@ export default function Header() {
                 priority
                 fetchPriority="high"
                 sizes="150px"
-                className={clsx("w-auto transition-all", scrolled ? "h-14" : "h-18")}
+                className={clsx(
+                  "w-auto transition-all duration-300",
+                  scrolled ? "h-10 sm:h-12 lg:h-14" : "h-12 sm:h-14 lg:h-18",
+                )}
               />
             </Link>
 
@@ -272,17 +275,32 @@ export default function Header() {
               </motion.button>
             </div>
 
-            {/* Mobile Toggle */}
-            <button
-              type="button"
-              suppressHydrationWarning
-              className="rounded-md p-2 text-navy-900 lg:hidden"
-              aria-label="Open menu"
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen((v) => !v)}
-            >
-              {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            {/* Mobile Actions: Book Consultation CTA + Hamburger Toggle */}
+            <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
+              <motion.button
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                type="button"
+                onClick={() => openConsultation("consultation")}
+                className="inline-flex items-center gap-1.5 rounded-full bg-orange-500 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-white shadow-md shadow-orange-500/20 transition-all hover:bg-orange-600 hover:shadow-orange-500/35 active:scale-95"
+                aria-label="Book Consultation"
+              >
+                <Calendar className="h-3.5 w-3.5 shrink-0" />
+                <span className="xs:hidden">Book</span>
+                <span className="hidden xs:inline">Book Consultation</span>
+              </motion.button>
+
+              <button
+                type="button"
+                suppressHydrationWarning
+                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg p-1.5 sm:p-2 text-navy-900 transition-colors hover:bg-navy-50"
+                aria-label="Open menu"
+                aria-expanded={mobileOpen}
+                onClick={() => setMobileOpen((v) => !v)}
+              >
+                {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
           </div>
         </div>
 
