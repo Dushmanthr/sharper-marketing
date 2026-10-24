@@ -220,6 +220,16 @@ export default function Header() {
               </Link>
 
               <Link
+                href="/blog"
+                className={clsx(
+                  "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  isActive("/blog") ? "text-orange-600 font-semibold" : "text-navy-800 hover:text-orange-600",
+                )}
+              >
+                Blogs
+              </Link>
+
+              <Link
                 href="/about"
                 className={clsx(
                   "rounded-md px-3 py-2 text-sm font-medium transition-colors",
@@ -359,6 +369,14 @@ export default function Header() {
                 className={clsx("border-b border-navy-50 py-3 text-base font-medium", isActive("/case-studies") ? "text-orange-600 font-semibold" : "text-navy-800")}
               >
                 Case Studies
+              </Link>
+
+              <Link
+                href="/blog"
+                onClick={() => setMobileOpen(false)}
+                className={clsx("border-b border-navy-50 py-3 text-base font-medium", isActive("/blog") ? "text-orange-600 font-semibold" : "text-navy-800")}
+              >
+                Blogs
               </Link>
 
               <Link
