@@ -8,7 +8,6 @@ import {
   TrendingUp,
   ShieldCheck,
   Quote,
-  Sparkles,
   MapPin,
   CheckCircle2,
 } from "lucide-react";
@@ -161,7 +160,7 @@ export default function Testimonials({
       <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between px-2 sm:px-4">
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50/80 px-3.5 py-1 text-xs font-semibold text-orange-700">
-            <Sparkles className="h-3.5 w-3.5 text-orange-500" />
+            <ShieldCheck className="h-3.5 w-3.5 text-orange-500" />
             <span>Verified Client Evidence</span>
           </div>
           <h2 className="mt-2.5 font-display text-2xl font-bold tracking-tight text-navy-950 sm:text-3xl lg:text-4xl">

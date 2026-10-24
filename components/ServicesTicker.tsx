@@ -9,7 +9,7 @@ import {
   BarChart3,
   Search,
   ArrowUpRight,
-  Sparkles,
+  CheckCircle2,
   type LucideIcon,
 } from "lucide-react";
 import { services, type Service } from "@/lib/site";
@@ -50,7 +50,7 @@ export default function ServicesTicker() {
         <div className="animate-ticker flex items-center">
           {/* First Half */}
           {tickerItems.map((service, index) => {
-            const Icon = iconMap[service.icon] || Sparkles;
+            const Icon = iconMap[service.icon] || CheckCircle2;
             return (
               <div
                 key={`half1-${service.slug}-${index}`}
@@ -89,7 +89,7 @@ export default function ServicesTicker() {
                   aria-hidden="true"
                 >
                   <span className="h-1 w-1 rounded-full bg-orange-400/40" />
-                  <Sparkles className="h-2.5 w-2.5 text-orange-400/60" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-400/70" />
                   <span className="h-1 w-1 rounded-full bg-orange-400/40" />
                 </div>
               </div>
@@ -98,7 +98,7 @@ export default function ServicesTicker() {
 
           {/* Second Half (Exact mirror clone for continuous seamless loop) */}
           {tickerItems.map((service, index) => {
-            const Icon = iconMap[service.icon] || Sparkles;
+            const Icon = iconMap[service.icon] || CheckCircle2;
             return (
               <div
                 key={`half2-${service.slug}-${index}`}
@@ -139,7 +139,7 @@ export default function ServicesTicker() {
                   aria-hidden="true"
                 >
                   <span className="h-1 w-1 rounded-full bg-orange-400/40" />
-                  <Sparkles className="h-2.5 w-2.5 text-orange-400/60" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-400/70" />
                   <span className="h-1 w-1 rounded-full bg-orange-400/40" />
                 </div>
               </div>

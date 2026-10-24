@@ -8,7 +8,7 @@ import {
   Share2,
   CheckCircle2,
   Quote,
-  Sparkles,
+  Lightbulb,
   ArrowRight,
   Phone,
   Bookmark,
@@ -247,7 +247,7 @@ export default async function BlogPostDetailPage({ params }: Params) {
                     {section.keyTakeaways && section.keyTakeaways.length > 0 && (
                       <div className="my-6 rounded-2xl border border-navy-200 bg-navy-900 text-white p-6 shadow-xs">
                         <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-orange-400 mb-3">
-                          <Sparkles className="h-3.5 w-3.5" /> Strategic Takeaways
+                          <Lightbulb className="h-3.5 w-3.5" /> Strategic Takeaways
                         </span>
                         <ul className="space-y-2.5">
                           {section.keyTakeaways.map((takeaway, tIdx) => (

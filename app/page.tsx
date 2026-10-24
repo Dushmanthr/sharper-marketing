@@ -4,7 +4,7 @@ import {
   ArrowRight,
   CheckCircle2,
   Phone,
-  Sparkles,
+  Workflow,
   Target,
   Globe2,
   TrendingUp,
@@ -284,7 +284,7 @@ export default function Home() {
             <div className="flex h-full flex-col justify-between rounded-3xl border border-navy-800 bg-navy-900 p-7 text-white shadow-md">
               <div>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-orange-400">
-                  <Sparkles className="h-3.5 w-3.5" /> A Clear Process
+                  <Workflow className="h-3.5 w-3.5" /> A Clear Process
                 </span>
                 <h3 className="mt-3 font-display text-lg font-bold text-white">
                   A Shared Goal

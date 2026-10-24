@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Building2, ShoppingBag, Stethoscope, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { caseStudies, type CaseStudy } from "@/lib/site";
 import CaseStudyCard from "./CaseStudyCard";

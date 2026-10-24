@@ -17,7 +17,6 @@ import {
   Trash2,
   Send,
   Loader2,
-  Sparkles,
   MessageSquare,
   AlertCircle,
 } from "lucide-react";

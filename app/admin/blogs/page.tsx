@@ -11,7 +11,6 @@ import {
   Edit,
   Trash2,
   Clock,
-  Sparkles,
   CheckCircle2,
   Tag,
   Loader2,

@@ -7,7 +7,6 @@ import Link from "next/link";
 import {
   ArrowLeft,
   Save,
-  Sparkles,
   Plus,
   Trash2,
   Eye,

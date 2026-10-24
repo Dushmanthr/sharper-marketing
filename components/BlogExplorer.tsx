@@ -8,7 +8,7 @@ import {
   Clock,
   ArrowRight,
   Calendar,
-  Sparkles,
+  Star,
   Tag,
   Filter,
 } from "lucide-react";
@@ -109,7 +109,7 @@ export default function BlogExplorer({ posts, categories }: BlogExplorerProps) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-950/70 via-transparent to-transparent" />
                   <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-navy-900/90 backdrop-blur-md px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-orange-400">
-                    <Sparkles className="h-3 w-3" /> Featured Insight
+                    <Star className="h-3 w-3" /> Featured Insight
                   </span>
                 </div>
 

@@ -8,7 +8,6 @@ import {
   Building2,
   Globe2,
   Clock,
-  Sparkles,
   Quote,
   ShieldCheck,
   ArrowRight,

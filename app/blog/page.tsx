@@ -1,4 +1,4 @@
-import { Sparkles, BookOpen, TrendingUp, Compass, ArrowRight } from "lucide-react";
+import { BookOpen, TrendingUp, Compass, ArrowRight } from "lucide-react";
 import Section, { SectionHeading } from "@/components/Section";
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";

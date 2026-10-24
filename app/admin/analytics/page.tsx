@@ -15,7 +15,6 @@ import {
   Printer,
   FileSpreadsheet,
   Layers,
-  Sparkles,
   Building,
   Mail,
   ChevronRight,

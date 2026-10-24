@@ -5,7 +5,6 @@ import {
   ArrowRight,
   Phone,
   CheckCircle2,
-  Sparkles,
   Layers,
   Target,
   ShieldAlert,

@@ -6,7 +6,7 @@ import {
   X,
   Calendar,
   FileText,
-  Sparkles,
+  BarChart3,
   CheckCircle2,
   Clock,
   Globe2,
@@ -285,7 +285,7 @@ Notes / Competitors: ${notes || "None"}`;
                   [
                     { id: "consultation", label: "Strategy Call", icon: Calendar },
                     { id: "quotation", label: "Request Quote", icon: FileText },
-                    { id: "audit", label: "Free Audit", icon: Sparkles },
+                    { id: "audit", label: "Free Audit", icon: BarChart3 },
                   ] as const
                 ).map((item) => {
                   const IconComponent = item.icon;
@@ -640,7 +640,7 @@ Notes / Competitors: ${notes || "None"}`;
                           </>
                         ) : (
                           <>
-                            Generate Free Marketing Review <Sparkles className="h-4 w-4" />
+                            Generate Free Marketing Review <BarChart3 className="h-4 w-4" />
                           </>
                         )}
                       </span>

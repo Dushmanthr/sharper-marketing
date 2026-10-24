@@ -12,7 +12,6 @@ import {
   Search,
   CheckCircle2,
   ArrowRight,
-  Sparkles,
 } from "lucide-react";
 import { services, type Service } from "@/lib/site";
 import ConsultationModal from "./ConsultationModal";
@@ -32,7 +31,7 @@ export default function ServicesExplorer() {
 
   const activeService: Service =
     services.find((s) => s.slug === activeSlug) || services[0];
-  const IconComponent = iconMap[activeService.icon] || Sparkles;
+  const IconComponent = iconMap[activeService.icon] || CheckCircle2;
 
   return (
     <div className="relative">
@@ -40,7 +39,7 @@ export default function ServicesExplorer() {
       <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-surface-muted border border-navy-100 max-w-4xl mx-auto mb-10">
         {services.map((service) => {
           const isSelected = activeSlug === service.slug;
-          const ServiceIcon = iconMap[service.icon] || Sparkles;
+          const ServiceIcon = iconMap[service.icon] || CheckCircle2;
           return (
             <motion.button
               key={service.slug}
