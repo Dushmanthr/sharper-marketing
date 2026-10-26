@@ -61,6 +61,7 @@ type SectionProps = {
   className?: string;
   /** background variant */
   tone?: "white" | "muted" | "navy";
+  spacing?: "default" | "tight" | "compact" | "none";
 };
 
 export default function Section({
@@ -68,12 +69,22 @@ export default function Section({
   id,
   className,
   tone = "white",
+  spacing = "default",
 }: SectionProps) {
+  const spacingClass =
+    spacing === "none"
+      ? "py-0"
+      : spacing === "compact"
+      ? "py-3 sm:py-4 md:py-6"
+      : spacing === "tight"
+      ? "py-6 sm:py-8 md:py-10 lg:py-12 2xl:py-14"
+      : "py-8 sm:py-10 md:py-14 lg:py-16 2xl:py-20";
+
   return (
     <section
       id={id}
       className={clsx(
-        "py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28",
+        spacingClass,
         tone === "muted" && "bg-surface-muted",
         tone === "navy" && "bg-navy-900 text-white",
         className,

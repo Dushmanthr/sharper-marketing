@@ -219,7 +219,7 @@ export default function Home() {
       <ServicesTicker />
 
       {/* 02. Recommended Supporting Section: Local Expertise. Global Perspective. */}
-      <section className="border-b border-navy-100 bg-surface-muted py-12 sm:py-16">
+      <section className="border-b border-navy-100 bg-surface-muted py-8 sm:py-10 md:py-12 lg:py-14">
         <div className="container-page">
           <div className="mx-auto max-w-4xl text-center">
             <Reveal>
@@ -262,7 +262,7 @@ export default function Home() {
         />
 
         {/* 5-Benefit Pillars */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 sm:mt-10 lg:mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {howWeHelp.map((item, i) => (
             <Reveal key={item.title} index={i} className="h-full">
               <div className="group flex h-full flex-col rounded-3xl border border-navy-100 bg-white p-7 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-orange-200 hover:shadow-lg">
@@ -314,19 +314,12 @@ export default function Home() {
           description="Click any service below to review what we deliver, how we approach the challenge, and the concrete outcomes you can expect for your business."
         />
 
-        <div className="mt-12">
+        <div className="mt-8 sm:mt-10 lg:mt-12">
           <ServicesExplorer />
         </div>
       </Section>
 
-      {/* 05. Interactive Growth Scorecard & Lead Review (Requested by Gobi) */}
-      <section className="py-12 sm:py-16">
-        <div className="container-page">
-         {/*  <InteractiveAudit /> */}
-        </div>
-      </section>
-
-      {/* 06. Why Partner with Sharper Labs Marketing? (Pages 3-4 of PDF) */}
+      {/* 05. Why Partner with Sharper Labs Marketing? (Pages 3-4 of PDF) */}
       <Section tone="white">
         <SectionHeading
           kicker="Why Partner With Us?"
@@ -334,7 +327,7 @@ export default function Home() {
           description="We combine strategic thinking with execution discipline. Here is how our approach delivers tangible commercial progress."
         />
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 sm:mt-10 lg:mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {whyPartnerPillars.map((p, i) => (
             <Reveal key={p.title} index={i} className="h-full">
               <div className="flex h-full flex-col rounded-3xl border border-navy-100 bg-surface-muted/50 p-7 transition-all hover:bg-white hover:shadow-md">
@@ -353,8 +346,8 @@ export default function Home() {
         </div>
 
         {/* Our Commitment Banner */}
-        <Reveal className="mt-12">
-          <div className="rounded-3xl border border-orange-200 bg-gradient-to-r from-orange-50 via-white to-orange-50 p-8 text-center sm:p-10">
+        <Reveal className="mt-8 sm:mt-10">
+          <div className="rounded-3xl border border-orange-200 bg-gradient-to-r from-orange-50 via-white to-orange-50 p-6 text-center sm:p-8 2xl:p-10">
             <span className="text-xs font-semibold uppercase tracking-wider text-orange-600">
               Our Core Commitment
             </span>
@@ -373,9 +366,9 @@ export default function Home() {
         </Reveal>
       </Section>
 
-      {/* 07. Featured Case Studies (Management 5-Point Standard) */}
+      {/* 06. Featured Case Studies (Management 5-Point Standard) */}
       <Section tone="muted">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-8 sm:mb-10">
           <div>
             <span className="kicker">Case Studies</span>
             <h2 className="mt-2 font-display text-3xl font-bold text-navy-900 sm:text-4xl">
@@ -425,7 +418,7 @@ export default function Home() {
           title="Frequently Asked Questions"
           description="Everything you need to know about working with a UK-based digital marketing consultancy."
         />
-        <div className="mt-10">
+        <div className="mt-6 sm:mt-8">
           <FAQ items={homeFaqs} />
         </div>
       </Section>

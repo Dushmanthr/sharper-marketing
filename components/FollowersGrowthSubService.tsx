@@ -36,14 +36,14 @@ export default function FollowersGrowthSubService({
   return (
     <section
       id="followers-growth"
-      className="relative scroll-mt-24 overflow-hidden rounded-3xl sm:rounded-4xl border-2 border-orange-200/90 bg-linear-to-b from-orange-50/40 via-white to-amber-50/20 p-5 xs:p-7 sm:p-10 lg:p-12 shadow-xl shadow-orange-500/5 transition-all"
+      className="relative scroll-mt-24 overflow-hidden rounded-3xl sm:rounded-4xl border-2 border-orange-200/90 bg-linear-to-b from-orange-50/40 via-white to-amber-50/20 p-5 xs:p-6 sm:p-8 lg:p-10 2xl:p-12 shadow-xl shadow-orange-500/5 transition-all"
     >
       {/* Background glow orb accents */}
       <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-orange-400/10 blur-3xl" />
       <div className="pointer-events-none absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-amber-400/10 blur-3xl" />
 
       {/* Top Banner & Header */}
-      <div className="relative z-10 flex flex-col items-start justify-between gap-4 border-b border-orange-100 pb-7 sm:pb-8 lg:flex-row lg:items-end">
+      <div className="relative z-10 flex flex-col items-start justify-between gap-4 border-b border-orange-100 pb-5 sm:pb-6 lg:flex-row lg:items-end">
         <div className="max-w-2xl">
           <div className="inline-flex items-center gap-2 rounded-full border border-orange-300 bg-orange-100/70 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-orange-800 shadow-xs">
             <Flame className="h-3.5 w-3.5 text-orange-600 animate-pulse" />
@@ -84,7 +84,7 @@ export default function FollowersGrowthSubService({
       </div>
 
       {/* Platform Filter Tabs (Mobile & Tablet Ergonomics) */}
-      <div className="relative z-10 mt-6 sm:mt-8 flex items-center justify-start xs:justify-center overflow-x-auto pb-2 scrollbar-none">
+      <div className="relative z-10 mt-4 sm:mt-6 flex items-center justify-start xs:justify-center overflow-x-auto pb-1.5 scrollbar-none">
         <div className="inline-flex items-center gap-1 sm:gap-2 rounded-2xl bg-navy-900/5 p-1 border border-navy-100">
           <button
             type="button"
@@ -137,7 +137,7 @@ export default function FollowersGrowthSubService({
       </div>
 
       {/* 3 Dedicated Platform Cards Grid */}
-      <div className="relative z-10 mt-6 grid gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="relative z-10 mt-4 sm:mt-5 grid gap-4 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
         <AnimatePresence mode="popLayout">
           {filteredPlatforms.map((platform) => {
             const isFB = platform.slug === "facebook";
@@ -256,7 +256,7 @@ export default function FollowersGrowthSubService({
       </div>
 
       {/* Trust & Methodology Pillars Bar */}
-      <div className="relative z-10 mt-8 sm:mt-10 rounded-2xl border border-navy-100 bg-white/90 p-5 sm:p-7 backdrop-blur-xs">
+      <div className="relative z-10 mt-5 sm:mt-7 rounded-2xl border border-navy-100 bg-white/90 p-4 sm:p-6 backdrop-blur-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-50 pb-4">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-orange-600">
@@ -293,7 +293,7 @@ export default function FollowersGrowthSubService({
       </div>
 
       {/* Bottom Conversion Action Strip */}
-      <div className="relative z-10 mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 rounded-2xl bg-navy-950 p-5 xs:p-6 sm:p-7 text-white shadow-lg">
+      <div className="relative z-10 mt-5 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 rounded-2xl bg-navy-950 p-4 xs:p-5 sm:p-6 text-white shadow-lg">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-orange-400">
             Start Scaling Followers Today

@@ -36,13 +36,13 @@ export default function CurvedHero({
 
       {/* Text column */}
       <div className="container-page relative">
-        <div className="max-w-xl py-10 xs:py-14 sm:py-16 lg:max-w-[46%] lg:py-28 xl:py-32 2xl:max-w-[48%] 2xl:py-36">
+        <div className="max-w-xl py-8 xs:py-10 sm:py-12 lg:max-w-[46%] lg:py-20 xl:py-24 2xl:max-w-[48%] 2xl:py-28">
           {children}
         </div>
       </div>
 
       {/* Media: rounded card on mobile, full-height curved bleed on desktop. */}
-      <div className="relative mx-3 xs:mx-5 sm:mx-8 mb-8 sm:mb-12 h-64 xs:h-72 sm:h-96 overflow-hidden rounded-3xl border border-white/10 shadow-2xl lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:mb-0 lg:h-full lg:w-1/2 lg:overflow-visible lg:rounded-none lg:border-0 lg:shadow-none">
+      <div className="relative mx-3 xs:mx-5 sm:mx-8 mb-6 sm:mb-8 h-64 xs:h-72 sm:h-96 overflow-hidden rounded-3xl border border-white/10 shadow-2xl lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:mb-0 lg:h-full lg:w-1/2 lg:overflow-visible lg:rounded-none lg:border-0 lg:shadow-none">
         <div className="hero-curve-media relative h-full w-full overflow-hidden">
           {media}
         </div>

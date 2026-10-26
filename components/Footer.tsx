@@ -46,7 +46,7 @@ export default function Footer() {
     <footer className="bg-navy-950 text-white">
       {/* Top CTA strip */}
       <div className="border-b border-white/10">
-        <div className="container-page flex flex-col items-center gap-4 py-8 text-center md:flex-row md:justify-between md:text-left">
+        <div className="container-page flex flex-col items-center gap-4 py-6 sm:py-7 text-center md:flex-row md:justify-between md:text-left">
           <div>
             <p className="font-display text-lg xs:text-xl font-semibold">Ready to make your marketing work harder?</p>
             <p className="text-xs xs:text-sm text-navy-200 mt-1">
@@ -71,7 +71,7 @@ export default function Footer() {
       </div>
 
       {/* Main footer */}
-      <div className="container-page grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-5 2xl:gap-14 2xl:py-16">
+      <div className="container-page grid gap-8 sm:gap-10 py-8 sm:py-10 md:py-12 lg:grid-cols-5 2xl:gap-12 2xl:py-14">
         <div className="lg:col-span-2">
           <Image
             src="/logo/footer-logo.png"

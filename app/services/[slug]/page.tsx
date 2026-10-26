@@ -215,13 +215,20 @@ export default async function ServicePage({ params }: Params) {
 
       {/* Dedicated Highlighted Sub-Services Showcase */}
       {service.subServices && service.subServices.length > 0 && (
-        <Section tone="white">
+        <Section tone="white" className="pb-0 sm:pb-0 md:pb-0 lg:pb-0 2xl:pb-0">
           <FollowersGrowthSubService subService={service.subServices[0]} />
         </Section>
       )}
 
       {/* Approach & What You Can Expect Split */}
-      <Section tone="white">
+      <Section
+        tone="white"
+        className={
+          service.subServices && service.subServices.length > 0
+            ? "pt-6 sm:pt-8 md:pt-10 lg:pt-12"
+            : undefined
+        }
+      >
         <div className="grid gap-12 lg:grid-cols-2 items-start">
           {/* Our Approach */}
           <div>
@@ -327,9 +334,9 @@ export default async function ServicePage({ params }: Params) {
       )}
 
       {/* Other services selector */}
-      <Section tone="white">
+      <Section tone="white" spacing="tight">
         <SectionHeading kicker="Explore More" title="Other Core Services" />
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <div className="mt-6 sm:mt-8 flex flex-wrap justify-center gap-3">
           {services
             .filter((s) => s.slug !== service.slug)
             .map((s) => (
@@ -351,7 +358,7 @@ export default async function ServicePage({ params }: Params) {
           title={`${service.short}: Frequently Asked Questions`}
           description="Everything you need to know about working with us on this discipline."
         />
-        <div className="mt-10 max-w-3xl mx-auto">
+        <div className="mt-6 sm:mt-8 max-w-3xl mx-auto">
           <FAQ items={service.faqs} />
         </div>
       </Section>

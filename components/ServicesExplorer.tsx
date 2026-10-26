@@ -36,7 +36,7 @@ export default function ServicesExplorer() {
   return (
     <div className="relative">
       {/* Category Tabs */}
-      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-1.5 rounded-2xl bg-surface-muted border border-navy-100 max-w-5xl mx-auto mb-8 sm:mb-10">
+      <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-1.5 rounded-2xl bg-surface-muted border border-navy-100 max-w-5xl mx-auto mb-5 sm:mb-7">
         {services.map((service) => {
           const isSelected = activeSlug === service.slug;
           const ServiceIcon = iconMap[service.icon] || CheckCircle2;
@@ -80,7 +80,7 @@ export default function ServicesExplorer() {
         >
           <div className="grid lg:grid-cols-12">
             {/* Left Column: Hook, Lead, What We Do */}
-            <div className="p-5 xs:p-7 sm:p-9 lg:col-span-7 lg:p-12">
+            <div className="p-5 xs:p-6 sm:p-8 lg:col-span-7 lg:p-10 2xl:p-12">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-orange-600">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-50 text-orange-600">
                   <IconComponent className="h-4 w-4" />
@@ -97,7 +97,7 @@ export default function ServicesExplorer() {
               </p>
 
               {/* What We Do Grid */}
-              <div className="mt-8">
+              <div className="mt-6 sm:mt-7">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-navy-400">
                     What We Do
@@ -152,7 +152,7 @@ export default function ServicesExplorer() {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-8 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-3">
+              <div className="mt-6 sm:mt-7 flex flex-col xs:flex-row flex-wrap items-stretch xs:items-center gap-3">
                 <motion.button
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97 }}
@@ -180,7 +180,7 @@ export default function ServicesExplorer() {
             </div>
 
             {/* Right Column: Approach & What You Can Expect */}
-            <div className="border-t border-navy-100 bg-navy-900 p-5 xs:p-7 sm:p-9 text-white lg:col-span-5 lg:border-t-0 lg:border-l lg:p-12">
+            <div className="border-t border-navy-100 bg-navy-900 p-5 xs:p-6 sm:p-8 text-white lg:col-span-5 lg:border-t-0 lg:border-l lg:p-10 2xl:p-12">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xs">
                 <span className="text-xs font-semibold uppercase tracking-wider text-orange-400">
                   Our Approach
@@ -190,7 +190,7 @@ export default function ServicesExplorer() {
                 </p>
               </div>
 
-              <div className="mt-8">
+              <div className="mt-5 sm:mt-6">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-orange-400">
                   What You Can Expect
                 </h4>
@@ -206,7 +206,7 @@ export default function ServicesExplorer() {
                 </ul>
               </div>
 
-              <div className="mt-8 rounded-2xl border border-orange-500/20 bg-orange-500/10 p-5">
+              <div className="mt-5 sm:mt-6 rounded-2xl border border-orange-500/20 bg-orange-500/10 p-4 sm:p-5">
                 <p className="text-xs font-medium text-orange-200">
                   💡 Serving businesses across the UK and internationally with transparent communication and measurable KPIs.
                 </p>

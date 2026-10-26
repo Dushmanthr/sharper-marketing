@@ -52,7 +52,7 @@ export default function ServicesPage() {
           description="Our six core services cover brand marketing, website design and development, social media, PPC, data analysis, and organic SEO. This allows us to coordinate different marketing activities around shared business goals across UK and international markets."
         />
 
-        <div className="mt-12">
+        <div className="mt-8 sm:mt-10 lg:mt-12">
           <ServicesExplorer />
         </div>
       </Section>
@@ -65,7 +65,7 @@ export default function ServicesPage() {
           description="Deep-dive into each service to review what customers receive, our 4-phase delivery framework, and the concrete outcomes you can expect."
         />
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 sm:mt-10 lg:mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((service, i) => (
             <ServiceCard key={service.slug} service={service} index={i} />
           ))}
@@ -73,7 +73,7 @@ export default function ServicesPage() {
       </Section>
 
       {/* Interactive Growth Calculator */}
-      <section className="py-12 sm:py-16">
+      <section className="py-8 sm:py-10 md:py-12">
         <div className="container-page">
           <InteractiveAudit />
         </div>

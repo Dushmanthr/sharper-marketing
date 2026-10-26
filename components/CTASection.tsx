@@ -11,9 +11,9 @@ type CTASectionProps = {
 /** High-impact conversion band for Sharper Labs Marketing. */
 export default function CTASection({ title, description }: CTASectionProps) {
   return (
-    <section className="py-16 sm:py-20">
+    <section className="py-8 sm:py-10 md:py-12 2xl:py-16">
       <div className="container-page">
-        <Reveal className="overflow-hidden rounded-3xl bg-navy-950 px-5 py-10 xs:px-6 xs:py-12 sm:px-12 sm:py-16 2xl:py-20 2xl:px-16 text-center text-white shadow-2xl border border-navy-800">
+        <Reveal className="overflow-hidden rounded-3xl bg-navy-950 px-5 py-8 xs:px-6 xs:py-10 sm:px-10 sm:py-12 2xl:py-14 2xl:px-14 text-center text-white shadow-2xl border border-navy-800">
           <h2 className="mx-auto max-w-2xl font-display text-xl xs:text-2xl font-bold leading-tight sm:text-3xl 2xl:text-4xl">
             {title ?? (
               <>

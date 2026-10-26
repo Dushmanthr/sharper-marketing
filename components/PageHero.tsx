@@ -27,7 +27,7 @@ export default function PageHero({ title, crumbs = [], showTagline = true }: Pag
         aria-hidden
         className="absolute -right-16 bottom-0 h-48 w-48 rotate-12 border border-white/10"
       />
-      <div className="container-page relative py-12 sm:py-16 lg:py-20 xl:py-24 text-center">
+      <div className="container-page relative py-8 sm:py-10 md:py-12 lg:py-14 2xl:py-16 text-center">
         <h1 className="text-2xl xs:text-3xl font-bold sm:text-4xl lg:text-5xl 2xl:text-6xl tracking-tight break-words max-w-5xl mx-auto leading-tight">
           {title}
         </h1>
