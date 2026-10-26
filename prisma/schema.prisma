@@ -12,8 +12,7 @@ datasource db {
 // ----------------------------------------------------
 enum AdminRole {
   SUPER_ADMIN
-  EDITOR
-  CONSULTANT
+  MODERATOR
 }
 
 model AdminUser {
@@ -21,7 +20,7 @@ model AdminUser {
   email        String        @unique
   passwordHash String
   name         String
-  role         AdminRole     @default(EDITOR)
+  role         AdminRole     @default(MODERATOR)
   isActive     Boolean       @default(true)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, hasAdminPanelAccess, isSuperAdmin } from "@/lib/auth";
 import type { PostStatus } from "@prisma/client";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -10,6 +10,10 @@ export async function GET(req: Request, context: RouteContext) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!hasAdminPanelAccess(session)) {
+    return NextResponse.json({ error: "Forbidden: Access denied." }, { status: 403 });
   }
 
   const { id } = await context.params;
@@ -37,6 +41,10 @@ export async function PUT(req: Request, context: RouteContext) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!hasAdminPanelAccess(session)) {
+    return NextResponse.json({ error: "Forbidden: Access denied." }, { status: 403 });
   }
 
   const { id } = await context.params;
@@ -116,6 +124,13 @@ export async function DELETE(req: Request, context: RouteContext) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!isSuperAdmin(session)) {
+    return NextResponse.json(
+      { error: "Forbidden: Only Super Admin can delete blog articles." },
+      { status: 403 }
+    );
   }
 
   const { id } = await context.params;

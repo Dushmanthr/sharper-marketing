@@ -5,11 +5,27 @@ import { cookies } from "next/headers";
 const JWT_SECRET = process.env.JWT_SECRET || "sharper_marketing_jwt_secret_fallback_key";
 const COOKIE_NAME = "sharper_admin_token";
 
+export type AdminRoleType = "SUPER_ADMIN" | "MODERATOR";
+
 export interface AdminTokenPayload {
   id: string;
   email: string;
   name: string;
-  role: string;
+  role: AdminRoleType | string;
+}
+
+/**
+ * Checks whether the given session belongs to a Super Admin.
+ */
+export function isSuperAdmin(session: AdminTokenPayload | null | undefined): boolean {
+  return session?.role === "SUPER_ADMIN";
+}
+
+/**
+ * Checks whether the given session belongs to either Super Admin or Moderator.
+ */
+export function hasAdminPanelAccess(session: AdminTokenPayload | null | undefined): boolean {
+  return session?.role === "SUPER_ADMIN" || session?.role === "MODERATOR";
 }
 
 /**

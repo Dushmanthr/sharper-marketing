@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, hasAdminPanelAccess } from "@/lib/auth";
 import type { PostStatus } from "@prisma/client";
 
 export async function GET(req: Request) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!hasAdminPanelAccess(session)) {
+    return NextResponse.json({ error: "Forbidden: Access denied." }, { status: 403 });
   }
 
   const { searchParams } = new URL(req.url);
@@ -46,6 +50,10 @@ export async function POST(req: Request) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!hasAdminPanelAccess(session)) {
+    return NextResponse.json({ error: "Forbidden: Access denied." }, { status: 403 });
   }
 
   try {

@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, isSuperAdmin } from "@/lib/auth";
 
 export async function GET(req: Request) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!isSuperAdmin(session)) {
+    return NextResponse.json(
+      { error: "Forbidden: Super Admin access required to view business analytics." },
+      { status: 403 }
+    );
   }
 
   const { searchParams } = new URL(req.url);
