@@ -96,23 +96,56 @@ export default function ServicesExplorer() {
                 {activeService.hook || activeService.excerpt}
               </p>
 
-              {/* What We Do 4-Grid */}
+              {/* What We Do Grid */}
               <div className="mt-8">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-navy-400">
-                  What We Do
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-navy-400">
+                    What We Do
+                  </h4>
+                  {activeService.subServices && activeService.subServices.length > 0 && (
+                    <span className="text-[11px] font-bold text-orange-600">
+                      ⚡ Includes Highlighted Sub-Service
+                    </span>
+                  )}
+                </div>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   {activeService.whatWeDo.map((item, idx) => (
                     <div
                       key={idx}
-                      className="rounded-2xl border border-navy-50 bg-surface-muted/60 p-4 transition-all hover:border-orange-200 hover:bg-orange-50/30"
+                      className={`rounded-2xl p-4 transition-all ${
+                        item.highlighted
+                          ? "border-2 border-orange-400 bg-linear-to-br from-orange-50/80 via-white to-amber-50/40 shadow-xs sm:col-span-2"
+                          : "border border-navy-50 bg-surface-muted/60 hover:border-orange-200 hover:bg-orange-50/30"
+                      }`}
                     >
-                      <h5 className="font-display text-sm font-semibold text-navy-900">
-                        {item.title}
-                      </h5>
+                      <div className="flex items-center justify-between gap-2">
+                        <h5 className="font-display text-sm font-bold text-navy-900">
+                          {item.title}
+                        </h5>
+                        {item.highlighted && (
+                          <span className="rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-xs">
+                            ★ Featured Sub-Service
+                          </span>
+                        )}
+                      </div>
                       <p className="mt-1 text-xs leading-relaxed text-ink-muted">
                         {item.description}
                       </p>
+                      {item.platforms && (
+                        <div className="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-orange-100/70 pt-2">
+                          <span className="text-[10px] font-bold text-navy-500 uppercase mr-0.5">
+                            Channels:
+                          </span>
+                          {item.platforms.map((p) => (
+                            <span
+                              key={p}
+                              className="rounded-md bg-white border border-navy-100 px-1.5 py-0.5 text-[10px] font-semibold text-navy-800"
+                            >
+                              {p}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

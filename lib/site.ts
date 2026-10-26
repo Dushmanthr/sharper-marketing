@@ -80,6 +80,34 @@ export type ServiceCapability = {
   title: string;
   description: string;
   icon?: string;
+  highlighted?: boolean;
+  badge?: string;
+  platforms?: string[];
+  subServiceId?: string;
+};
+
+export type PlatformGrowthDetail = {
+  name: string;
+  slug: "facebook" | "instagram" | "tiktok";
+  shortName: string; // "FB", "IG", "TikTok"
+  badge: string;
+  focus: string;
+  strategy: string;
+  deliverables: string[];
+  metricLabel: string;
+  metricValue: string;
+};
+
+export type SubService = {
+  id: string;
+  title: string;
+  shortTitle: string;
+  badge: string;
+  lead: string;
+  description: string;
+  platforms: PlatformGrowthDetail[];
+  growthPillars: { title: string; description: string; icon: string }[];
+  deliverables: string[];
 };
 
 export type Service = {
@@ -100,6 +128,8 @@ export type Service = {
   hook?: string;
   /** Structured "What We Do" capabilities */
   whatWeDo: ServiceCapability[];
+  /** Optional highlighted sub-services */
+  subServices?: SubService[];
   /** Structured "Our Approach" narrative */
   approach: string;
   /** Structured "What You Can Expect" deliverables */
@@ -362,6 +392,16 @@ export const services: Service[] = [
     ],
     whatWeDo: [
       {
+        title: "Social Media Followers Increasing",
+        description:
+          "Targeted organic and paid follower growth campaigns across Facebook, Instagram, and TikTok to build real, engaged audiences that convert.",
+        icon: "TrendingUp",
+        highlighted: true,
+        badge: "Highlighted Sub-Service",
+        platforms: ["Facebook", "Instagram", "TikTok"],
+        subServiceId: "followers-increasing",
+      },
+      {
         title: "Social Media Strategy",
         description: "Identify suitable platforms, audience priorities, content themes, and commercial objectives.",
         icon: "Target",
@@ -387,10 +427,108 @@ export const services: Service[] = [
         icon: "BarChart3",
       },
     ],
+    subServices: [
+      {
+        id: "followers-increasing",
+        title: "Social Media Followers Increasing",
+        shortTitle: "Followers Increasing",
+        badge: "Highlighted Sub-Service",
+        lead: "Strategic Audience Growth Across Facebook, Instagram & TikTok",
+        description:
+          "Accelerate your brand presence with authentic, algorithm-aligned follower growth. We combine hyper-targeted paid acceleration, high-impact viral content formats, and community engagement loops across Facebook, Instagram, and TikTok to turn casual scrollers into loyal followers and paying customers.",
+        platforms: [
+          {
+            name: "Facebook",
+            slug: "facebook",
+            shortName: "FB",
+            badge: "Community & Trust",
+            focus: "Page Follower Scale & Community Building",
+            strategy:
+              "Leverage Facebook's granular demographic graph and group ecosystems to attract high-intent followers who actively engage with your posts and business announcements.",
+            deliverables: [
+              "Targeted Meta Ads follower campaigns with cost-per-follower optimization",
+              "Local and international audience interest mapping",
+              "Community group leadership and cross-post amplification",
+              "Zero bot policy: 100% genuine user profiles",
+            ],
+            metricLabel: "Follower Quality",
+            metricValue: "High-Intent & Real",
+          },
+          {
+            name: "Instagram",
+            slug: "instagram",
+            shortName: "IG",
+            badge: "Visual Reach & Reels",
+            focus: "Reels Viral Velocity & High-Aesthetic Grid Authority",
+            strategy:
+              "Harness Instagram's recommendation algorithm with trending Reels audio, aesthetic grid curation, and strategic hashtag clusters to attract daily profile visitors and convert them into followers.",
+            deliverables: [
+              "Trending Reels content pacing and hook optimization",
+              "Curated bio and highlight funnels engineered for follow conversion",
+              "Strategic influencer co-collaborations and audio trend riding",
+              "Consistent follower retention through engaging Stories and Carousels",
+            ],
+            metricLabel: "Engagement Rate",
+            metricValue: "3.2x Average",
+          },
+          {
+            name: "TikTok",
+            slug: "tiktok",
+            shortName: "TikTok",
+            badge: "Viral Discovery",
+            focus: "FYP Algorithm Acceleration & Trend Capitalization",
+            strategy:
+              "Engineer short-form video hooks designed to trigger TikTok's For You Page (FYP) algorithm, driving rapid organic discoverability and explosive follower increases among Gen Z and Millennial demographics.",
+            deliverables: [
+              "Hook-first 7-to-15 second video storytelling frameworks",
+              "Real-time trending sound, meme, and challenge adaptation",
+              "Comment section engagement loops that boost algorithmic distribution",
+              "Audience transition funnels from viral viewers to active followers",
+            ],
+            metricLabel: "Discovery Velocity",
+            metricValue: "Rapid FYP Scale",
+          },
+        ],
+        growthPillars: [
+          {
+            title: "100% Real & Policy-Safe",
+            description:
+              "Strictly compliant with Meta and TikTok guidelines. No fake bots, pods, or shortcuts that risk shadowbans.",
+            icon: "ShieldAlert",
+          },
+          {
+            title: "Audience That Actually Converts",
+            description:
+              "We don't chase vanity numbers. We target users matching your ideal customer profile who engage and buy.",
+            icon: "Target",
+          },
+          {
+            title: "Cross-Platform Synergies",
+            description:
+              "Synchronize your Facebook, Instagram, and TikTok presence so momentum on one channel compounds the others.",
+            icon: "Layers",
+          },
+          {
+            title: "Transparent Growth Analytics",
+            description:
+              "Track weekly follower velocity, audience demographics, retention rate, and cost efficiency with clear reporting.",
+            icon: "BarChart3",
+          },
+        ],
+        deliverables: [
+          "Platform-specific follower growth roadmap for Facebook, Instagram, and TikTok",
+          "Comprehensive profile optimization (bio, call-to-action, highlights, link-in-bio)",
+          "Viral content hooks, trending templates, and posting schedule calendar",
+          "Audience retention tactics to ensure followers stay engaged over time",
+          "Monthly follower quality audit and demographic breakdown reporting",
+        ],
+      },
+    ],
     approach:
       "We assess your current presence, define content priorities, plan and publish agreed content, and review results regularly. Future content is refined based on audience response and performance data.",
     whatYouCanExpect: [
       "A more consistent, professional social media presence",
+      "Accelerated follower growth across Facebook, Instagram, and TikTok",
       "Content aligned with your brand voice and target audience",
       "Better understanding of audience engagement and content resonance",
       "Increased relevant website traffic and qualified enquiries",
@@ -398,6 +536,7 @@ export const services: Service[] = [
     ],
     benefits: [
       "Active presence on the platforms that matter to your buyers",
+      "Accelerated follower increase on Facebook, Instagram, and TikTok",
       "Increased brand awareness and authority in your sector",
       "Expert content planning, creation, and distribution",
       "Audience growth on LinkedIn, Instagram, Facebook, and beyond",
@@ -405,9 +544,19 @@ export const services: Service[] = [
     ],
     faqs: [
       {
+        question: "How does your Social Media Followers Increasing sub-service work?",
+        answer:
+          "Our follower increasing service focuses on 100% authentic, algorithm-safe audience growth across Facebook, Instagram, and TikTok. We never use fake bots or engagement pods. Instead, we combine high-converting content formats (such as trending Reels and TikToks), targeted Meta growth campaigns, profile optimization, and community engagement to attract real followers who are genuinely interested in your brand.",
+      },
+      {
+        question: "Can I choose specific platforms like only Instagram, Facebook, or TikTok?",
+        answer:
+          "Yes. While cross-platform synergy between Facebook, Instagram, and TikTok produces the fastest compounding growth, we can tailor your follower growth strategy to individual platforms based on where your target buyers are most active.",
+      },
+      {
         question: "Which social media platforms do you manage?",
         answer:
-          "We manage all major platforms, including LinkedIn, Instagram, Facebook, X (Twitter), and YouTube. We focus on the channels where your buyers actually spend time.",
+          "We manage all major platforms, including LinkedIn, Instagram, Facebook, TikTok, X (Twitter), and YouTube. We focus on the channels where your buyers actually spend time.",
       },
       {
         question: "Do you handle B2B social media as well as B2C?",

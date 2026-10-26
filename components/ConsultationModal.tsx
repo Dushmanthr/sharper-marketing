@@ -134,7 +134,10 @@ export default function ConsultationModal({
     let messageBody = "";
 
     if (tab === "consultation") {
-      const srv = services.find((s) => s.slug === selectedService)?.title || selectedService;
+      const srv =
+        selectedService === "social-media-followers"
+          ? "Social Media Followers Increasing (FB, IG, TikTok)"
+          : services.find((s) => s.slug === selectedService)?.title || selectedService;
       subject = `Strategy Consultation Request: ${srv}`;
       messageBody = `CONSULTATION BOOKING DETAILS:
 Service: ${srv}
@@ -384,6 +387,9 @@ Notes / Competitors: ${notes || "None"}`;
                               {s.title}
                             </option>
                           ))}
+                          <option value="social-media-followers">
+                            Social Media Followers Increasing (FB, IG, TikTok)
+                          </option>
                           <option value="full-growth-strategy">Full Cross-Channel Growth Strategy</option>
                         </select>
                       </div>

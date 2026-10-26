@@ -2,7 +2,7 @@
  * Brand social icons as inline SVG. lucide-react removed brand/logo glyphs, so
  * we ship our own minimal paths (single-colour, inherit currentColor).
  */
-type IconName = "facebook" | "instagram" | "youtube" | "linkedin";
+type IconName = "facebook" | "instagram" | "youtube" | "linkedin" | "tiktok";
 
 const paths: Record<IconName, React.ReactNode> = {
   facebook: (
@@ -14,6 +14,9 @@ const paths: Record<IconName, React.ReactNode> = {
       <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2" />
       <circle cx="17.5" cy="6.5" r="1.3" />
     </>
+  ),
+  tiktok: (
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 3 15.66 6.34 6.34 0 0 0 9.34 22a6.34 6.34 0 0 0 6.33-6.34V8.5a8.2 8.2 0 0 0 4.92 1.63V6.69Z" />
   ),
   youtube: (
     <path d="M23 12s0-3.2-.41-4.74a2.5 2.5 0 0 0-1.76-1.77C19.29 5.07 12 5.07 12 5.07s-7.29 0-8.83.42A2.5 2.5 0 0 0 1.41 7.26C1 8.8 1 12 1 12s0 3.2.41 4.74a2.5 2.5 0 0 0 1.76 1.77c1.54.42 8.83.42 8.83.42s7.29 0 8.83-.42a2.5 2.5 0 0 0 1.76-1.77C23 15.2 23 12 23 12ZM9.75 15.02V8.98L15.5 12l-5.75 3.02Z" />

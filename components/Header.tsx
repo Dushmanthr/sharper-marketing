@@ -188,16 +188,30 @@ export default function Header() {
                 >
                   <div className="grid gap-1 rounded-2xl border border-navy-100 bg-white p-3 shadow-xl">
                     {services.map((s) => (
-                      <Link
-                        key={s.slug}
-                        href={`/services/${s.slug}`}
-                        className="group/item flex items-center justify-between rounded-lg px-3 py-2 text-sm text-navy-800 transition-colors hover:bg-orange-50 hover:text-orange-700"
-                      >
-                        <span className="font-medium">{s.short}</span>
-                        <span className="text-xs text-orange-500 opacity-0 transition-opacity group-hover/item:opacity-100">
-                          Explore →
-                        </span>
-                      </Link>
+                      <div key={s.slug} className="flex flex-col">
+                        <Link
+                          href={`/services/${s.slug}`}
+                          className="group/item flex items-center justify-between rounded-lg px-3 py-2 text-sm text-navy-800 transition-colors hover:bg-orange-50 hover:text-orange-700"
+                        >
+                          <span className="font-medium">{s.short}</span>
+                          <span className="text-xs text-orange-500 opacity-0 transition-opacity group-hover/item:opacity-100">
+                            Explore →
+                          </span>
+                        </Link>
+                        {s.subServices && s.subServices.length > 0 && (
+                          <Link
+                            href={`/services/${s.slug}#followers-growth`}
+                            className="ml-3 mb-1 flex items-center justify-between rounded-md bg-orange-50/70 px-2.5 py-1 text-xs text-orange-700 transition-colors hover:bg-orange-100 border border-orange-100"
+                          >
+                            <span className="font-semibold flex items-center gap-1.5">
+                              <span className="text-orange-500 font-bold">↳</span> Followers Increasing
+                            </span>
+                            <span className="text-[10px] font-bold text-orange-600 bg-white/80 px-1 py-0.2 rounded border border-orange-200">
+                              FB · IG · TikTok
+                            </span>
+                          </Link>
+                        )}
+                      </div>
                     ))}
                     <div className="mt-2 border-t border-navy-50 pt-2">
                       <Link
@@ -369,14 +383,29 @@ export default function Header() {
                 </div>
                 <div className="mt-2 flex flex-col gap-1.5 pl-2">
                   {services.map((s) => (
-                    <Link
-                      key={s.slug}
-                      href={`/services/${s.slug}`}
-                      onClick={() => setMobileOpen(false)}
-                      className="py-1 text-sm text-navy-700 hover:text-orange-600"
-                    >
-                      {s.short}
-                    </Link>
+                    <div key={s.slug} className="flex flex-col">
+                      <Link
+                        href={`/services/${s.slug}`}
+                        onClick={() => setMobileOpen(false)}
+                        className="py-1 text-sm text-navy-700 hover:text-orange-600"
+                      >
+                        {s.short}
+                      </Link>
+                      {s.subServices && s.subServices.length > 0 && (
+                        <Link
+                          href={`/services/${s.slug}#followers-growth`}
+                          onClick={() => setMobileOpen(false)}
+                          className="ml-2 mb-1 inline-flex items-center justify-between rounded-lg bg-orange-50/80 px-2.5 py-1 text-xs font-semibold text-orange-700 hover:bg-orange-100 border border-orange-100"
+                        >
+                          <span className="flex items-center gap-1">
+                            <span className="text-orange-500 font-bold">↳</span> Followers Increasing
+                          </span>
+                          <span className="text-[10px] font-bold text-orange-600 bg-white/90 px-1.5 py-0.2 rounded border border-orange-200">
+                            FB · IG · TikTok
+                          </span>
+                        </Link>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>

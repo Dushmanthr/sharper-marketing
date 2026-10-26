@@ -35,21 +35,32 @@ export default function ServiceCard({ service, index = 0 }: { service: Service; 
           </span>
         </div>
         <div className="flex flex-1 flex-col p-5 xs:p-6 sm:p-7 2xl:p-8">
-          <h3 className="font-display text-base xs:text-lg font-bold text-navy-900 group-hover:text-orange-600 transition-colors">
-            {service.short}
-          </h3>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-display text-base xs:text-lg font-bold text-navy-900 group-hover:text-orange-600 transition-colors">
+              {service.short}
+            </h3>
+            {service.subServices && service.subServices.length > 0 && (
+              <span className="shrink-0 rounded-full bg-orange-100 border border-orange-200 px-2 py-0.5 text-[10px] font-bold text-orange-700">
+                + Followers Growth
+              </span>
+            )}
+          </div>
           <p className="mt-2 flex-1 text-xs sm:text-sm leading-relaxed text-ink-muted">
             {service.excerpt}
           </p>
 
           {service.whatWeDo && (
             <div className="mt-4 flex flex-wrap gap-1.5 border-t border-navy-50 pt-3">
-              {service.whatWeDo.slice(0, 2).map((item, i) => (
+              {service.whatWeDo.slice(0, 3).map((item, i) => (
                 <span
                   key={i}
-                  className="rounded-md bg-navy-50 px-2 py-0.5 text-[11px] font-medium text-navy-700"
+                  className={`rounded-md px-2 py-0.5 text-[11px] ${
+                    item.highlighted
+                      ? "bg-orange-50 text-orange-700 border border-orange-200 font-semibold"
+                      : "bg-navy-50 text-navy-700 font-medium"
+                  }`}
                 >
-                  {item.title}
+                  {item.highlighted ? `★ ${item.title}` : item.title}
                 </span>
               ))}
             </div>

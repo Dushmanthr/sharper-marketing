@@ -121,7 +121,10 @@ export default function EnquiryForm({ defaultSubjectSlug }: EnquiryFormProps) {
     }
 
     const country = getCountryByIso(values.countryIso);
-    const serviceLabel = services.find((s) => s.slug === values.subject)?.short || "General enquiry";
+    const serviceLabel =
+      values.subject === "social-media-followers"
+        ? "Social Media: Followers Increasing (FB, IG, TikTok)"
+        : services.find((s) => s.slug === values.subject)?.short || "General enquiry";
     const data: EnquiryData = {
       type: "CONTACT",
       name: values.name.trim(),
@@ -273,6 +276,9 @@ export default function EnquiryForm({ defaultSubjectSlug }: EnquiryFormProps) {
                 {s.short}
               </option>
             ))}
+            <option value="social-media-followers">
+              Social Media: Followers Increasing (FB, IG, TikTok)
+            </option>
             <option value="general">General enquiry</option>
           </select>
         </div>

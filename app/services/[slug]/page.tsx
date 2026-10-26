@@ -20,6 +20,7 @@ import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
 import FAQ from "@/components/FAQ";
 import CaseStudyCard from "@/components/CaseStudyCard";
+import FollowersGrowthSubService from "@/components/FollowersGrowthSubService";
 import { services, getService, site, caseStudies } from "@/lib/site";
 import { pageMeta, breadcrumbJsonLd, serviceJsonLd, faqJsonLd } from "@/lib/seo";
 
@@ -145,24 +146,79 @@ export default async function ServicePage({ params }: Params) {
           description={`Comprehensive, data-driven ${service.short} capabilities delivered by our UK and international marketing consultants.`}
         />
 
-        <div className="mt-12 grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4 2xl:gap-8">
+        <div className="mt-12 grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:gap-8">
           {service.whatWeDo.map((item, idx) => (
             <Reveal key={idx} index={idx} className="h-full">
-              <div className="flex h-full flex-col rounded-3xl border border-navy-100 bg-white p-5 sm:p-6 2xl:p-7 shadow-xs transition-all hover:border-orange-300 hover:shadow-md">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-50 text-orange-600 font-bold">
-                  {idx + 1}
-                </span>
-                <h3 className="mt-4 font-display text-base font-bold text-navy-900">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-muted">
-                  {item.description}
-                </p>
+              <div
+                className={`flex h-full flex-col justify-between rounded-3xl p-5 sm:p-6 2xl:p-7 transition-all ${
+                  item.highlighted
+                    ? "border-2 border-orange-400 bg-linear-to-b from-orange-50/70 via-white to-amber-50/30 shadow-md ring-2 ring-orange-200/50 hover:shadow-xl"
+                    : "border border-navy-100 bg-white shadow-xs hover:border-orange-300 hover:shadow-md"
+                }`}
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span
+                      className={`flex h-11 w-11 items-center justify-center rounded-xl font-bold ${
+                        item.highlighted
+                          ? "bg-orange-500 text-white shadow-xs"
+                          : "bg-orange-50 text-orange-600"
+                      }`}
+                    >
+                      {idx + 1}
+                    </span>
+                    {item.highlighted && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-orange-800">
+                        ★ Highlighted Sub-Service
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="mt-4 font-display text-base font-bold text-navy-900">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-ink-muted">
+                    {item.description}
+                  </p>
+
+                  {item.platforms && (
+                    <div className="mt-4 flex flex-wrap gap-1.5 border-t border-navy-100/60 pt-3">
+                      {item.platforms.map((p) => (
+                        <span
+                          key={p}
+                          className="inline-flex items-center gap-1 rounded-md bg-navy-50 px-2 py-0.5 text-[11px] font-semibold text-navy-700"
+                        >
+                          {p}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {item.subServiceId && (
+                  <div className="mt-5 pt-3 border-t border-orange-200/60">
+                    <a
+                      href={`#${item.subServiceId}`}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-orange-600 hover:text-orange-700 transition-colors"
+                    >
+                      <span>Explore Growth Blueprint</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </a>
+                  </div>
+                )}
               </div>
             </Reveal>
           ))}
         </div>
       </Section>
+
+      {/* Dedicated Highlighted Sub-Services Showcase */}
+      {service.subServices && service.subServices.length > 0 && (
+        <Section tone="white">
+          <FollowersGrowthSubService subService={service.subServices[0]} />
+        </Section>
+      )}
 
       {/* Approach & What You Can Expect Split */}
       <Section tone="white">
