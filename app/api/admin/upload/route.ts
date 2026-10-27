@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import { getSessionAdmin, hasAdminPanelAccess } from "@/lib/auth";
 import fs from "fs/promises";
 import path from "path";
