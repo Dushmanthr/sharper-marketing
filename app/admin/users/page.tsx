@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 import {
   Users,
   UserPlus,
@@ -59,6 +60,11 @@ export default function AdminUsersPage() {
   const [resetModalUser, setResetModalUser] = useState<AdminUserItem | null>(null);
   const [resettingPassword, setResettingPassword] = useState(false);
   const [resetPassValue, setResetPassValue] = useState("");
+
+  // Custom confirmation modal states
+  const [deleteConfirmUser, setDeleteConfirmUser] = useState<AdminUserItem | null>(null);
+  const [statusConfirmUser, setStatusConfirmUser] = useState<AdminUserItem | null>(null);
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
   // Action loading IDs
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
@@ -161,39 +167,51 @@ export default function AdminUsersPage() {
     }
   };
 
-  // Toggle Active/Inactive Status
-  const handleToggleActive = async (user: AdminUserItem) => {
+  // Trigger Status Toggle Modal
+  const promptToggleActive = (user: AdminUserItem) => {
+    setError("");
+    const isSoleSuperAdmin = user.role === "SUPER_ADMIN" && superAdminsCount <= 1;
     if (user.id === currentAdminId) {
-      alert("You cannot deactivate your own Super Admin account.");
+      setError("You cannot deactivate your own Super Admin account.");
       return;
     }
+    if (isSoleSuperAdmin) {
+      setError("Cannot deactivate the only active Super Admin account. At least one active Super Admin must exist.");
+      return;
+    }
+    setStatusConfirmUser(user);
+  };
 
-    const nextStatus = !user.isActive;
-    const confirmMsg = nextStatus
-      ? `Re-activate login access for "${user.name}"?`
-      : `Deactivate login access for "${user.name}"? They will not be able to sign in.`;
+  // Execute Status Toggle from Modal
+  const executeToggleActive = async () => {
+    if (!statusConfirmUser) return;
+    const target = statusConfirmUser;
+    const nextStatus = !target.isActive;
 
-    if (!confirm(confirmMsg)) return;
-
-    setActionLoadingId(user.id);
+    setConfirmLoading(true);
+    setActionLoadingId(target.id);
     try {
-      const res = await fetch(`/api/admin/users/${user.id}`, {
+      const res = await fetch(`/api/admin/users/${target.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isActive: nextStatus }),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || "Failed to update account status.");
       }
 
       setUsers((prev) =>
-        prev.map((u) => (u.id === user.id ? { ...u, isActive: nextStatus } : u))
+        prev.map((u) => (u.id === target.id ? { ...u, isActive: nextStatus } : u))
       );
+      setSuccessMsg(`Status for "${target.name}" updated to ${nextStatus ? "Active" : "Disabled"}.`);
+      setTimeout(() => setSuccessMsg(""), 5000);
+      setStatusConfirmUser(null);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Failed to update status.");
+      setError(err instanceof Error ? err.message : "Failed to update status.");
     } finally {
+      setConfirmLoading(false);
       setActionLoadingId(null);
     }
   };
@@ -204,6 +222,7 @@ export default function AdminUsersPage() {
     if (!resetModalUser || !resetPassValue) return;
 
     setResettingPassword(true);
+    setError("");
     try {
       const res = await fetch(`/api/admin/users/${resetModalUser.id}`, {
         method: "PATCH",
@@ -211,8 +230,8 @@ export default function AdminUsersPage() {
         body: JSON.stringify({ password: resetPassValue }),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || "Failed to reset password.");
       }
 
@@ -222,39 +241,52 @@ export default function AdminUsersPage() {
       setResetModalUser(null);
       setResetPassValue("");
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Error resetting password.");
+      setError(err instanceof Error ? err.message : "Error resetting password.");
     } finally {
       setResettingPassword(false);
     }
   };
 
-  // Delete User Handler
-  const handleDeleteUser = async (user: AdminUserItem) => {
+  // Trigger Delete Modal
+  const promptDeleteUser = (user: AdminUserItem) => {
+    setError("");
+    const isSoleSuperAdmin = user.role === "SUPER_ADMIN" && superAdminsCount <= 1;
     if (user.id === currentAdminId) {
-      alert("You cannot delete your own Super Admin account.");
+      setError("You cannot delete your own Super Admin account.");
       return;
     }
+    if (isSoleSuperAdmin) {
+      setError("Cannot delete the only remaining Super Admin account. At least one Super Admin must exist.");
+      return;
+    }
+    setDeleteConfirmUser(user);
+  };
 
-    const confirmMsg = `Are you sure you want to permanently delete the account for "${user.name}" (${user.email})? This action cannot be undone.`;
-    if (!confirm(confirmMsg)) return;
+  // Execute Delete from Modal
+  const executeDeleteUser = async () => {
+    if (!deleteConfirmUser) return;
+    const target = deleteConfirmUser;
 
-    setActionLoadingId(user.id);
+    setConfirmLoading(true);
+    setActionLoadingId(target.id);
     try {
-      const res = await fetch(`/api/admin/users/${user.id}`, {
+      const res = await fetch(`/api/admin/users/${target.id}`, {
         method: "DELETE",
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         throw new Error(data.error || "Failed to delete account.");
       }
 
-      setUsers((prev) => prev.filter((u) => u.id !== user.id));
-      setSuccessMsg(`Account "${user.name}" deleted successfully.`);
+      setUsers((prev) => prev.filter((u) => u.id !== target.id));
+      setSuccessMsg(`Account "${target.name}" has been permanently removed.`);
       setTimeout(() => setSuccessMsg(""), 5000);
+      setDeleteConfirmUser(null);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Error deleting account.");
+      setError(err instanceof Error ? err.message : "Error deleting account.");
     } finally {
+      setConfirmLoading(false);
       setActionLoadingId(null);
     }
   };
@@ -471,29 +503,38 @@ export default function AdminUsersPage() {
 
                       {/* Status Toggle */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
-                        <button
-                          onClick={() => handleToggleActive(user)}
-                          disabled={isCurrent || isBusy}
-                          title={
-                            isCurrent
-                              ? "Cannot change self status"
-                              : user.isActive
-                              ? "Click to deactivate"
-                              : "Click to activate"
-                          }
-                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold transition-colors ${
-                            user.isActive
-                              ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
-                              : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                          } ${isCurrent ? "cursor-not-allowed opacity-90" : "cursor-pointer"}`}
-                        >
-                          <span
-                            className={`h-1.5 w-1.5 rounded-full ${
-                              user.isActive ? "bg-emerald-500 animate-pulse" : "bg-slate-400"
-                            }`}
-                          />
-                          {user.isActive ? "Active" : "Disabled"}
-                        </button>
+                        {(() => {
+                          const isSoleSuperAdmin = user.role === "SUPER_ADMIN" && superAdminsCount <= 1;
+                          const cannotToggle = isCurrent || isSoleSuperAdmin;
+
+                          return (
+                            <button
+                              onClick={() => promptToggleActive(user)}
+                              disabled={cannotToggle || isBusy}
+                              title={
+                                isCurrent
+                                  ? "Cannot deactivate your own account"
+                                  : isSoleSuperAdmin
+                                  ? "Cannot deactivate the sole Super Admin account"
+                                  : user.isActive
+                                  ? "Click to deactivate account"
+                                  : "Click to activate account"
+                              }
+                              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold transition-colors ${
+                                user.isActive
+                                  ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200"
+                                  : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                              } ${cannotToggle ? "cursor-not-allowed opacity-80" : "cursor-pointer"}`}
+                            >
+                              <span
+                                className={`h-1.5 w-1.5 rounded-full ${
+                                  user.isActive ? "bg-emerald-500 animate-pulse" : "bg-slate-400"
+                                }`}
+                              />
+                              {user.isActive ? "Active" : "Disabled"}
+                            </button>
+                          );
+                        })()}
                       </td>
 
                       {/* Articles Count */}
@@ -525,21 +566,41 @@ export default function AdminUsersPage() {
                             <KeyRound className="h-4 w-4" />
                           </button>
 
-                          {/* Delete Button */}
-                          {!isCurrent && (
-                            <button
-                              onClick={() => handleDeleteUser(user)}
-                              disabled={isBusy}
-                              title="Delete Account"
-                              className="rounded-lg p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer disabled:opacity-50"
-                            >
-                              {isBusy ? (
-                                <Loader2 className="h-4 w-4 animate-spin text-red-500" />
-                              ) : (
-                                <Trash2 className="h-4 w-4" />
-                              )}
-                            </button>
-                          )}
+                          {/* Delete Button / Protected State */}
+                          {(() => {
+                            const isSoleSuperAdmin = user.role === "SUPER_ADMIN" && superAdminsCount <= 1;
+                            const cannotDelete = isCurrent || isSoleSuperAdmin;
+
+                            if (cannotDelete) {
+                              return (
+                                <span
+                                  title={
+                                    isCurrent
+                                      ? "Your account (cannot delete own account)"
+                                      : "Sole Super Admin account (protected root account)"
+                                  }
+                                  className="inline-flex items-center justify-center rounded-lg p-1.5 text-slate-300 cursor-not-allowed"
+                                >
+                                  <Lock className="h-4 w-4" />
+                                </span>
+                              );
+                            }
+
+                            return (
+                              <button
+                                onClick={() => promptDeleteUser(user)}
+                                disabled={isBusy}
+                                title="Delete Account"
+                                className="rounded-lg p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer disabled:opacity-50"
+                              >
+                                {isBusy ? (
+                                  <Loader2 className="h-4 w-4 animate-spin text-red-500" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4" />
+                                )}
+                              </button>
+                            );
+                          })()}
                         </div>
                       </td>
                     </tr>
@@ -771,6 +832,64 @@ export default function AdminUsersPage() {
           </div>
         </div>
       )}
+
+      {/* Confirm Delete User Modal */}
+      <ConfirmModal
+        isOpen={Boolean(deleteConfirmUser)}
+        title={`Delete Account: ${deleteConfirmUser?.name || ""}`}
+        description={
+          <div className="space-y-2">
+            <p>
+              Are you sure you want to permanently delete the account for{" "}
+              <strong className="text-navy-900">{deleteConfirmUser?.name}</strong> (
+              <span className="font-mono text-slate-700">{deleteConfirmUser?.email}</span>)?
+            </p>
+            {deleteConfirmUser?._count?.blogs && deleteConfirmUser._count.blogs > 0 ? (
+              <p className="rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-[11px] text-amber-800">
+                Note: This user has authored {deleteConfirmUser._count.blogs} published article(s).
+                Their articles will be safely reassigned to your Super Admin account so public content is preserved.
+              </p>
+            ) : null}
+            <p className="text-[11px] text-red-600 font-semibold">
+              This action cannot be undone.
+            </p>
+          </div>
+        }
+        confirmText="Yes, Delete Account"
+        variant="danger"
+        loading={confirmLoading}
+        onConfirm={executeDeleteUser}
+        onClose={() => setDeleteConfirmUser(null)}
+      />
+
+      {/* Confirm Toggle Status Modal */}
+      <ConfirmModal
+        isOpen={Boolean(statusConfirmUser)}
+        title={
+          statusConfirmUser?.isActive
+            ? `Deactivate Account: ${statusConfirmUser?.name || ""}`
+            : `Re-activate Account: ${statusConfirmUser?.name || ""}`
+        }
+        description={
+          statusConfirmUser?.isActive ? (
+            <p>
+              Deactivating <strong className="text-navy-900">{statusConfirmUser?.name}</strong> will
+              immediately revoke their ability to sign in to the admin panel. All existing published articles
+              will remain untouched.
+            </p>
+          ) : (
+            <p>
+              Re-activating <strong className="text-navy-900">{statusConfirmUser?.name}</strong> will
+              restore their ability to sign in with their existing credentials.
+            </p>
+          )
+        }
+        confirmText={statusConfirmUser?.isActive ? "Yes, Deactivate" : "Yes, Re-activate"}
+        variant={statusConfirmUser?.isActive ? "warning" : "info"}
+        loading={confirmLoading}
+        onConfirm={executeToggleActive}
+        onClose={() => setStatusConfirmUser(null)}
+      />
     </div>
   );
 }

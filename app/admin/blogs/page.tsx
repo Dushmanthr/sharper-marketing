@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 import {
   FileText,
   PlusCircle,
@@ -41,6 +42,10 @@ export default function AdminBlogsPage() {
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
 
+  // Confirm delete modal state
+  const [deletePostTarget, setDeletePostTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
   useEffect(() => {
     fetchPosts();
 
@@ -70,18 +75,20 @@ export default function AdminBlogsPage() {
     }
   }
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Are you sure you want to delete "${title}"? This cannot be undone.`)) {
-      return;
-    }
+  const executeDeletePost = async () => {
+    if (!deletePostTarget) return;
+    setDeleteLoading(true);
 
     try {
-      const res = await fetch(`/api/admin/blogs/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/blogs/${deletePostTarget.id}`, { method: "DELETE" });
       if (res.ok) {
-        setPosts((prev) => prev.filter((p) => p.id !== id));
+        setPosts((prev) => prev.filter((p) => p.id !== deletePostTarget.id));
+        setDeletePostTarget(null);
       }
     } catch (err) {
       console.error("Failed to delete post:", err);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -278,9 +285,9 @@ export default function AdminBlogsPage() {
                         </Link>
                         {userRole === "SUPER_ADMIN" && (
                           <button
-                            onClick={() => handleDelete(post.id, post.title)}
+                            onClick={() => setDeletePostTarget({ id: post.id, title: post.title })}
                             title="Delete Article"
-                            className="rounded-lg p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                            className="rounded-lg p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -294,6 +301,28 @@ export default function AdminBlogsPage() {
           </table>
         </div>
       </div>
+
+      {/* Confirm Delete Blog Modal */}
+      <ConfirmModal
+        isOpen={Boolean(deletePostTarget)}
+        title="Delete Article"
+        description={
+          <div className="space-y-2">
+            <p>
+              Are you sure you want to permanently delete the article{" "}
+              <strong className="text-navy-900">&ldquo;{deletePostTarget?.title}&rdquo;</strong>?
+            </p>
+            <p className="text-[11px] text-red-600 font-semibold">
+              This article will be immediately removed from the live website and search index. This action cannot be undone.
+            </p>
+          </div>
+        }
+        confirmText="Yes, Delete Article"
+        variant="danger"
+        loading={deleteLoading}
+        onConfirm={executeDeletePost}
+        onClose={() => setDeletePostTarget(null)}
+      />
     </div>
   );
 }
