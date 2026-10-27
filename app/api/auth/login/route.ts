@@ -33,14 +33,14 @@ export async function POST(req: Request) {
     }
 
     // Portal role validation if a specific portal was requested
-    if (portalRole === "SUPER_ADMIN" && admin.role !== "SUPER_ADMIN") {
+    if (portalRole === "SUPER_ADMIN" && (admin.role as string) !== "SUPER_ADMIN") {
       return NextResponse.json(
         { error: "Access denied: This account does not have Super Admin privileges. Please use the Moderator Portal." },
         { status: 403 }
       );
     }
 
-    if (portalRole === "MODERATOR" && admin.role !== "MODERATOR") {
+    if (portalRole === "MODERATOR" && (admin.role as string) !== "MODERATOR") {
       return NextResponse.json(
         { error: "Access denied: This account has Super Admin privileges. Please use the Super Admin Portal." },
         { status: 403 }
