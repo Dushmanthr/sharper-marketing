@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import ConfirmModal from "@/components/admin/ConfirmModal";
 import {
   Inbox,
   Search,
@@ -61,6 +62,10 @@ export default function AdminEnquiriesPage() {
   const [noteContent, setNoteContent] = useState("");
   const [savingNote, setSavingNote] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+
+  // Confirm delete enquiry state
+  const [deleteEnquiryId, setDeleteEnquiryId] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     fetchEnquiries();
@@ -153,25 +158,27 @@ export default function AdminEnquiriesPage() {
     }
   };
 
-  // Delete enquiry
-  const handleDeleteEnquiry = async (enquiryId: string) => {
-    if (!confirm("Are you sure you want to delete this enquiry? This action cannot be undone.")) {
-      return;
-    }
+  // Delete enquiry execution from modal
+  const executeDeleteEnquiry = async () => {
+    if (!deleteEnquiryId) return;
+    setDeleteLoading(true);
 
     try {
-      const res = await fetch(`/api/admin/enquiries/${enquiryId}`, {
+      const res = await fetch(`/api/admin/enquiries/${deleteEnquiryId}`, {
         method: "DELETE",
       });
 
       if (res.ok) {
-        setEnquiries((prev) => prev.filter((e) => e.id !== enquiryId));
-        if (activeEnquiry?.id === enquiryId) {
+        setEnquiries((prev) => prev.filter((e) => e.id !== deleteEnquiryId));
+        if (activeEnquiry?.id === deleteEnquiryId) {
           setActiveEnquiry(null);
         }
+        setDeleteEnquiryId(null);
       }
     } catch (err) {
       console.error("Failed to delete enquiry:", err);
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -577,14 +584,14 @@ export default function AdminEnquiriesPage() {
               {/* Bottom Actions */}
               <div className="flex items-center justify-between border-t border-slate-200 pt-6">
                 <button
-                  onClick={() => handleDeleteEnquiry(activeEnquiry.id)}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:text-red-800"
+                  onClick={() => setDeleteEnquiryId(activeEnquiry.id)}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:text-red-800 transition-colors cursor-pointer"
                 >
                   <Trash2 className="h-3.5 w-3.5" /> Delete Enquiry
                 </button>
                 <button
                   onClick={() => setActiveEnquiry(null)}
-                  className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                  className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
                 >
                   Close Drawer
                 </button>
@@ -593,6 +600,29 @@ export default function AdminEnquiriesPage() {
           </div>
         </div>
       )}
+
+      {/* Confirm Delete Enquiry Modal */}
+      <ConfirmModal
+        isOpen={Boolean(deleteEnquiryId)}
+        title="Delete Customer Lead Enquiry"
+        description={
+          <div className="space-y-2">
+            <p>
+              Are you sure you want to permanently delete this enquiry from{" "}
+              <strong className="text-navy-900">{activeEnquiry?.name}</strong> (
+              <span className="font-mono text-slate-700">{activeEnquiry?.email}</span>)?
+            </p>
+            <p className="text-[11px] text-red-600 font-semibold">
+              All associated internal consultation notes and history will be permanently deleted. This action cannot be undone.
+            </p>
+          </div>
+        }
+        confirmText="Yes, Delete Enquiry"
+        variant="danger"
+        loading={deleteLoading}
+        onConfirm={executeDeleteEnquiry}
+        onClose={() => setDeleteEnquiryId(null)}
+      />
     </div>
   );
 }

@@ -96,6 +96,7 @@ export default function AdminDashboardPage() {
   const quotationCount = counts["QUOTATION"] || 0;
   const consultationCount = counts["CONSULTATION"] || 0;
   const publishedBlogsCount = blogs.filter((b) => b.status === "PUBLISHED").length;
+  const pendingBlogsCount = blogs.filter((b) => b.status === "PENDING_APPROVAL").length;
 
   const getTypeBadge = (type: string) => {
     switch (type) {
@@ -163,6 +164,31 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
+      {/* Review Alert Banner for Super Admin */}
+      {pendingBlogsCount > 0 && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-3xl border border-amber-300 bg-amber-50/90 p-5 shadow-xs">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-200 text-amber-800 shadow-2xs">
+              <Clock className="h-5 w-5 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-navy-900">
+                {pendingBlogsCount} {pendingBlogsCount === 1 ? "Article" : "Articles"} Awaiting Your Approval
+              </h3>
+              <p className="mt-0.5 text-xs text-slate-600">
+                Moderators submitted content ready for review. Approve them to publish live on the main website.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/admin/blogs"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700 transition-colors self-start sm:self-auto shadow-xs shrink-0"
+          >
+            Open Review Queue &rarr;
+          </Link>
+        </div>
+      )}
+
       {/* KPI Metric Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Inquiries */}
@@ -229,7 +255,14 @@ export default function AdminDashboardPage() {
           <p className="mt-3 font-display text-3xl font-bold text-navy-900">
             {loading ? "..." : publishedBlogsCount}
           </p>
-          <p className="mt-2 text-xs text-slate-500">Live SEO & AEO strategic articles</p>
+          {pendingBlogsCount > 0 ? (
+            <div className="mt-2 flex items-center gap-1 text-xs font-bold text-amber-700">
+              <Clock className="h-3.5 w-3.5 animate-pulse" />
+              <span>{pendingBlogsCount} pending approval</span>
+            </div>
+          ) : (
+            <p className="mt-2 text-xs text-slate-500">Live SEO & strategic articles</p>
+          )}
         </div>
       </div>
 
@@ -331,8 +364,16 @@ export default function AdminDashboardPage() {
               >
                 <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
                   <span className="font-semibold text-orange-600">{post.category}</span>
-                  <span className="rounded-full bg-emerald-100 px-2 py-0.2 text-[10px] font-bold text-emerald-800">
-                    {post.status}
+                  <span
+                    className={`rounded-full px-2 py-0.2 text-[10px] font-bold ${
+                      post.status === "PUBLISHED"
+                        ? "bg-emerald-100 text-emerald-800"
+                        : post.status === "PENDING_APPROVAL"
+                        ? "bg-amber-100 text-amber-800 font-bold"
+                        : "bg-slate-100 text-slate-700"
+                    }`}
+                  >
+                    {post.status === "PENDING_APPROVAL" ? "Pending" : post.status}
                   </span>
                 </div>
                 <h3 className="font-display text-xs font-bold text-navy-900 line-clamp-1 group-hover:text-orange-600 transition-colors">

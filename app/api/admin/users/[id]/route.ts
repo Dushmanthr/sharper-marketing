@@ -33,12 +33,25 @@ export async function PATCH(req: Request, context: RouteContext) {
       return NextResponse.json({ error: "User not found." }, { status: 404 });
     }
 
-    // Prevent self-deactivation
-    if (id === session.id && isActive === false) {
-      return NextResponse.json(
-        { error: "You cannot deactivate your own Super Admin account." },
-        { status: 400 }
-      );
+    // Prevent self-deactivation or deactivating the only active Super Admin
+    if (isActive === false) {
+      if (id === session.id) {
+        return NextResponse.json(
+          { error: "You cannot deactivate your own Super Admin account." },
+          { status: 400 }
+        );
+      }
+      if (targetUser.role === "SUPER_ADMIN") {
+        const activeSuperAdmins = await prisma.adminUser.count({
+          where: { role: "SUPER_ADMIN", isActive: true },
+        });
+        if (activeSuperAdmins <= 1) {
+          return NextResponse.json(
+            { error: "Cannot deactivate the only active Super Admin account. At least one active Super Admin must exist." },
+            { status: 400 }
+          );
+        }
+      }
     }
 
     const updateData: {
@@ -132,6 +145,19 @@ export async function DELETE(req: Request, context: RouteContext) {
 
     if (!targetUser) {
       return NextResponse.json({ error: "User not found." }, { status: 404 });
+    }
+
+    // Prevent deleting the only remaining Super Admin
+    if (targetUser.role === "SUPER_ADMIN") {
+      const superAdminCount = await prisma.adminUser.count({
+        where: { role: "SUPER_ADMIN" },
+      });
+      if (superAdminCount <= 1) {
+        return NextResponse.json(
+          { error: "Cannot delete the only remaining Super Admin account. At least one Super Admin must exist." },
+          { status: 400 }
+        );
+      }
     }
 
     // If the user has authored blogs, reassign authored blogs to current Super Admin so content is preserved

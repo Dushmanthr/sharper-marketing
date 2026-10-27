@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { getSessionAdmin, hasAdminPanelAccess } from "@/lib/auth";
+import { getSessionAdmin, hasAdminPanelAccess, isSuperAdmin } from "@/lib/auth";
 import type { PostStatus } from "@prisma/client";
 
 export async function GET(req: Request) {
@@ -19,7 +19,9 @@ export async function GET(req: Request) {
   const search = searchParams.get("search");
 
   const where: Record<string, unknown> = {};
-  if (status) where.status = status;
+  if (status && status !== ("ALL" as unknown)) {
+    where.status = status;
+  }
   if (search) {
     where.OR = [
       { title: { contains: search } },
@@ -29,17 +31,40 @@ export async function GET(req: Request) {
   }
 
   try {
-    const posts = await prisma.blogPost.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      include: {
-        author: {
-          select: { name: true, email: true },
+    const [posts, statusGroups] = await Promise.all([
+      prisma.blogPost.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        include: {
+          author: {
+            select: { id: true, name: true, email: true, role: true },
+          },
         },
-      },
+      }),
+      prisma.blogPost.groupBy({
+        by: ["status"],
+        _count: { id: true },
+      }).catch(() => []),
+    ]);
+
+    const counts = {
+      total: 0,
+      published: 0,
+      pending: 0,
+      draft: 0,
+      archived: 0,
+    };
+
+    statusGroups.forEach((g: { status: string; _count: { id: number } }) => {
+      const count = g._count.id;
+      counts.total += count;
+      if (g.status === "PUBLISHED") counts.published = count;
+      else if (g.status === "PENDING_APPROVAL") counts.pending = count;
+      else if (g.status === "DRAFT") counts.draft = count;
+      else if (g.status === "ARCHIVED") counts.archived = count;
     });
 
-    return NextResponse.json({ posts });
+    return NextResponse.json({ posts, counts });
   } catch (error) {
     console.error("[Admin Blogs GET Error]:", error);
     return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
@@ -89,6 +114,22 @@ export async function POST(req: Request) {
       );
     }
 
+    const superAdminUser = isSuperAdmin(session);
+    let finalStatus: PostStatus = (status as PostStatus) || "DRAFT";
+
+    if (!superAdminUser) {
+      // Moderators cannot directly publish articles to the main site.
+      // If a moderator clicks "Submit for Approval" or passes PUBLISHED,
+      // route it strictly to PENDING_APPROVAL.
+      if (finalStatus === "PUBLISHED" || finalStatus === ("PENDING_APPROVAL" as PostStatus)) {
+        finalStatus = "PENDING_APPROVAL" as PostStatus;
+      } else {
+        finalStatus = "DRAFT" as PostStatus;
+      }
+    }
+
+    const isPublished = finalStatus === "PUBLISHED";
+
     const post = await prisma.blogPost.create({
       data: {
         title: String(title).trim(),
@@ -101,20 +142,27 @@ export async function POST(req: Request) {
         readTime,
         tags: Array.isArray(tags) ? tags : [],
         metaDescription: metaDescription || excerpt,
-        status: status as PostStatus,
+        status: finalStatus,
         featured: Boolean(featured),
         authorId: session.id,
-        publishedAt: status === "PUBLISHED" ? new Date() : null,
+        publishedAt: isPublished ? new Date() : null,
       },
     });
 
-    if (status === "PUBLISHED") {
+    if (isPublished) {
       revalidatePath("/blog");
       revalidatePath(`/blog/${post.slug}`);
       revalidatePath("/sitemap.xml");
     }
 
-    return NextResponse.json({ success: true, post }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        post,
+        requiresApproval: !superAdminUser && finalStatus === ("PENDING_APPROVAL" as PostStatus),
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("[Admin Blog POST Error]:", error);
     return NextResponse.json({ error: "Failed to create blog post" }, { status: 500 });

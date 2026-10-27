@@ -108,6 +108,7 @@ model EnquiryNote {
 // ----------------------------------------------------
 enum PostStatus {
   DRAFT
+  PENDING_APPROVAL
   PUBLISHED
   ARCHIVED
 }
