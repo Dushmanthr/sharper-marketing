@@ -4,7 +4,7 @@ import { verifyPassword, signAdminToken, COOKIE_NAME } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
+    const { email, password, portalRole } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json(
@@ -29,6 +29,21 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "Invalid email or password." },
         { status: 401 }
+      );
+    }
+
+    // Portal role validation if a specific portal was requested
+    if (portalRole === "SUPER_ADMIN" && (admin.role as string) !== "SUPER_ADMIN") {
+      return NextResponse.json(
+        { error: "Access denied: This account does not have Super Admin privileges. Please use the Moderator Portal." },
+        { status: 403 }
+      );
+    }
+
+    if (portalRole === "MODERATOR" && (admin.role as string) !== "MODERATOR") {
+      return NextResponse.json(
+        { error: "Access denied: This account has Super Admin privileges. Please use the Super Admin Portal." },
+        { status: 403 }
       );
     }
 

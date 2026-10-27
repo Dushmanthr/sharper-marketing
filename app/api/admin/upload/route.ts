@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, hasAdminPanelAccess } from "@/lib/auth";
 import fs from "fs/promises";
 import path from "path";
 
@@ -20,6 +20,10 @@ export async function POST(req: Request) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!hasAdminPanelAccess(session)) {
+    return NextResponse.json({ error: "Forbidden: Access denied." }, { status: 403 });
   }
 
   try {

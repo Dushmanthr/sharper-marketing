@@ -14,7 +14,9 @@ async function main() {
 
   const admin = await prisma.adminUser.upsert({
     where: { email: adminEmail },
-    update: {},
+    update: {
+      role: AdminRole.SUPER_ADMIN,
+    },
     create: {
       email: adminEmail,
       name: "Sharper Labs Administrator",
@@ -24,8 +26,30 @@ async function main() {
     },
   });
 
-  console.log(`✅ Super Admin created: ${admin.email}`);
-  console.log(`   Initial password: ${defaultPassword} (Please change upon initial login)`);
+  console.log(`✅ Super Admin ready: ${admin.email}`);
+  console.log(`   Initial password: ${defaultPassword}`);
+
+  // 2. Create Default Moderator
+  const modEmail = "moderator@sharper-labs.com";
+  const defaultModPassword = "ModeratorSharper2026!";
+  const modPasswordHash = await bcrypt.hash(defaultModPassword, 10);
+
+  const moderator = await prisma.adminUser.upsert({
+    where: { email: modEmail },
+    update: {
+      role: AdminRole.MODERATOR,
+    },
+    create: {
+      email: modEmail,
+      name: "Sharper Content Moderator",
+      passwordHash: modPasswordHash,
+      role: AdminRole.MODERATOR,
+      isActive: true,
+    },
+  });
+
+  console.log(`✅ Moderator ready: ${moderator.email}`);
+  console.log(`   Initial password: ${defaultModPassword}`);
 
   // 2. Seed Initial 6 SEO Blog Posts
   for (const post of blogPosts) {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSessionAdmin } from "@/lib/auth";
+import { getSessionAdmin, isSuperAdmin } from "@/lib/auth";
 import type { EnquiryStatus } from "@prisma/client";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -9,6 +9,13 @@ export async function PATCH(req: Request, context: RouteContext) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!isSuperAdmin(session)) {
+    return NextResponse.json(
+      { error: "Forbidden: Super Admin access required." },
+      { status: 403 }
+    );
   }
 
   const { id } = await context.params;
@@ -56,6 +63,13 @@ export async function DELETE(req: Request, context: RouteContext) {
   const session = await getSessionAdmin();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (!isSuperAdmin(session)) {
+    return NextResponse.json(
+      { error: "Forbidden: Super Admin access required." },
+      { status: 403 }
+    );
   }
 
   const { id } = await context.params;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Inbox,
   FileText,
@@ -41,6 +42,7 @@ interface BlogPostItem {
 }
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [enquiries, setEnquiries] = useState<EnquiryItem[]>([]);
   const [blogs, setBlogs] = useState<BlogPostItem[]>([]);
   const [counts, setCounts] = useState<{ [key: string]: number }>({});
@@ -49,6 +51,15 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     async function loadDashboardData() {
       try {
+        const authRes = await fetch("/api/auth/me");
+        if (authRes.ok) {
+          const authData = await authRes.json();
+          if (authData?.admin?.role === "MODERATOR") {
+            router.replace("/admin/blogs");
+            return;
+          }
+        }
+
         const [enqRes, blogRes] = await Promise.all([
           fetch("/api/admin/enquiries"),
           fetch("/api/admin/blogs"),

@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Bell,
   PlusCircle,
+  Users,
 } from "lucide-react";
 
 interface AdminUser {
@@ -39,20 +40,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const isLoginPage = normalizedPath === "/admin/login" || normalizedPath.endsWith("/admin/login");
 
   useEffect(() => {
-    // If on login page, check if already logged in; if so redirect to dashboard
+    // If on login page, check if already logged in; if so redirect to appropriate page
     if (isLoginPage) {
       fetch("/api/auth/me")
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (data && data.authenticated) {
-            router.replace("/admin");
+            if (data.admin?.role === "MODERATOR") {
+              router.replace("/admin/blogs");
+            } else {
+              router.replace("/admin");
+            }
           }
         })
         .catch(() => {});
       return;
     }
 
-    // For protected admin routes, verify authentication
+    // For protected admin routes, verify authentication & role access
     async function checkAuth() {
       try {
         const res = await fetch("/api/auth/me");
@@ -60,6 +65,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           const data = await res.json();
           if (data.authenticated) {
             setAdmin(data.admin);
+
+            // Role-based protection:
+            // Moderator should only access blog creation and blog management
+            if (data.admin.role === "MODERATOR") {
+              const isBlogRoute = normalizedPath.startsWith("/admin/blogs");
+              if (!isBlogRoute) {
+                router.replace("/admin/blogs");
+              }
+            }
           } else {
             router.replace("/admin/login");
           }
@@ -109,32 +123,48 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return null;
   }
 
-  const navLinks = [
+  const allNavLinks = [
     {
       name: "Dashboard",
       href: "/admin",
       icon: LayoutDashboard,
       exact: true,
+      roles: ["SUPER_ADMIN"],
     },
     {
       name: "Analytics & Reports",
       href: "/admin/analytics",
       icon: BarChart3,
       exact: false,
+      roles: ["SUPER_ADMIN"],
     },
     {
       name: "Enquiries & Leads",
       href: "/admin/enquiries",
       icon: Inbox,
       exact: false,
+      roles: ["SUPER_ADMIN"],
     },
     {
       name: "Blog Management",
       href: "/admin/blogs",
       icon: FileText,
       exact: false,
+      roles: ["SUPER_ADMIN", "MODERATOR"],
+    },
+    {
+      name: "Team & Moderators",
+      href: "/admin/users",
+      icon: Users,
+      exact: false,
+      roles: ["SUPER_ADMIN"],
     },
   ];
+
+  // Only show links authorized for the current user's role
+  const navLinks = allNavLinks.filter((item) =>
+    item.roles.includes(admin.role)
+  );
 
   const isActive = (href: string, exact: boolean) => {
     const normHref = href.replace(/\/+$/, "") || "/";
@@ -203,7 +233,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
               <div className="min-w-0">
                 <p className="truncate text-xs font-semibold text-slate-800">{admin.name}</p>
-                <p className="truncate text-[10px] text-slate-500">{admin.role}</p>
+                <p className="truncate text-[10px] text-slate-500 font-medium">
+                  {admin.role === "SUPER_ADMIN" ? "Super Admin" : admin.role === "MODERATOR" ? "Moderator" : admin.role}
+                </p>
               </div>
             </div>
             <button

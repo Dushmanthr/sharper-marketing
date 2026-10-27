@@ -407,7 +407,7 @@ export default function Home() {
       </ParallaxBand>
 
       {/* 09. Testimonials */}
-      <Section tone="white">
+      <Section tone="white" spacing="tight">
         <Testimonials />
       </Section>
 

@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
   Star,
-  TrendingUp,
+  ArrowUpRight,
   ShieldCheck,
-  Quote,
   MapPin,
   CheckCircle2,
 } from "lucide-react";
@@ -43,12 +42,12 @@ export const testimonials: Testimonial[] = [
   },
   {
     quote:
-      "The PPC and SEO work Sharper Labs delivered paid for itself within months. They researched everything properly, kept refining the campaigns, and were always transparent about spend and results. A genuine marketing partner.",
+      "The social media follower growth Sharper Labs delivered across Instagram, TikTok and Facebook paid for itself within months. They researched everything properly, consistently expanded our reach, and were always transparent about performance.",
     role: "Founder & CEO",
     company: "Consumer E-commerce Brand",
     location: "UK & European Markets",
-    metric: "3.8x Return on Ad Spend",
-    service: "PPC & Organic SEO",
+    metric: "+150K New Followers",
+    service: "Social Media Followers Growth",
   },
   {
     quote:
@@ -74,7 +73,7 @@ export const testimonials: Testimonial[] = [
     role: "E-Commerce Director",
     company: "Sustainable Consumer Goods",
     location: "UK & GCC Markets",
-    metric: "-42% Blended CPA",
+    metric: "3.8x Return on Ad Spend",
     service: "PPC & Data Analysis",
   },
 ];
@@ -87,29 +86,74 @@ function getInitials(company: string): string {
   return company.slice(0, 2).toUpperCase();
 }
 
+function getDiff(index: number, active: number, total: number): number {
+  let diff = index - active;
+  while (diff > total / 2) diff -= total;
+  while (diff < -total / 2) diff += total;
+  return diff;
+}
+
+function getCardTransform(diff: number) {
+  switch (diff) {
+    case 0:
+      return {
+        x: "-50%",
+        scale: 1,
+        zIndex: 30,
+        opacity: 1,
+        pointerEvents: "auto" as const,
+      };
+    case 1:
+      return {
+        x: "14%",
+        scale: 0.92,
+        zIndex: 20,
+        opacity: 0.88,
+        pointerEvents: "auto" as const,
+      };
+    case -1:
+      return {
+        x: "-114%",
+        scale: 0.92,
+        zIndex: 20,
+        opacity: 0.88,
+        pointerEvents: "auto" as const,
+      };
+    case 2:
+      return {
+        x: "72%",
+        scale: 0.82,
+        zIndex: 10,
+        opacity: 0.35,
+        pointerEvents: "auto" as const,
+      };
+    case -2:
+      return {
+        x: "-172%",
+        scale: 0.82,
+        zIndex: 10,
+        opacity: 0.35,
+        pointerEvents: "auto" as const,
+      };
+    default:
+      return {
+        x: diff > 0 ? "130%" : "-230%",
+        scale: 0.7,
+        zIndex: 0,
+        opacity: 0,
+        pointerEvents: "none" as const,
+      };
+  }
+}
+
 export default function Testimonials({
   items = testimonials,
+  intervalMs = 4500,
 }: {
   items?: Testimonial[];
+  intervalMs?: number;
 }) {
-  const [active, setActive] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [cardWidth, setCardWidth] = useState(380);
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const firstCardRef = useRef<HTMLDivElement>(null);
-
-  // Measure card width dynamically for pixel-perfect sliding on any screen size
-  useEffect(() => {
-    const updateWidth = () => {
-      if (firstCardRef.current) {
-        setCardWidth(firstCardRef.current.offsetWidth);
-      }
-    };
-    updateWidth();
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
-  }, []);
+  const [active, setActive] = useState(3); // Start with item 3 (Clinical Advisory Practice)
 
   const total = items.length;
 
@@ -120,220 +164,304 @@ export default function Testimonials({
     [total],
   );
 
-  const prev = () => goTo(active - 1);
-  const next = useCallback(() => goTo(active + 1), [active, goTo]);
+  const prev = useCallback(() => {
+    setActive((curr) => (curr - 1 + total) % total);
+  }, [total]);
 
-  // Autoplay sliding animation with pause on hover/interaction
+  const next = useCallback(() => {
+    setActive((curr) => (curr + 1) % total);
+  }, [total]);
+
+  // Autoplay moving automatically one by one with a fair time gap (4.5s)
   useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(next, 5200);
+    const timer = setInterval(() => {
+      setActive((curr) => (curr + 1) % total);
+    }, intervalMs);
     return () => clearInterval(timer);
-  }, [next, isPaused]);
+  }, [active, total, intervalMs]);
 
   // Handle touch / drag gestures
   const handleDragEnd = (
     _event: MouseEvent | TouchEvent | PointerEvent,
     info: { offset: { x: number }; velocity: { x: number } },
   ) => {
-    if (info.offset.x < -40 || info.velocity.x < -300) {
+    if (info.offset.x < -35 || info.velocity.x < -250) {
       next();
-    } else if (info.offset.x > 40 || info.velocity.x > 300) {
+    } else if (info.offset.x > 35 || info.velocity.x > 250) {
       prev();
     }
   };
 
-  const gap = 24; // 1.5rem (gap-6)
-  const offset = active * (cardWidth + gap);
-
   return (
     <div
-      ref={containerRef}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={() => setIsPaused(true)}
-      onTouchEnd={() => setIsPaused(false)}
-      className="relative overflow-hidden rounded-3xl border border-navy-100 bg-gradient-to-b from-surface-muted/80 via-white to-surface-muted/50 py-8 px-3.5 xs:py-10 xs:px-4 sm:py-14 sm:px-8 lg:px-10 2xl:py-18 2xl:px-14 shadow-xs"
+      className="relative overflow-hidden rounded-3xl sm:rounded-4xl border border-navy-100/90 bg-gradient-to-b from-slate-50/70 via-white to-slate-50/70 p-5 xs:p-7 sm:p-10 lg:p-12 shadow-sm transition-all"
       role="region"
-      aria-label="Client testimonials carousel"
+      aria-label="Client testimonials showcase"
     >
-      {/* Header with Title & Controls */}
-      <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between px-2 sm:px-4">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50/80 px-3.5 py-1 text-xs font-semibold text-orange-700">
-            <ShieldCheck className="h-3.5 w-3.5 text-orange-500" />
-            <span>Verified Client Evidence</span>
-          </div>
-          <h2 className="mt-2.5 font-display text-xl xs:text-2xl font-bold tracking-tight text-navy-950 sm:text-3xl lg:text-4xl 2xl:text-5xl">
-            Trusted by Growing Brands
-          </h2>
-          <p className="mt-1.5 max-w-xl text-xs sm:text-sm leading-relaxed text-ink-muted">
-            Explore authentic feedback and verified commercial outcomes across UK and international campaigns.
-          </p>
-        </div>
+      {/* Decorative Subtle Background Ambiance (Clean Theme Colors, No Images) */}
+      <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-[600px] rounded-full bg-orange-500/5 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-navy-600/5 blur-3xl" />
 
-        <div className="flex items-center gap-3 self-start sm:self-auto">
-          {/* Auto-sliding status pill */}
-          <div className="hidden sm:inline-flex items-center gap-2 rounded-full border border-navy-200/70 bg-white px-3.5 py-1.5 text-xs font-medium text-navy-700 shadow-2xs">
-            <span className="relative flex h-2 w-2">
-              <span className={`absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75 ${!isPaused ? "animate-ping" : ""}`} />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
-            </span>
-            <span className="text-[11px] text-ink-muted">
-              {isPaused ? "Paused" : "Auto-sliding"}
-            </span>
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className="flex items-center gap-2" role="group" aria-label="Carousel navigation">
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              onClick={prev}
-              aria-label="Previous testimonial"
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-navy-200 bg-white text-navy-700 shadow-2xs transition-colors hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-orange-400"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </motion.button>
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              onClick={next}
-              aria-label="Next testimonial"
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-navy-200 bg-white text-navy-700 shadow-2xs transition-colors hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-orange-400"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </motion.button>
-          </div>
-        </div>
+      {/* Subtle Quote Watermark on Bottom Right (Matches Reference Screenshot) */}
+      <div
+        className="pointer-events-none absolute -bottom-4 right-4 sm:bottom-4 sm:right-8 lg:right-12 select-none opacity-[0.06] text-navy-900"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 100 80"
+          fill="currentColor"
+          className="h-24 w-24 sm:h-32 sm:w-32 lg:h-36 lg:w-36"
+        >
+          <path d="M28 0C12.5 0 0 12.5 0 28v52h45V28H15c0-7.2 5.8-13 13-13V0zm55 0C67.5 0 55 12.5 55 28v52h45V28H70c0-7.2 5.8-13 13-13V0z" />
+        </svg>
       </div>
 
-      {/* Carousel Outer Viewport with Feathered Gradient Masks */}
-      <div className="relative overflow-hidden w-full px-2 sm:px-4 py-2">
-        {/* Soft edge fade masks */}
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 w-6 sm:w-12 bg-gradient-to-r from-surface-muted/90 to-transparent z-10"
-          aria-hidden="true"
-        />
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-6 sm:w-12 bg-gradient-to-l from-surface-muted/90 to-transparent z-10"
-          aria-hidden="true"
-        />
+      {/* Section Header: Badge & Heading */}
+      <div className="relative z-10 mx-auto max-w-3xl text-center pb-6 sm:pb-8">
+        <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-orange-600 shadow-2xs">
+          <ShieldCheck className="h-3.5 w-3.5 text-orange-600" />
+          <span>Verified Client Evidence</span>
+        </div>
+        <h2 className="mt-3 font-display text-2xl xs:text-3xl font-extrabold tracking-tight text-navy-900 sm:text-4xl">
+          Trusted by Growing Brands
+        </h2>
+        <p className="mt-2 text-xs sm:text-sm md:text-base text-ink-muted leading-relaxed">
+          Direct feedback and verified commercial impact from UK and international partnerships.
+        </p>
+      </div>
 
-        {/* Sliding Card Track with Spring Physics */}
-        <motion.div
-          animate={{ x: -offset }}
-          transition={{ type: "spring", stiffness: 260, damping: 28 }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.2}
-          onDragEnd={handleDragEnd}
-          className="flex cursor-grab active:cursor-grabbing gap-6"
+      {/* Multi-Card 3D Coverflow Stage (Cards physically glide one by one) */}
+      <div className="relative z-10 mt-2 sm:mt-4 flex items-center justify-center min-h-[440px] xs:min-h-[420px] sm:min-h-[450px] lg:min-h-[470px]">
+        {/* Circular Floating Navigation Buttons (Left & Right) */}
+        <button
+          type="button"
+          onClick={prev}
+          aria-label="Previous testimonial"
+          className="absolute left-1 xs:left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-40 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white text-navy-900 shadow-xl border border-navy-100 hover:scale-105 active:scale-95 transition-all cursor-pointer hover:text-orange-600 hover:border-orange-300"
         >
+          <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+        </button>
+
+        <button
+          type="button"
+          onClick={next}
+          aria-label="Next testimonial"
+          className="absolute right-1 xs:right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-40 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white text-navy-900 shadow-xl border border-navy-100 hover:scale-105 active:scale-95 transition-all cursor-pointer hover:text-orange-600 hover:border-orange-300"
+        >
+          <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+        </button>
+
+        {/* 5-Card Depth Motion Track */}
+        <div className="relative w-full h-[400px] xs:h-[410px] sm:h-[430px] lg:h-[450px] flex items-center justify-center">
           {items.map((item, index) => {
-            const isFirst = index === 0;
-            const isCurrent = index === active;
+            const diff = getDiff(index, active, total);
+            const style = getCardTransform(diff);
+            const isCenter = diff === 0;
 
             return (
-              <div
+              <motion.div
                 key={index}
-                ref={isFirst ? firstCardRef : undefined}
-                className="w-[86vw] max-w-[340px] sm:w-[380px] lg:w-[410px] 2xl:w-[450px] shrink-0"
+                initial={false}
+                animate={{
+                  x: style.x,
+                  y: "-50%",
+                  scale: style.scale,
+                  opacity: style.opacity,
+                  zIndex: style.zIndex,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 240,
+                  damping: 26,
+                  mass: 0.8,
+                }}
+                drag={isCenter ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.25}
+                onDragEnd={isCenter ? handleDragEnd : undefined}
+                onClick={() => goTo(index)}
+                className={`absolute top-1/2 left-1/2 w-full max-w-[88vw] xs:max-w-[420px] sm:max-w-[480px] lg:max-w-[520px] select-none cursor-pointer ${
+                  Math.abs(diff) === 2 ? "hidden sm:block" : ""
+                }`}
+                style={{
+                  pointerEvents: style.pointerEvents,
+                }}
               >
-                <div
-                  className={`group relative flex h-full flex-col justify-between rounded-3xl border bg-white p-5 xs:p-6 sm:p-8 2xl:p-9 transition-all duration-300 ${
-                    isCurrent
-                      ? "border-orange-400 shadow-xl shadow-orange-500/5 ring-2 ring-orange-500/15"
-                      : "border-navy-100 shadow-sm hover:border-orange-200 hover:shadow-md"
-                  }`}
-                >
-                  {/* Card Header: Metric Badge + Stars */}
-                  <div>
-                    <div className="flex items-center justify-between gap-3 mb-5">
-                      {item.metric ? (
-                        <div className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/25 bg-orange-50 px-3 py-1 text-xs font-bold text-orange-600 shadow-2xs">
-                          <TrendingUp className="h-3.5 w-3.5 text-orange-500" />
-                          <span>{item.metric}</span>
-                        </div>
-                      ) : (
-                        <span />
-                      )}
-
-                      <div className="flex items-center gap-0.5 rounded-full bg-surface-muted px-2 py-1 border border-navy-100">
-                        {Array.from({ length: 5 }).map((_, s) => (
-                          <Star key={s} className="h-3.5 w-3.5 fill-orange-400 text-orange-400" />
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Quotation Icon & Quote Text */}
-                    <Quote className="h-7 w-7 text-orange-400/40 mb-3" />
-                    <blockquote className="text-sm sm:text-[15px] font-medium leading-relaxed text-navy-950">
-                      &ldquo;{item.quote}&rdquo;
-                    </blockquote>
-                  </div>
-
-                  {/* Card Footer: Client Info & Verification */}
-                  <div className="mt-8 border-t border-navy-100 pt-5">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-navy-900 font-display text-sm font-bold text-orange-400 shadow-xs">
-                        {getInitials(item.company)}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="truncate font-display text-sm font-bold text-navy-950">
-                          {item.role}
-                        </div>
-                        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-ink-muted">
-                          <span className="truncate font-semibold text-orange-600">{item.company}</span>
-                          <span>·</span>
-                          <span className="truncate flex items-center gap-0.5">
-                            <MapPin className="h-3 w-3 shrink-0 text-navy-400" /> {item.location}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-3.5 flex items-center justify-between gap-2 border-t border-navy-50 pt-3 text-xs">
-                      {item.service && (
-                        <span className="truncate rounded-md bg-surface-muted px-2 py-0.5 font-medium text-navy-700 border border-navy-100 text-[11px]">
-                          {item.service}
-                        </span>
-                      )}
-                      <span className="inline-flex shrink-0 items-center gap-1 font-semibold text-emerald-600 text-[11px]">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> Verified Result
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                <TestimonialCard item={item} isActive={isCenter} />
+              </motion.div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
 
-      {/* Bottom Indicator Dots & Counter */}
-      <div className="mt-6 sm:mt-8 flex items-center justify-between px-4 sm:px-6">
+      {/* Bottom Pagination Dots (Matching Screenshot: Orange Pill for Active Dot) */}
+      <div className="relative z-10 mt-6 sm:mt-8 flex flex-col items-center gap-3">
         <div className="flex items-center gap-2">
           {items.map((_, i) => (
             <button
               key={i}
               type="button"
               onClick={() => goTo(i)}
-              aria-label={`Jump to slide ${i + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+              aria-label={`Jump to testimonial ${i + 1}`}
+              className={`rounded-full transition-all duration-500 cursor-pointer ${
                 i === active
-                  ? "w-8 bg-orange-500 shadow-2xs"
-                  : "w-2.5 bg-navy-200 hover:bg-navy-300"
+                  ? "w-8 h-2.5 bg-orange-500 shadow-sm shadow-orange-500/40"
+                  : "w-2.5 h-2.5 bg-navy-200/90 hover:bg-navy-400"
               }`}
             />
           ))}
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-ink-muted font-mono">
-          <span className="font-semibold text-navy-900">0{active + 1}</span>
+        {/* Slide Counter */}
+        <div className="flex items-center gap-1.5 text-xs font-mono text-navy-400">
+          <span className="font-bold text-orange-600">0{active + 1}</span>
           <span className="text-navy-300">/</span>
           <span>0{total}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Individual Card matching the reference screenshot design:
+ * - Center card: Dark Navy with white circle avatar & gold stars
+ * - Flanking cards: Crisp White with soft shadow & dark navy typography
+ */
+function TestimonialCard({
+  item,
+  isActive,
+}: {
+  item: Testimonial;
+  isActive: boolean;
+}) {
+  return (
+    <div
+      className={`relative flex flex-col justify-between rounded-3xl sm:rounded-[28px] p-6 xs:p-7 sm:p-8 lg:p-9 transition-all duration-500 ${
+        isActive
+          ? "bg-[#0B132B] text-white border border-navy-700/80 shadow-[0_20px_50px_-10px_rgba(11,19,43,0.45)] ring-1 ring-white/10"
+          : "bg-white text-navy-900 border border-navy-100 shadow-xl shadow-navy-900/6 hover:border-navy-200"
+      }`}
+    >
+      <div>
+        {/* CARD TOP ROW: 5 Golden Stars (Left) & Metric Tag (Right) */}
+        <div className="flex items-center justify-between gap-2.5">
+          {/* 5 Golden Stars matching reference screenshot */}
+          <div className="flex items-center gap-1">
+            {Array.from({ length: 5 }).map((_, s) => (
+              <Star
+                key={s}
+                className={`h-4.5 w-4.5 sm:h-5 sm:w-5 ${
+                  isActive
+                    ? "fill-amber-400 text-amber-400"
+                    : "fill-amber-400/90 text-amber-400/90"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Metric Pill Badge */}
+          {item.metric && (
+            <div
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold truncate ${
+                isActive
+                  ? "border border-orange-500/40 bg-orange-500/15 text-orange-300"
+                  : "border border-navy-200/80 bg-navy-50 text-navy-800"
+              }`}
+            >
+              <ArrowUpRight
+                className={`h-3.5 w-3.5 shrink-0 ${
+                  isActive ? "text-orange-400" : "text-orange-600"
+                }`}
+              />
+              <span className="truncate">{item.metric}</span>
+            </div>
+          )}
+        </div>
+
+        {/* QUOTATION TEXT */}
+        <blockquote
+          className={`mt-4 sm:mt-5 font-display italic font-semibold leading-relaxed ${
+            isActive
+              ? "text-base sm:text-lg lg:text-[18px] text-white"
+              : "text-sm sm:text-base text-navy-900/90 line-clamp-4"
+          }`}
+        >
+          &ldquo;{item.quote}&rdquo;
+        </blockquote>
+      </div>
+
+      <div>
+        {/* CARD DIVIDER LINE */}
+        <div
+          className={`my-4 sm:my-5 border-t ${
+            isActive ? "border-white/15" : "border-navy-100"
+          }`}
+        />
+
+        {/* CARD FOOTER: Author Avatar + Details + Verified Badge */}
+        <div className="flex items-center justify-between gap-3">
+          {/* Left: Avatar & Info */}
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Monogram circle avatar matching reference screenshot */}
+            <div
+              className={`flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full font-display text-xs sm:text-sm font-extrabold shadow-sm transition-all ${
+                isActive
+                  ? "bg-white text-navy-900 ring-2 ring-white/20"
+                  : "bg-navy-100 text-navy-800 border border-navy-200/70"
+              }`}
+            >
+              {getInitials(item.company)}
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div
+                className={`truncate font-display text-sm sm:text-base font-bold ${
+                  isActive ? "text-white" : "text-navy-900"
+                }`}
+              >
+                {item.role}
+              </div>
+              <div
+                className={`truncate font-display text-xs sm:text-sm font-semibold mt-0.5 ${
+                  isActive ? "text-orange-400" : "text-orange-600"
+                }`}
+              >
+                {item.company}
+              </div>
+              <div
+                className={`mt-0.5 flex items-center gap-1 text-[11px] truncate ${
+                  isActive ? "text-navy-300" : "text-ink-muted"
+                }`}
+              >
+                <MapPin className="h-3 w-3 shrink-0 text-navy-400" />
+                <span className="truncate">{item.location}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Verified Badge + Service */}
+          <div className="flex flex-col items-end gap-1 shrink-0">
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold shadow-2xs ${
+                isActive
+                  ? "border border-emerald-500/50 bg-emerald-500/15 text-emerald-400"
+                  : "border border-emerald-600/30 bg-emerald-50 text-emerald-700"
+              }`}
+            >
+              <CheckCircle2 className="h-3 w-3 shrink-0" />
+              <span>Verified</span>
+            </span>
+
+            {item.service && (
+              <span
+                className={`text-[10px] sm:text-[11px] font-medium text-right truncate max-w-[120px] xs:max-w-[140px] sm:max-w-[160px] ${
+                  isActive ? "text-navy-300" : "text-ink-muted"
+                }`}
+              >
+                {item.service}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

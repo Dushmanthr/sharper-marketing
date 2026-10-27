@@ -35,6 +35,7 @@ interface BlogPost {
 
 export default function AdminBlogsPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string>("ALL");
@@ -42,6 +43,16 @@ export default function AdminBlogsPage() {
 
   useEffect(() => {
     fetchPosts();
+
+    // Check user role for action permissions
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.authenticated && data?.admin?.role) {
+          setUserRole(data.admin.role);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   async function fetchPosts() {
@@ -265,13 +276,15 @@ export default function AdminBlogsPage() {
                         >
                           <Edit className="h-4 w-4" />
                         </Link>
-                        <button
-                          onClick={() => handleDelete(post.id, post.title)}
-                          title="Delete Article"
-                          className="rounded-lg p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {userRole === "SUPER_ADMIN" && (
+                          <button
+                            onClick={() => handleDelete(post.id, post.title)}
+                            title="Delete Article"
+                            className="rounded-lg p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
