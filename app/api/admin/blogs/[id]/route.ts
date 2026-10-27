@@ -22,7 +22,7 @@ export async function GET(req: Request, context: RouteContext) {
     const post = await prisma.blogPost.findUnique({
       where: { id },
       include: {
-        author: { select: { name: true, email: true } },
+        author: { select: { id: true, name: true, email: true, role: true } },
       },
     });
 
@@ -82,6 +82,23 @@ export async function PUT(req: Request, context: RouteContext) {
       }
     }
 
+    const superAdminUser = isSuperAdmin(session);
+    let resolvedStatus: PostStatus | undefined = undefined;
+
+    if (status !== undefined) {
+      if (!superAdminUser) {
+        // Moderator cannot approve or publish directly to the main site.
+        if (status === "PUBLISHED" || status === "PENDING_APPROVAL") {
+          resolvedStatus = "PENDING_APPROVAL" as PostStatus;
+        } else {
+          resolvedStatus = "DRAFT" as PostStatus;
+        }
+      } else {
+        // Super Admin can set any status
+        resolvedStatus = status as PostStatus;
+      }
+    }
+
     const updated = await prisma.blogPost.update({
       where: { id },
       data: {
@@ -95,11 +112,11 @@ export async function PUT(req: Request, context: RouteContext) {
         ...(readTime && { readTime }),
         ...(tags !== undefined && { tags: Array.isArray(tags) ? tags : [] }),
         ...(metaDescription !== undefined && { metaDescription }),
-        ...(status && {
-          status: status as PostStatus,
+        ...(resolvedStatus && {
+          status: resolvedStatus,
           publishedAt:
-            status === "PUBLISHED" && !existing.publishedAt
-              ? new Date()
+            resolvedStatus === "PUBLISHED"
+              ? existing.publishedAt || new Date()
               : existing.publishedAt,
         }),
         ...(featured !== undefined && { featured: Boolean(featured) }),
@@ -113,7 +130,11 @@ export async function PUT(req: Request, context: RouteContext) {
     }
     revalidatePath("/sitemap.xml");
 
-    return NextResponse.json({ success: true, post: updated });
+    return NextResponse.json({
+      success: true,
+      post: updated,
+      requiresApproval: !superAdminUser && resolvedStatus === ("PENDING_APPROVAL" as PostStatus),
+    });
   } catch (error) {
     console.error("[Update Blog Error]:", error);
     return NextResponse.json({ error: "Failed to update blog post" }, { status: 500 });

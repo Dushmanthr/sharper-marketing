@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { AlertTriangle, Trash2, AlertCircle, Info, Loader2, X } from "lucide-react";
+import { AlertTriangle, Trash2, AlertCircle, Info, Loader2, X, CheckCircle2 } from "lucide-react";
 
-export type ConfirmVariant = "danger" | "warning" | "info";
+export type ConfirmVariant = "danger" | "warning" | "info" | "success";
 
 export interface ConfirmModalProps {
   isOpen: boolean;
@@ -59,6 +59,11 @@ export default function ConfirmModal({
       bg: "bg-blue-50 border-blue-100 text-blue-600",
       icon: <Info className="h-5 w-5" />,
       buttonBg: "bg-navy-900 hover:bg-navy-800 text-white shadow-navy-900/20",
+    },
+    success: {
+      bg: "bg-emerald-50 border-emerald-100 text-emerald-600",
+      icon: <CheckCircle2 className="h-5 w-5" />,
+      buttonBg: "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20",
     },
   }[variant];
 

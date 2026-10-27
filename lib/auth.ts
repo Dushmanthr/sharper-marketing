@@ -22,6 +22,13 @@ export function isSuperAdmin(session: AdminTokenPayload | null | undefined): boo
 }
 
 /**
+ * Checks whether the given session belongs to a Moderator.
+ */
+export function isModerator(session: AdminTokenPayload | null | undefined): boolean {
+  return session?.role === "MODERATOR";
+}
+
+/**
  * Checks whether the given session belongs to either Super Admin or Moderator.
  */
 export function hasAdminPanelAccess(session: AdminTokenPayload | null | undefined): boolean {

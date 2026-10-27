@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +20,10 @@ import {
   UploadCloud,
   X,
   Image as ImageIcon,
+  Send,
+  ShieldCheck,
+  RotateCcw,
+  Info,
 } from "lucide-react";
 
 export interface BlogSectionItem {
@@ -43,7 +47,7 @@ export interface BlogFormData {
   readTime: string;
   tags: string[];
   metaDescription: string;
-  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  status: "DRAFT" | "PENDING_APPROVAL" | "PUBLISHED" | "ARCHIVED";
   featured: boolean;
   content: BlogSectionItem[];
 }
@@ -79,11 +83,71 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [successNotice, setSuccessNotice] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState<"SUPER_ADMIN" | "MODERATOR" | null>(null);
+  const [approvalLoading, setApprovalLoading] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.authenticated && data?.admin?.role) {
+          const role = data.admin.role as "SUPER_ADMIN" | "MODERATOR";
+          setCurrentUserRole(role);
+          if (role === "MODERATOR" && !isEditing && (!initialData || initialData.status === "DRAFT")) {
+            setFormData((prev) => ({ ...prev, status: "PENDING_APPROVAL" }));
+          }
+        }
+      })
+      .catch(() => {});
+  }, [isEditing, initialData]);
+
+  const handleApproveArticle = async () => {
+    if (!formData.id) return;
+    setApprovalLoading(true);
+    setError("");
+    setSuccessNotice("");
+    try {
+      const res = await fetch(`/api/admin/blogs/${formData.id}/approve`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to approve article");
+      setFormData((prev) => ({ ...prev, status: "PUBLISHED" }));
+      setSuccessNotice("Article has been approved and published to the live site!");
+      router.refresh();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to approve article");
+    } finally {
+      setApprovalLoading(false);
+    }
+  };
+
+  const handleRejectToDraft = async () => {
+    if (!formData.id) return;
+    setApprovalLoading(true);
+    setError("");
+    setSuccessNotice("");
+    try {
+      const res = await fetch(`/api/admin/blogs/${formData.id}/reject`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to revert article to draft");
+      setFormData((prev) => ({ ...prev, status: "DRAFT" }));
+      setSuccessNotice("Article status reverted to Draft.");
+      router.refresh();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to revert article to draft");
+    } finally {
+      setApprovalLoading(false);
+    }
+  };
 
   const handleImageFile = async (file: File) => {
     if (!file) return;
@@ -295,7 +359,7 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <div className="flex rounded-xl bg-slate-200/80 p-1 text-xs font-semibold">
             <button
               type="button"
@@ -317,16 +381,122 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
             </button>
           </div>
 
-          <button
-            onClick={handleSubmit}
-            disabled={saving}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 disabled:opacity-50 transition-colors"
-          >
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-            {formData.status === "PUBLISHED" ? "Publish Changes" : "Save Draft"}
-          </button>
+          {/* Conditional Role-Based Action Buttons */}
+          {currentUserRole === "SUPER_ADMIN" && formData.status === "PENDING_APPROVAL" && isEditing ? (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRejectToDraft}
+                disabled={approvalLoading || saving}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+              >
+                <RotateCcw className="h-3.5 w-3.5 text-slate-500" /> Revert to Draft
+              </button>
+              <button
+                type="button"
+                onClick={handleApproveArticle}
+                disabled={approvalLoading || saving}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 disabled:opacity-50 transition-colors cursor-pointer"
+              >
+                {approvalLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ShieldCheck className="h-4 w-4" />
+                )}
+                Approve & Publish Live
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={saving}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 disabled:opacity-50 transition-colors"
+              >
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                Save Changes
+              </button>
+            </div>
+          ) : currentUserRole === "MODERATOR" ? (
+            <div className="flex items-center gap-2">
+              {formData.status === "PENDING_APPROVAL" ? (
+                <button
+                  onClick={handleSubmit}
+                  disabled={saving}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 disabled:opacity-50 transition-colors"
+                >
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  Submit for Approval
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  disabled={saving}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-navy-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-navy-950 disabled:opacity-50 transition-colors"
+                >
+                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                  Save Draft
+                </button>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              disabled={saving}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 disabled:opacity-50 transition-colors"
+            >
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              {formData.status === "PUBLISHED" ? "Publish Changes" : "Save Article"}
+            </button>
+          )}
         </div>
       </div>
+
+      {successNotice && (
+        <div className="flex items-center gap-2 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-xs font-medium text-emerald-800">
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+          <span>{successNotice}</span>
+        </div>
+      )}
+
+      {formData.status === "PENDING_APPROVAL" && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50/90 p-4 text-xs">
+          <div className="flex items-center gap-2.5 text-amber-900">
+            <Clock className="h-4 w-4 shrink-0 text-amber-600" />
+            <span>
+              <strong>Status: Pending Super Admin Approval.</strong> This article is submitted and will not appear on the live site until approved.
+            </span>
+          </div>
+          {currentUserRole === "SUPER_ADMIN" && isEditing && (
+            <button
+              type="button"
+              onClick={handleApproveArticle}
+              disabled={approvalLoading}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-emerald-700 transition-colors self-start sm:self-auto cursor-pointer"
+            >
+              {approvalLoading ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <ShieldCheck className="h-3.5 w-3.5" />
+              )}
+              Approve & Publish Live
+            </button>
+          )}
+        </div>
+      )}
+
+      {formData.status === "PUBLISHED" && (
+        <div className="flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50/70 p-3.5 text-xs text-emerald-900">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+            <span>This article is live and published on the main site.</span>
+          </div>
+          <Link
+            href={`/blog/${formData.slug}`}
+            target="_blank"
+            className="font-bold underline hover:text-emerald-700"
+          >
+            View Live Page &rarr;
+          </Link>
+        </div>
+      )}
 
       {error && (
         <div className="flex items-center gap-2 rounded-2xl border border-red-200 bg-red-50 p-4 text-xs font-medium text-red-700">
@@ -481,25 +651,97 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                 Publishing Controls
               </span>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Status
-                </label>
-                <select
-                  value={formData.status}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      status: e.target.value as "DRAFT" | "PUBLISHED" | "ARCHIVED",
-                    }))
-                  }
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs font-bold text-navy-900 focus:outline-hidden"
-                >
-                  <option value="DRAFT">Draft (Hidden from public site)</option>
-                  <option value="PUBLISHED">Published (Visible on live /blog)</option>
-                  <option value="ARCHIVED">Archived</option>
-                </select>
-              </div>
+              {currentUserRole === "MODERATOR" ? (
+                <>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      Submission Status
+                    </label>
+                    <select
+                      value={formData.status === "PUBLISHED" ? "PENDING_APPROVAL" : formData.status}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          status: e.target.value as "DRAFT" | "PENDING_APPROVAL",
+                        }))
+                      }
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs font-bold text-navy-900 focus:outline-hidden"
+                    >
+                      <option value="PENDING_APPROVAL">Submit for Approval (Sent to Super Admin)</option>
+                      <option value="DRAFT">Draft (Save as work in progress)</option>
+                    </select>
+                  </div>
+
+                  <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-[11px] text-amber-900 space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-amber-800">
+                      <Info className="h-3.5 w-3.5 text-amber-600" /> Moderator Workflow
+                    </div>
+                    <p className="text-amber-800 leading-relaxed">
+                      Articles submitted for approval go to Super Admin for verification. Once approved, they will appear automatically on the live website.
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      Publishing Status
+                    </label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          status: e.target.value as "DRAFT" | "PENDING_APPROVAL" | "PUBLISHED" | "ARCHIVED",
+                        }))
+                      }
+                      className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs font-bold text-navy-900 focus:outline-hidden"
+                    >
+                      <option value="PUBLISHED">Published (Visible on live /blog)</option>
+                      <option value="PENDING_APPROVAL">Pending Approval (Review queue)</option>
+                      <option value="DRAFT">Draft (Hidden from public site)</option>
+                      <option value="ARCHIVED">Archived</option>
+                    </select>
+                  </div>
+
+                  {formData.status === "PENDING_APPROVAL" && (
+                    <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 text-[11px] text-amber-900 space-y-2">
+                      <div className="flex items-center gap-1.5 font-bold text-amber-800">
+                        <Clock className="h-3.5 w-3.5 text-amber-600" /> Awaiting Super Admin Review
+                      </div>
+                      <p className="text-amber-800 leading-relaxed">
+                        This article is currently pending approval. Approving it will immediately publish it to the live website.
+                      </p>
+                      {isEditing && (
+                        <div className="flex flex-col gap-1.5 pt-1">
+                          <button
+                            type="button"
+                            onClick={handleApproveArticle}
+                            disabled={approvalLoading}
+                            className="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition-colors cursor-pointer"
+                          >
+                            {approvalLoading ? (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            ) : (
+                              <ShieldCheck className="h-3.5 w-3.5" />
+                            )}
+                            Approve & Publish Live
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleRejectToDraft}
+                            disabled={approvalLoading}
+                            className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                          >
+                            <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
+                            Send Back to Draft
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
 
               <div className="flex items-center gap-2 pt-2">
                 <input

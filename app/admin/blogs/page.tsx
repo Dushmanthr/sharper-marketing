@@ -16,6 +16,9 @@ import {
   Tag,
   Loader2,
   AlertCircle,
+  ShieldCheck,
+  RotateCcw,
+  Sparkles,
 } from "lucide-react";
 
 interface BlogPost {
@@ -25,17 +28,36 @@ interface BlogPost {
   excerpt: string;
   category: string;
   coverImage: string;
-  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  status: "DRAFT" | "PENDING_APPROVAL" | "PUBLISHED" | "ARCHIVED";
   featured: boolean;
   readTime: string;
   viewCount: number;
   publishedAt: string | null;
   createdAt: string;
-  author: { name: string; email: string };
+  author: {
+    name: string;
+    email: string;
+    role?: "SUPER_ADMIN" | "MODERATOR" | string;
+  };
+}
+
+interface StatusCounts {
+  total: number;
+  published: number;
+  pending: number;
+  draft: number;
+  archived: number;
 }
 
 export default function AdminBlogsPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [counts, setCounts] = useState<StatusCounts>({
+    total: 0,
+    published: 0,
+    pending: 0,
+    draft: 0,
+    archived: 0,
+  });
   const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,6 +67,10 @@ export default function AdminBlogsPage() {
   // Confirm delete modal state
   const [deletePostTarget, setDeletePostTarget] = useState<{ id: string; title: string } | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+
+  // Quick approve modal state
+  const [approvePostTarget, setApprovePostTarget] = useState<{ id: string; title: string } | null>(null);
+  const [approveLoading, setApproveLoading] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -66,7 +92,21 @@ export default function AdminBlogsPage() {
       const res = await fetch("/api/admin/blogs");
       if (res.ok) {
         const data = await res.json();
-        setPosts(data.posts || []);
+        const loadedPosts: BlogPost[] = data.posts || [];
+        setPosts(loadedPosts);
+
+        if (data.counts) {
+          setCounts(data.counts);
+        } else {
+          // Fallback calculation
+          setCounts({
+            total: loadedPosts.length,
+            published: loadedPosts.filter((p) => p.status === "PUBLISHED").length,
+            pending: loadedPosts.filter((p) => p.status === "PENDING_APPROVAL").length,
+            draft: loadedPosts.filter((p) => p.status === "DRAFT").length,
+            archived: loadedPosts.filter((p) => p.status === "ARCHIVED").length,
+          });
+        }
       }
     } catch (err) {
       console.error("Failed to fetch blog posts:", err);
@@ -84,11 +124,38 @@ export default function AdminBlogsPage() {
       if (res.ok) {
         setPosts((prev) => prev.filter((p) => p.id !== deletePostTarget.id));
         setDeletePostTarget(null);
+        fetchPosts();
       }
     } catch (err) {
       console.error("Failed to delete post:", err);
     } finally {
       setDeleteLoading(false);
+    }
+  };
+
+  const executeApprovePost = async () => {
+    if (!approvePostTarget) return;
+    setApproveLoading(true);
+
+    try {
+      const res = await fetch(`/api/admin/blogs/${approvePostTarget.id}/approve`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        setPosts((prev) =>
+          prev.map((p) =>
+            p.id === approvePostTarget.id
+              ? { ...p, status: "PUBLISHED", publishedAt: new Date().toISOString() }
+              : p
+          )
+        );
+        setApprovePostTarget(null);
+        fetchPosts();
+      }
+    } catch (err) {
+      console.error("Failed to approve post:", err);
+    } finally {
+      setApproveLoading(false);
     }
   };
 
@@ -124,7 +191,7 @@ export default function AdminBlogsPage() {
             Blog Articles & Strategic Guides
           </h1>
           <p className="mt-1 text-xs text-slate-500">
-            Author, edit, and publish high-ranking thought leadership articles to capture UK and international search intent.
+            Author, review, and publish strategic marketing articles to drive organic search growth.
           </p>
         </div>
 
@@ -134,6 +201,133 @@ export default function AdminBlogsPage() {
         >
           <PlusCircle className="h-4 w-4" /> Create New Article
         </Link>
+      </div>
+
+      {/* Super Admin Review Alert Banner */}
+      {userRole === "SUPER_ADMIN" && counts.pending > 0 && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-3xl border border-amber-300 bg-amber-50/90 p-5 shadow-xs">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-200/70 text-amber-800 shadow-2xs">
+              <Clock className="h-5 w-5 animate-pulse" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-navy-900">
+                {counts.pending} {counts.pending === 1 ? "Article" : "Articles"} Waiting for Approval
+              </h3>
+              <p className="mt-0.5 text-xs text-slate-600">
+                Moderators have submitted new articles that require your review and approval before publishing live.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setSelectedStatus("PENDING_APPROVAL")}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-xs font-bold text-white hover:bg-amber-700 transition-colors self-start sm:self-auto cursor-pointer shadow-xs shrink-0"
+          >
+            Review Pending Articles &rarr;
+          </button>
+        </div>
+      )}
+
+      {/* Status Filter Tabs */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
+        <button
+          onClick={() => setSelectedStatus("ALL")}
+          className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all cursor-pointer ${
+            selectedStatus === "ALL"
+              ? "bg-navy-900 text-white shadow-xs"
+              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          All Articles
+          <span
+            className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+              selectedStatus === "ALL" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {counts.total}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setSelectedStatus("PENDING_APPROVAL")}
+          className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all cursor-pointer ${
+            selectedStatus === "PENDING_APPROVAL"
+              ? "bg-amber-600 text-white shadow-xs"
+              : counts.pending > 0
+              ? "bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100"
+              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          <Clock className="h-3.5 w-3.5" />
+          Pending Approval
+          <span
+            className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
+              selectedStatus === "PENDING_APPROVAL"
+                ? "bg-white/20 text-white"
+                : counts.pending > 0
+                ? "bg-amber-600 text-white"
+                : "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {counts.pending}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setSelectedStatus("PUBLISHED")}
+          className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all cursor-pointer ${
+            selectedStatus === "PUBLISHED"
+              ? "bg-emerald-700 text-white shadow-xs"
+              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          <CheckCircle2 className="h-3.5 w-3.5" />
+          Published
+          <span
+            className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+              selectedStatus === "PUBLISHED" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {counts.published}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setSelectedStatus("DRAFT")}
+          className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all cursor-pointer ${
+            selectedStatus === "DRAFT"
+              ? "bg-slate-700 text-white shadow-xs"
+              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          Drafts
+          <span
+            className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+              selectedStatus === "DRAFT" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {counts.draft}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setSelectedStatus("ARCHIVED")}
+          className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-bold transition-all cursor-pointer ${
+            selectedStatus === "ARCHIVED"
+              ? "bg-slate-600 text-white shadow-xs"
+              : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          Archived
+          <span
+            className={`rounded-full px-1.5 py-0.2 text-[10px] ${
+              selectedStatus === "ARCHIVED" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-700"
+            }`}
+          >
+            {counts.archived}
+          </span>
+        </button>
       </div>
 
       {/* Filter & Search Toolbar */}
@@ -150,7 +344,7 @@ export default function AdminBlogsPage() {
           />
         </div>
 
-        {/* Status & Category Filters */}
+        {/* Category Filter */}
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={selectedCategory}
@@ -162,17 +356,6 @@ export default function AdminBlogsPage() {
                 Category: {cat}
               </option>
             ))}
-          </select>
-
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700 focus:bg-white focus:outline-hidden"
-          >
-            <option value="ALL">Status: All</option>
-            <option value="PUBLISHED">Published</option>
-            <option value="DRAFT">Draft</option>
-            <option value="ARCHIVED">Archived</option>
           </select>
         </div>
       </div>
@@ -186,8 +369,8 @@ export default function AdminBlogsPage() {
                 <th className="py-3.5 px-4">Article</th>
                 <th className="py-3.5 px-4">Category</th>
                 <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4">Read Time</th>
                 <th className="py-3.5 px-4">Author</th>
+                <th className="py-3.5 px-4">Read Time</th>
                 <th className="py-3.5 px-4">Published Date</th>
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
@@ -203,7 +386,7 @@ export default function AdminBlogsPage() {
               ) : filteredPosts.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-12 text-center text-slate-400">
-                    No articles match your search criteria.
+                    No articles match your criteria in this view.
                   </td>
                 </tr>
               ) : (
@@ -241,21 +424,38 @@ export default function AdminBlogsPage() {
                       </span>
                     </td>
                     <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                          post.status === "PUBLISHED"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : "bg-amber-100 text-amber-800"
-                        }`}
-                      >
-                        {post.status}
-                      </span>
+                      {post.status === "PUBLISHED" ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
+                          <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                          Published
+                        </span>
+                      ) : post.status === "PENDING_APPROVAL" ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-300 px-2.5 py-0.5 text-[10px] font-bold text-amber-800 animate-pulse">
+                          <Clock className="h-3 w-3 text-amber-600" />
+                          Pending Approval
+                        </span>
+                      ) : post.status === "DRAFT" ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[10px] font-semibold text-slate-700">
+                          Draft
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[10px] font-semibold text-slate-500">
+                          Archived
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-4 whitespace-nowrap">
+                      <div className="flex flex-col">
+                        <span className="font-medium text-slate-700">{post.author?.name || "Admin"}</span>
+                        {post.author?.role === "MODERATOR" && (
+                          <span className="inline-flex items-center w-fit rounded-sm bg-purple-50 px-1.5 py-0.2 text-[9px] font-bold text-purple-700 uppercase tracking-wider">
+                            Moderator
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3.5 px-4 whitespace-nowrap text-slate-500">
                       {post.readTime}
-                    </td>
-                    <td className="py-3.5 px-4 whitespace-nowrap text-slate-600 font-medium">
-                      {post.author?.name || "Admin"}
                     </td>
                     <td className="py-3.5 px-4 whitespace-nowrap text-slate-500 font-mono text-[11px]">
                       {post.publishedAt
@@ -264,18 +464,34 @@ export default function AdminBlogsPage() {
                             month: "short",
                             year: "numeric",
                           })
+                        : post.status === "PENDING_APPROVAL"
+                        ? "Pending"
                         : "Draft"}
                     </td>
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5">
-                        <Link
-                          href={`/blog/${post.slug}`}
-                          target="_blank"
-                          title="View on Public Site"
-                          className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-navy-900 transition-colors"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </Link>
+                        {/* Quick 1-click Approve for Super Admin on Pending posts */}
+                        {userRole === "SUPER_ADMIN" && post.status === "PENDING_APPROVAL" && (
+                          <button
+                            onClick={() => setApprovePostTarget({ id: post.id, title: post.title })}
+                            title="Approve & Publish to Live Site"
+                            className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-700 border border-emerald-200 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer"
+                          >
+                            <ShieldCheck className="h-3.5 w-3.5" /> Approve
+                          </button>
+                        )}
+
+                        {post.status === "PUBLISHED" && (
+                          <Link
+                            href={`/blog/${post.slug}`}
+                            target="_blank"
+                            title="View on Public Site"
+                            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-navy-900 transition-colors"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </Link>
+                        )}
+
                         <Link
                           href={`/admin/blogs/${post.id}`}
                           title="Edit Article"
@@ -283,6 +499,7 @@ export default function AdminBlogsPage() {
                         >
                           <Edit className="h-4 w-4" />
                         </Link>
+
                         {userRole === "SUPER_ADMIN" && (
                           <button
                             onClick={() => setDeletePostTarget({ id: post.id, title: post.title })}
@@ -301,6 +518,28 @@ export default function AdminBlogsPage() {
           </table>
         </div>
       </div>
+
+      {/* Confirm Approve Blog Modal */}
+      <ConfirmModal
+        isOpen={Boolean(approvePostTarget)}
+        title="Approve & Publish Article"
+        description={
+          <div className="space-y-2">
+            <p>
+              Are you sure you want to approve the article{" "}
+              <strong className="text-navy-900">&ldquo;{approvePostTarget?.title}&rdquo;</strong>?
+            </p>
+            <p className="text-[11px] text-emerald-700 font-semibold">
+              Upon approval, this article will immediately be published and made publicly visible on the main website blog index.
+            </p>
+          </div>
+        }
+        confirmText="Approve & Publish Live"
+        variant="success"
+        loading={approveLoading}
+        onConfirm={executeApprovePost}
+        onClose={() => setApprovePostTarget(null)}
+      />
 
       {/* Confirm Delete Blog Modal */}
       <ConfirmModal
