@@ -18,6 +18,14 @@ import {
   Repeat,
   FileCheck,
 } from "lucide-react";
+import {
+  MuiTrackChanges,
+  MuiHub,
+  MuiInsights,
+  MuiAutorenew,
+  MuiAssessment,
+  MuiHandshake,
+} from "@/components/MaterialIcons";
 import Section, { SectionHeading } from "@/components/Section";
 import Button from "@/components/Button";
 import Reveal from "@/components/Reveal";
@@ -107,34 +115,46 @@ const howWeHelp = [
 
 const whyPartnerPillars = [
   {
+    step: "01",
+    tag: "Tailored Strategy",
     title: "Marketing Built Around Your Business",
     text: "We begin by understanding your business objectives, target audience, challenges, and priorities. Our recommendations are designed around your specific needs rather than a rigid, one-size-fits-all package.",
-    icon: Target,
+    icon: MuiTrackChanges,
   },
   {
+    step: "02",
+    tag: "Unified Services",
     title: "Strategy and Execution Under One Roof",
     text: "Our six core services cover brand marketing, website design and development, social media, PPC, data analysis, and organic SEO, allowing us to coordinate different marketing activities around shared business goals.",
-    icon: Layers,
+    icon: MuiHub,
   },
   {
+    step: "03",
+    tag: "Data Intelligence",
     title: "Decisions Informed by Data",
     text: "We use relevant performance information to assess what is working, identify areas for improvement, and guide marketing decisions. Our aim is to make performance easier to understand and opportunities easier to identify.",
-    icon: BarChart3,
+    icon: MuiInsights,
   },
   {
+    step: "04",
+    tag: "Iterative Growth",
     title: "Continuous Improvement",
     text: "Our Initiation, Iteration, and Integration approach focuses on understanding the audience, improving campaigns based on feedback and performance, and connecting marketing activities into a more consistent strategy.",
-    icon: Repeat,
+    icon: MuiAutorenew,
   },
   {
+    step: "05",
+    tag: "Transparent Reporting",
     title: "Clear Communication & Reporting",
     text: "We aim to provide clear updates on agreed activities, performance indicators, and next steps, helping clients understand the work being delivered and the reasons behind our recommendations.",
-    icon: MessageSquare,
+    icon: MuiAssessment,
   },
   {
+    step: "06",
+    tag: "Adaptive Partnership",
     title: "Flexible Support for Different Goals",
     text: "Whether you need support with one service or a coordinated digital marketing strategy, we work with you to identify an approach that reflects your priorities, resources, and commercial timeline.",
-    icon: Users,
+    icon: MuiHandshake,
   },
 ];
 
@@ -330,16 +350,54 @@ export default function Home() {
         <div className="mt-8 sm:mt-10 lg:mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {whyPartnerPillars.map((p, i) => (
             <Reveal key={p.title} index={i} className="h-full">
-              <div className="flex h-full flex-col rounded-3xl border border-navy-100 bg-surface-muted/50 p-7 transition-all hover:bg-white hover:shadow-md">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy-900 text-orange-400">
-                  <p.icon className="h-5 w-5" />
-                </span>
-                <h3 className="mt-5 font-display text-base font-bold text-navy-900 sm:text-lg">
-                  {p.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                  {p.text}
-                </p>
+              <div className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-navy-100/90 bg-white p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-orange-300 hover:shadow-xl hover:shadow-orange-500/10">
+                {/* Ambient top-right decorative brand glow on hover */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br from-orange-500/12 via-amber-400/8 to-transparent blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                />
+
+                <div>
+                  {/* Top Bar: Material UI Icon vessel + Theme Number Badge */}
+                  <div className="flex items-center justify-between">
+                    <div className="relative">
+                      {/* Ambient hover glow halo behind icon */}
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -inset-1 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-40"
+                      />
+                      <span className="relative flex h-13 w-13 items-center justify-center rounded-2xl border border-orange-200/80 bg-orange-50 text-orange-600 shadow-xs transition-all duration-300 group-hover:scale-105 group-hover:border-transparent group-hover:bg-gradient-to-br group-hover:from-orange-500 group-hover:to-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-orange-500/30">
+                        <p.icon className="h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
+                      </span>
+                    </div>
+
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-200/70 bg-orange-50/80 px-2.5 py-1 font-mono text-xs font-bold text-orange-600 transition-colors group-hover:border-orange-500 group-hover:bg-orange-500 group-hover:text-white">
+                      <span className="h-1.5 w-1.5 rounded-full bg-orange-500 transition-colors group-hover:bg-white" />
+                      {p.step}
+                    </span>
+                  </div>
+
+                  {/* Title (strictly unchanged) */}
+                  <h3 className="mt-6 font-display text-lg font-bold text-navy-900 transition-colors group-hover:text-navy-950 sm:text-xl">
+                    {p.title}
+                  </h3>
+
+                  {/* Description / Content (strictly unchanged) */}
+                  <p className="mt-2.5 text-sm leading-relaxed text-ink-muted">
+                    {p.text}
+                  </p>
+                </div>
+
+                {/* Bottom Pillar Tag Bar with theme accents */}
+                <div className="mt-6 pt-4 border-t border-navy-50 flex items-center justify-between text-xs font-medium">
+                  <span className="inline-flex items-center gap-2 font-semibold text-navy-800 transition-colors group-hover:text-orange-600">
+                    <span className="h-1.5 w-1.5 rounded-full bg-orange-500 transition-transform duration-200 group-hover:scale-125" />
+                    {p.tag}
+                  </span>
+                  <span className="inline-flex items-center gap-1 font-semibold text-orange-600 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+                    Core Pillar →
+                  </span>
+                </div>
               </div>
             </Reveal>
           ))}
