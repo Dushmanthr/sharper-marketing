@@ -299,3 +299,28 @@ h1, h2, h3, h4, h5 {
   }
 }
 
+/* Case Studies Continuous Moving Track Animation */
+.animate-case-ticker {
+  display: flex;
+  width: max-content;
+  animation: ticker-slide 48s linear infinite;
+  will-change: transform;
+}
+
+.animate-case-ticker:hover,
+.animate-case-ticker:focus-within {
+  animation-play-state: paused;
+}
+
+@media (max-width: 640px) {
+  .animate-case-ticker {
+    animation-duration: 38s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-case-ticker {
+    animation-play-state: paused;
+  }
+}
+

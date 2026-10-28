@@ -443,7 +443,7 @@ export default function Home() {
           </div>
         </div>
 
-        <CaseStudiesShowcase />
+        <CaseStudiesShowcase defaultView="moving" />
       </Section>
 
       {/* 08. Parallax Statement */}

@@ -43,7 +43,7 @@ const pressMeSecondary = {
 
 export default function Header() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/admin") || pathname?.includes("/admin")) return null;
+  if (pathname?.startsWith("/admin") || pathname?.includes("/admin") || pathname?.startsWith("/demos")) return null;
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);

@@ -11,6 +11,7 @@ import {
   Quote,
   ShieldCheck,
   ArrowRight,
+  ExternalLink,
 } from "lucide-react";
 import Section from "@/components/Section";
 import PageHero from "@/components/PageHero";
@@ -22,7 +23,12 @@ import { caseStudies, getCaseStudy, site } from "@/lib/site";
 import { pageMeta, breadcrumbJsonLd, webPageJsonLd } from "@/lib/seo";
 
 export function generateStaticParams() {
-  return caseStudies.map((c) => ({ slug: c.slug }));
+  const slugs: { slug: string }[] = [];
+  caseStudies.forEach((c) => {
+    slugs.push({ slug: c.slug });
+    c.legacySlugs?.forEach((legacy) => slugs.push({ slug: legacy }));
+  });
+  return slugs;
 }
 
 type Params = { params: Promise<{ slug: string }> };
@@ -123,6 +129,86 @@ export default async function CaseStudyDetailPage({ params }: Params) {
                     {study.clientOverview.timeframe}
                   </p>
                 </div>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Website Visual & Screen Recording Showcase */}
+          <Reveal className="mt-8">
+            <div className="overflow-hidden rounded-2xl sm:rounded-3xl border border-navy-100 bg-white shadow-sm">
+              <div className="flex items-center justify-between border-b border-navy-100/70 bg-navy-50/70 px-3.5 py-2.5 sm:px-4 sm:py-3 select-none">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-navy-200" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-navy-200" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-navy-200" />
+                </div>
+                <div className="flex max-w-[55%] sm:max-w-[65%] items-center gap-1.5 rounded-full border border-navy-100 bg-white px-3 py-0.5 text-xs font-mono text-navy-700">
+                  <Globe2 className="h-3 w-3 text-navy-400 shrink-0" />
+                  <span className="truncate">{study.clientDomain || `${study.slug}.co.uk`}</span>
+                </div>
+                {study.websiteUrl ? (
+                  <a
+                    href={study.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-full bg-orange-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-orange-600 transition-colors hover:bg-orange-500 hover:text-white"
+                  >
+                    <span>Visit Live Site</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                ) : (
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600">
+                    Live Showcase
+                  </span>
+                )}
+              </div>
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-navy-950">
+                {study.video ? (
+                  <video
+                    src={study.video}
+                    poster={study.image}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    controls
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <Image
+                    src={study.image}
+                    alt={study.title}
+                    fill
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    className="object-cover"
+                  />
+                )}
+              </div>
+
+              {/* Showcase Footer Bar with Client & Live Production CTA */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-navy-50 bg-navy-50/40 p-4 sm:px-6 sm:py-3.5">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="text-xs font-semibold text-navy-900">
+                    {study.client || study.clientOverview.industry}
+                  </span>
+                  <span className="hidden sm:inline text-navy-300">·</span>
+                  <span className="hidden sm:inline text-xs text-ink-muted">
+                    {study.clientOverview.targetMarket}
+                  </span>
+                </div>
+
+                {study.websiteUrl && (
+                  <a
+                    href={study.websiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-4 py-1.5 text-xs font-semibold text-white transition-all hover:bg-orange-600 shadow-2xs"
+                  >
+                    <span>Visit Production Website</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
               </div>
             </div>
           </Reveal>

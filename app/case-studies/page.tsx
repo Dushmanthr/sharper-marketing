@@ -80,7 +80,7 @@ export default function CaseStudiesPage() {
         />
 
         <div className="mt-12">
-          <CaseStudiesShowcase />
+          <CaseStudiesShowcase defaultView="grid" />
         </div>
       </Section>
 
