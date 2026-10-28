@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sprout,
@@ -16,8 +17,11 @@ import {
   Sliders,
   CheckCircle2,
   Plane,
+  ArrowRight,
 } from "lucide-react";
 import { loadThreeJs } from "@/lib/threeLoader";
+import AgricultureNav from "@/components/demos/AgricultureNav";
+import DemoBadge from "@/components/demos/DemoBadge";
 
 const sectors = [
   { id: "s1", name: "Sector 01: Winter Wheat", area: "450 Ha", moisture: "44.2%", health: "98.4%", irrigation: "Optimal" },
@@ -206,36 +210,8 @@ export default function SmartAgricultureDemo() {
   return (
     <div className="w-full min-h-screen bg-[#07130f] text-[#ecfdf5] font-sans selection:bg-[#10b981] selection:text-black">
       {/* 1. Agritech Navbar */}
-      <nav className="sticky top-0 z-40 w-full border-b border-emerald-950/60 bg-[#07130f]/85 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500 text-black font-bold">
-            <Sprout className="h-5 w-5 text-black" />
-          </div>
-          <div>
-            <span className="font-display font-bold tracking-tight text-sm sm:text-base text-white">
-              TerraSynapse AI
-            </span>
-            <span className="hidden sm:inline-block ml-2 text-[10px] font-mono text-emerald-400">
-              v4.2 Telemetry Engine
-            </span>
-          </div>
-        </div>
-
-        <div className="hidden md:flex items-center gap-6 text-xs uppercase tracking-wider text-emerald-200/70">
-          <a href="#telemetry" className="hover:text-emerald-400 transition-colors font-medium">Live Telemetry</a>
-          <a href="#sectors" className="hover:text-emerald-400 transition-colors font-medium">Crop Sectors</a>
-          <a href="#calculator" className="hover:text-emerald-400 transition-colors font-medium">Yield ROI Engine</a>
-        </div>
-
-        <button
-          onClick={handleTriggerDroneScan}
-          disabled={droneScanning}
-          className="flex items-center gap-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-xs font-semibold text-black transition-all hover:scale-105 shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50"
-        >
-          <Plane className={`h-3.5 w-3.5 ${droneScanning ? "animate-spin" : ""}`} />
-          <span>{droneScanning ? "Deploying Scan..." : "Deploy Drone"}</span>
-        </button>
-      </nav>
+      <AgricultureNav />
+      <DemoBadge studySlug="smart-agriculture" studyName="TerraSynapse" />
 
       {/* 2. Hero with Three.js 3D Soil Digital-Twin Grid */}
       <section className="px-4 sm:px-8 lg:px-16 py-8 sm:py-12">
@@ -355,6 +331,47 @@ export default function SmartAgricultureDemo() {
               <p className="text-[11px] text-emerald-200/60 mt-1">Consolidated cost savings verified across 180 European farms</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Sub-pages Discovery Bar */}
+      <section className="px-4 sm:px-8 lg:px-16 py-10 border-t border-emerald-950 bg-[#06120e]">
+        <div className="container mx-auto grid md:grid-cols-2 gap-6">
+          <Link
+            href="/demos/smart-agriculture/telemetry"
+            className="group rounded-2xl border border-emerald-900/60 bg-[#091a14] p-6 shadow-md hover:border-emerald-500 hover:shadow-xl transition-all flex items-center justify-between text-left"
+          >
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">
+                Drone &amp; Lidar Ops
+              </span>
+              <h3 className="font-display text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">
+                Explore Crop Sectors &amp; Drone Swarms →
+              </h3>
+              <p className="text-xs text-emerald-200/70">
+                Live sensor dials, moisture heatmaps, and autonomous drone mission control.
+              </p>
+            </div>
+            <ArrowRight className="h-5 w-5 text-emerald-400 shrink-0 group-hover:translate-x-1 transition-transform" />
+          </Link>
+
+          <Link
+            href="/demos/smart-agriculture/roi-calculator"
+            className="group rounded-2xl border border-emerald-900/60 bg-[#091a14] p-6 shadow-md hover:border-emerald-500 hover:shadow-xl transition-all flex items-center justify-between text-left"
+          >
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold">
+                Economic Simulator
+              </span>
+              <h3 className="font-display text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">
+                Planetary Yield &amp; ROI Engine →
+              </h3>
+              <p className="text-xs text-emerald-200/70">
+                Acreage modeling, water conservation credits, and proposal generation.
+              </p>
+            </div>
+            <ArrowRight className="h-5 w-5 text-emerald-400 shrink-0 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </section>
 

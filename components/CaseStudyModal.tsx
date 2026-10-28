@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,15 +8,12 @@ import {
   ExternalLink,
   Lock,
   ArrowRight,
-  Code2,
+  Sparkles,
   Monitor,
   Tablet,
   Smartphone,
   Maximize2,
   Loader2,
-  Play,
-  Volume2,
-  VolumeX,
   Calendar,
   ChevronLeft,
   ChevronRight,
@@ -39,11 +35,8 @@ export default function CaseStudyModal({
 }: CaseStudyModalProps) {
   // Find current index in caseStudies array
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [showcaseMode, setShowcaseMode] = useState<"interactive" | "video">("interactive");
   const [deviceViewport, setDeviceViewport] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const [iframeLoading, setIframeLoading] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Sync index when study prop changes
   useEffect(() => {
@@ -103,33 +96,8 @@ export default function CaseStudyModal({
     };
   }, [isOpen, currentIndex, onClose]);
 
-  // Video playback management
-  useEffect(() => {
-    if (isOpen && showcaseMode === "video" && videoRef.current && activeStudy?.video) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.muted = isMuted;
-      videoRef.current.play().catch(() => {
-        if (videoRef.current) {
-          videoRef.current.muted = true;
-          setIsMuted(true);
-          videoRef.current.play().catch(() => {});
-        }
-      });
-    } else if (videoRef.current) {
-      videoRef.current.pause();
-    }
-  }, [isOpen, showcaseMode, activeStudy, isMuted]);
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    const nextMuted = !isMuted;
-    videoRef.current.muted = nextMuted;
-    setIsMuted(nextMuted);
-  };
-
   if (!isOpen || !activeStudy) return null;
 
-  const domain = activeStudy.clientDomain || `${activeStudy.slug}.co.uk`;
   const demoUrl = activeStudy.demoUrl || "/demos/modern-restaurant";
 
   return (
@@ -283,89 +251,73 @@ export default function CaseStudyModal({
                 </div>
               </div>
 
-              {/* Mode Selector & Interactive Toolbar */}
+              {/* Interactive Toolbar (100% Focused on Live Interactive Experience) */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-navy-100 shadow-2xs">
-                {/* Main Mode Toggle: [ Live Interactive Demo ] vs [ Video Tour ] */}
-                <div className="flex items-center rounded-xl bg-navy-50/80 p-1 border border-navy-200/60 shadow-2xs w-full sm:w-auto">
-                  <button
-                    type="button"
-                    onClick={() => setShowcaseMode("interactive")}
-                    className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                      showcaseMode === "interactive"
-                        ? "bg-orange-500 text-white shadow-xs"
-                        : "text-navy-700 hover:text-navy-900"
-                    }`}
-                  >
-                    <Code2 className="h-3.5 w-3.5" />
-                    <span>⚡ Live Interactive Demo</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowcaseMode("video")}
-                    className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                      showcaseMode === "video"
-                        ? "bg-navy-900 text-white shadow-xs"
-                        : "text-navy-700 hover:text-navy-900"
-                    }`}
-                  >
-                    <Play className="h-3.5 w-3.5" />
-                    <span>🎬 Video Tour</span>
-                  </button>
+                {/* Live Sandbox Status Indicator */}
+                <div className="flex items-center gap-2 px-2 py-1">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-500/10 text-orange-600">
+                    <Sparkles className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-navy-900 block leading-tight">
+                      Live Interactive Experience
+                    </span>
+                    <span className="text-[10px] text-ink-muted block leading-tight">
+                      Explore 3D graphics, navigation &amp; responsive layouts in real time
+                    </span>
+                  </div>
                 </div>
 
-                {/* Sub-controls when in Interactive Demo Mode */}
-                {showcaseMode === "interactive" && (
-                  <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-                    {/* Device Viewport Switcher */}
-                    <div className="inline-flex items-center rounded-lg bg-navy-50/80 p-1 border border-navy-200/60 shadow-2xs">
-                      <button
-                        type="button"
-                        onClick={() => setDeviceViewport("desktop")}
-                        title="Desktop View (100%)"
-                        className={`p-1.5 rounded-md transition-colors ${
-                          deviceViewport === "desktop" ? "bg-navy-900 text-white" : "text-navy-500 hover:text-navy-900"
-                        }`}
-                      >
-                        <Monitor className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDeviceViewport("tablet")}
-                        title="Tablet View (768px)"
-                        className={`p-1.5 rounded-md transition-colors ${
-                          deviceViewport === "tablet" ? "bg-navy-900 text-white" : "text-navy-500 hover:text-navy-900"
-                        }`}
-                      >
-                        <Tablet className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDeviceViewport("mobile")}
-                        title="Mobile Phone View (375px)"
-                        className={`p-1.5 rounded-md transition-colors ${
-                          deviceViewport === "mobile" ? "bg-navy-900 text-white" : "text-navy-500 hover:text-navy-900"
-                        }`}
-                      >
-                        <Smartphone className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-
-                    {/* Open in full tab button */}
-                    <a
-                      href={demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-lg bg-navy-50/80 px-2.5 py-1.5 text-xs font-semibold text-navy-800 border border-navy-200/60 hover:text-orange-600 transition-colors shadow-2xs"
+                {/* Viewport & Tab Actions */}
+                <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+                  {/* Device Viewport Switcher */}
+                  <div className="inline-flex items-center rounded-lg bg-navy-50/80 p-1 border border-navy-200/60 shadow-2xs">
+                    <button
+                      type="button"
+                      onClick={() => setDeviceViewport("desktop")}
+                      title="Desktop View (100%)"
+                      className={`p-1.5 rounded-md transition-colors ${
+                        deviceViewport === "desktop" ? "bg-navy-900 text-white" : "text-navy-500 hover:text-navy-900"
+                      }`}
                     >
-                      <Maximize2 className="h-3 w-3" />
-                      <span className="hidden xs:inline">Full Tab</span>
-                    </a>
+                      <Monitor className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeviceViewport("tablet")}
+                      title="Tablet View (768px)"
+                      className={`p-1.5 rounded-md transition-colors ${
+                        deviceViewport === "tablet" ? "bg-navy-900 text-white" : "text-navy-500 hover:text-navy-900"
+                      }`}
+                    >
+                      <Tablet className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeviceViewport("mobile")}
+                      title="Mobile Phone View (375px)"
+                      className={`p-1.5 rounded-md transition-colors ${
+                        deviceViewport === "mobile" ? "bg-navy-900 text-white" : "text-navy-500 hover:text-navy-900"
+                      }`}
+                    >
+                      <Smartphone className="h-3.5 w-3.5" />
+                    </button>
                   </div>
-                )}
+
+                  {/* Open in full tab button */}
+                  <a
+                    href={demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg bg-navy-50/80 px-2.5 py-1.5 text-xs font-semibold text-navy-800 border border-navy-200/60 hover:text-orange-600 transition-colors shadow-2xs"
+                  >
+                    <Maximize2 className="h-3 w-3" />
+                    <span className="hidden xs:inline">Open in New Tab</span>
+                  </a>
+                </div>
               </div>
 
-              {/* Browser Mockup Demonstration Player / Interactive Iframe Viewport */}
+              {/* Browser Mockup Demonstration Sandbox Viewport */}
               <div className="overflow-hidden rounded-xl sm:rounded-2xl border border-navy-200/80 bg-white shadow-lg">
                 {/* Browser Top Window Bar */}
                 <div className="flex items-center justify-between border-b border-navy-100 bg-navy-50/80 px-4 py-2.5 select-none">
@@ -378,9 +330,7 @@ export default function CaseStudyModal({
                   <div className="flex max-w-[60%] sm:max-w-[70%] items-center gap-1.5 rounded-full border border-navy-100 bg-white px-3 py-1 text-xs font-mono text-navy-700 shadow-2xs">
                     <Lock className="h-3 w-3 text-navy-400 shrink-0" />
                     <span className="truncate">
-                      {showcaseMode === "interactive"
-                        ? `https://sharper-labs.com${demoUrl}`
-                        : domain}
+                      {`https://sharper-labs.com${demoUrl}`}
                     </span>
                   </div>
 
@@ -390,92 +340,39 @@ export default function CaseStudyModal({
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
                     </span>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 hidden xs:inline">
-                      {showcaseMode === "interactive" ? "Live 3D Sandbox" : "Demonstration Tour"}
+                      Live 3D Sandbox
                     </span>
                   </div>
                 </div>
 
-                {/* Viewport Area */}
-                {showcaseMode === "interactive" ? (
-                  /* Mode 1: Interactive Live Sandbox with Three.js 3D & Micro-animations */
-                  <div className="relative bg-[#0c0e14] p-2 sm:p-4 flex items-center justify-center min-h-[500px] sm:min-h-[580px] overflow-hidden">
-                    <div
-                      className={`relative transition-all duration-300 overflow-hidden bg-white shadow-2xl ${
-                        deviceViewport === "desktop"
-                          ? "w-full h-[500px] sm:h-[580px] rounded-lg"
-                          : deviceViewport === "tablet"
-                          ? "w-[768px] max-w-full h-[500px] sm:h-[580px] rounded-xl border-4 border-navy-700"
-                          : "w-[375px] max-w-full h-[520px] sm:h-[580px] rounded-3xl border-8 border-navy-800"
-                      }`}
-                    >
-                      {iframeLoading && (
-                        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-navy-950/80 text-white backdrop-blur-xs">
-                          <Loader2 className="h-8 w-8 animate-spin text-orange-500 mb-2" />
-                          <p className="text-xs font-semibold">Loading Live 3D Experience...</p>
-                        </div>
-                      )}
-
-                      <iframe
-                        key={demoUrl}
-                        src={demoUrl}
-                        title={`Live Demonstration - ${activeStudy.title}`}
-                        onLoad={() => setIframeLoading(false)}
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-                        className="w-full h-full border-none"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  /* Mode 2: High-Definition Video Screen Recording */
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-navy-950 group/player">
-                    {activeStudy.video ? (
-                      <>
-                        <video
-                          ref={videoRef}
-                          src={activeStudy.video}
-                          poster={activeStudy.image}
-                          autoPlay
-                          loop
-                          playsInline
-                          muted={isMuted}
-                          preload="auto"
-                          controls
-                          className="h-full w-full object-cover"
-                        />
-
-                        {/* Sound Toggle Button */}
-                        <button
-                          type="button"
-                          onClick={toggleMute}
-                          aria-label={isMuted ? "Unmute audio" : "Mute audio"}
-                          className="absolute top-3 right-3 z-10 flex items-center gap-1.5 rounded-full border border-white/20 bg-navy-950/80 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-md transition-all hover:bg-orange-600 hover:border-orange-400 shadow-md"
-                        >
-                          {isMuted ? (
-                            <>
-                              <VolumeX className="h-3.5 w-3.5 text-white/80" />
-                              <span className="hidden xs:inline text-[11px]">Unmute</span>
-                            </>
-                          ) : (
-                            <>
-                              <Volume2 className="h-3.5 w-3.5 text-orange-400" />
-                              <span className="hidden xs:inline text-[11px]">Muted</span>
-                            </>
-                          )}
-                        </button>
-                      </>
-                    ) : (
-                      <div className="relative h-full w-full overflow-y-auto">
-                        <Image
-                          src={activeStudy.image}
-                          alt={activeStudy.title}
-                          fill
-                          sizes="(max-width: 1200px) 100vw, 1200px"
-                          className="object-cover object-top"
-                        />
+                {/* Interactive Live Sandbox Viewport */}
+                <div className="relative bg-[#0c0e14] p-2 sm:p-4 flex items-center justify-center min-h-[500px] sm:min-h-[580px] overflow-hidden">
+                  <div
+                    className={`relative transition-all duration-300 overflow-hidden bg-white shadow-2xl ${
+                      deviceViewport === "desktop"
+                        ? "w-full h-[500px] sm:h-[580px] rounded-lg"
+                        : deviceViewport === "tablet"
+                        ? "w-[768px] max-w-full h-[500px] sm:h-[580px] rounded-xl border-4 border-navy-700"
+                        : "w-[375px] max-w-full h-[520px] sm:h-[580px] rounded-3xl border-8 border-navy-800"
+                    }`}
+                  >
+                    {iframeLoading && (
+                      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-navy-950/80 text-white backdrop-blur-xs">
+                        <Loader2 className="h-8 w-8 animate-spin text-orange-500 mb-2" />
+                        <p className="text-xs font-semibold">Loading Live 3D Experience...</p>
                       </div>
                     )}
+
+                    <iframe
+                      key={demoUrl}
+                      src={demoUrl}
+                      title={`Live Demonstration - ${activeStudy.title}`}
+                      onLoad={() => setIframeLoading(false)}
+                      sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                      className="w-full h-full border-none"
+                    />
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Title & Core Overview */}

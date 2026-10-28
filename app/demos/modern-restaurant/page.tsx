@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   UtensilsCrossed,
@@ -19,6 +20,8 @@ import {
   X,
 } from "lucide-react";
 import { loadThreeJs } from "@/lib/threeLoader";
+import RestaurantNav from "@/components/demos/RestaurantNav";
+import DemoBadge from "@/components/demos/DemoBadge";
 
 const menuCategories = ["Tasting Menu", "Main Courses", "Cocktails & Cellar"];
 
@@ -224,30 +227,8 @@ export default function ModernRestaurantDemo() {
   return (
     <div className="w-full min-h-screen bg-[#0b0d13] text-[#f4efe6] font-sans selection:bg-[#d4af37] selection:text-black">
       {/* 1. Modern Restaurant Navbar */}
-      <nav className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#0b0d13]/80 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#d4af37] text-black font-serif font-bold text-sm">
-            A
-          </div>
-          <span className="font-serif tracking-widest text-sm sm:text-base font-semibold uppercase text-white">
-            Aura Mayfair
-          </span>
-        </div>
-
-        <div className="hidden md:flex items-center gap-6 text-xs uppercase tracking-wider text-white/70">
-          <a href="#about" className="hover:text-[#d4af37] transition-colors">Philosophy</a>
-          <a href="#menu" className="hover:text-[#d4af37] transition-colors">Menu</a>
-          <a href="#cellar" className="hover:text-[#d4af37] transition-colors">Wine Cellar</a>
-          <a href="#private-dining" className="hover:text-[#d4af37] transition-colors">Private Dining</a>
-        </div>
-
-        <button
-          onClick={() => setReservationModal(true)}
-          className="rounded-full bg-gradient-to-r from-[#d4af37] to-[#e5c158] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-black transition-all hover:scale-105 shadow-[0_0_20px_rgba(212,175,55,0.3)]"
-        >
-          Reserve Table
-        </button>
-      </nav>
+      <RestaurantNav />
+      <DemoBadge studySlug="modern-restaurant" studyName="AURA Mayfair" />
 
       {/* 2. Hero Section with Three.js 3D Interactive Sculpture */}
       <section className="relative min-h-[85vh] flex items-center overflow-hidden px-4 sm:px-8 lg:px-16 py-12">
@@ -269,19 +250,19 @@ export default function ModernRestaurantDemo() {
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <button
-                onClick={() => setReservationModal(true)}
-                className="rounded-full bg-[#d4af37] px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider text-black transition-transform hover:scale-105"
+              <Link
+                href="/demos/modern-restaurant/menu"
+                className="rounded-full bg-[#d4af37] px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider text-black transition-transform hover:scale-105 shadow-lg"
               >
-                Book Your Experience
-              </button>
-              <a
-                href="#menu"
+                Curated Menu Experience
+              </Link>
+              <Link
+                href="/demos/modern-restaurant/private-dining"
                 className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-xs sm:text-sm font-medium tracking-wider text-white hover:border-[#d4af37] hover:text-[#d4af37] transition-colors"
               >
-                <span>Explore Tasting Menu</span>
+                <span>Private Dining Salons</span>
                 <ChevronRight className="h-4 w-4" />
-              </a>
+              </Link>
             </div>
 
             <div className="pt-6 grid grid-cols-3 gap-4 border-t border-white/10 max-w-lg">

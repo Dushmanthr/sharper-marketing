@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Armchair,
@@ -17,6 +18,8 @@ import {
   Plus,
 } from "lucide-react";
 import { loadThreeJs } from "@/lib/threeLoader";
+import FurnitureNav from "@/components/demos/FurnitureNav";
+import DemoBadge from "@/components/demos/DemoBadge";
 
 const finishes = [
   { id: "amber-oak", name: "Smoked Amber Oak", hex: 0xb47238, colorClass: "bg-[#b47238]" },
@@ -241,33 +244,8 @@ export default function FurnitureHouseDemo() {
   return (
     <div className="w-full min-h-screen bg-[#f7f5f0] text-[#1a1c20] font-sans selection:bg-[#aa4c33] selection:text-white">
       {/* 1. Nordic Atelier Navbar */}
-      <nav className="sticky top-0 z-40 w-full border-b border-[#e5e0d4] bg-[#f7f5f0]/85 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Armchair className="h-5 w-5 text-[#856046]" />
-          <span className="font-display font-bold tracking-tight text-sm sm:text-base uppercase text-[#1a1c20]">
-            Nordic &amp; Form Atelier
-          </span>
-        </div>
-
-        <div className="hidden md:flex items-center gap-6 text-xs uppercase tracking-wider text-[#5a5f68]">
-          <a href="#customizer" className="hover:text-black transition-colors font-medium">Lounge Studio</a>
-          <a href="#materials" className="hover:text-black transition-colors font-medium">Sustainable Craft</a>
-          <a href="#collection" className="hover:text-black transition-colors font-medium">Living Collection</a>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleAddToCart}
-            className="relative flex items-center gap-2 rounded-full border border-[#d8d3c5] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#1a1c20] shadow-xs hover:border-[#aa4c33]"
-          >
-            <ShoppingBag className="h-3.5 w-3.5 text-[#aa4c33]" />
-            <span>Bag</span>
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#aa4c33] text-[9px] font-bold text-white">
-              {cartCount}
-            </span>
-          </button>
-        </div>
-      </nav>
+      <FurnitureNav cartCount={cartCount} />
+      <DemoBadge studySlug="furniture-house" studyName="Nordic & Form" />
 
       {/* 2. Main 3D Customizer Studio */}
       <section id="customizer" className="px-4 sm:px-8 lg:px-16 py-8 sm:py-12">
@@ -406,6 +384,47 @@ export default function FurnitureHouseDemo() {
               Every seam is finished by master upholsterers in our Copenhagen atelier.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* Sub-pages Discovery Bar */}
+      <section className="px-4 sm:px-8 lg:px-16 py-10 border-t border-[#e5e0d4] bg-[#f0ede4]">
+        <div className="container mx-auto grid md:grid-cols-2 gap-6">
+          <Link
+            href="/demos/furniture-house/collection"
+            className="group rounded-2xl border border-[#d6cfc0] bg-white p-6 shadow-xs hover:border-[#aa4c33] hover:shadow-md transition-all flex items-center justify-between"
+          >
+            <div className="space-y-1 text-left">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#aa4c33] font-bold">
+                Catalog &amp; Pieces
+              </span>
+              <h3 className="font-display text-lg font-bold text-[#1a1c20] group-hover:text-[#aa4c33] transition-colors">
+                Explore The Full Living Collection →
+              </h3>
+              <p className="text-xs text-[#5a5f68]">
+                Lounge seating, monolithic coffee tables, and architectural floor lamps.
+              </p>
+            </div>
+            <ArrowRight className="h-5 w-5 text-[#aa4c33] shrink-0 group-hover:translate-x-1 transition-transform" />
+          </Link>
+
+          <Link
+            href="/demos/furniture-house/craft"
+            className="group rounded-2xl border border-[#d6cfc0] bg-white p-6 shadow-xs hover:border-[#856046] hover:shadow-md transition-all flex items-center justify-between"
+          >
+            <div className="space-y-1 text-left">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#856046] font-bold">
+                Atelier Provenance
+              </span>
+              <h3 className="font-display text-lg font-bold text-[#1a1c20] group-hover:text-[#856046] transition-colors">
+                The Sustainable Craft Story →
+              </h3>
+              <p className="text-xs text-[#5a5f68]">
+                Certified Jutland oak, traditional mortise joinery, and natural organic oils.
+              </p>
+            </div>
+            <ArrowRight className="h-5 w-5 text-[#856046] shrink-0 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </section>
 
