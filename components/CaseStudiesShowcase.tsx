@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutGrid, Sparkles, MoveHorizontal } from "lucide-react";
+import { LayoutGrid, MoveHorizontal } from "lucide-react";
 import { caseStudies, type CaseStudy } from "@/lib/site";
 import CaseStudyCard from "./CaseStudyCard";
 import CaseStudyModal from "./CaseStudyModal";
@@ -108,7 +108,7 @@ export default function CaseStudiesShowcase({
       {viewMode === "moving" && (
         <div className="mb-4 flex items-center justify-center">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-200/80 bg-orange-50/70 px-3 py-1 text-[11px] font-medium text-orange-800">
-            <Sparkles className="h-3 w-3 text-orange-500" />
+
             <span>Hover to preview · Click any card to open interactive demonstration</span>
           </span>
         </div>
