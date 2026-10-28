@@ -152,7 +152,7 @@ export const services: Service[] = [
     slug: "brand-marketing",
     title: "Brand Marketing",
     short: "Brand Marketing",
-    icon: "Palette",
+    icon: "Crown",
     excerpt:
       "Build a distinctive brand identity, messaging, and visual presence your customers recognize and remember across digital and offline channels.",
     image: "/images/brand-marketing-02.jpg",

@@ -9,7 +9,6 @@ import {
   ArrowRight,
   ShieldCheck,
   Zap,
-  Sparkles,
   BarChart2,
   Phone,
   Flame,

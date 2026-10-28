@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  Crown,
   Palette,
   Code2,
   Share2,
@@ -14,17 +15,27 @@ import {
   ArrowRight,
   ShieldCheck,
   Zap,
+  Target,
+  MessageSquare,
+  LayoutTemplate,
+  TrendingUp,
 } from "lucide-react";
 import { services, type Service } from "@/lib/site";
 import ConsultationModal from "./ConsultationModal";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Crown,
+  Sparkles: Crown,
   Palette,
   Code2,
   Share2,
   MousePointerClick,
   BarChart3,
   Search,
+  Target,
+  MessageSquare,
+  LayoutTemplate,
+  TrendingUp,
 };
 
 export default function ServicesExplorer() {
@@ -174,28 +185,35 @@ export default function ServicesExplorer() {
                   </div>
 
                   <div className="grid gap-3 sm:grid-cols-2">
-                    {activeService.whatWeDo.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className={`group/card rounded-2xl p-4 transition-all duration-200 ${
-                          item.highlighted
-                            ? "border border-orange-300 bg-gradient-to-br from-orange-50/80 via-white to-amber-50/40 shadow-xs sm:col-span-2"
-                            : "border border-navy-100/70 bg-navy-50/25 hover:border-orange-300 hover:bg-white hover:shadow-xs"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <h5 className="font-display text-sm font-bold text-navy-900 group-hover/card:text-orange-600 transition-colors">
-                            {item.title}
-                          </h5>
-                          {item.highlighted && (
-                            <span className="rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-xs">
-                              Featured Focus
-                            </span>
-                          )}
-                        </div>
-                        <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                          {item.description}
-                        </p>
+                    {activeService.whatWeDo.map((item, idx) => {
+                      const ItemIcon = (item.icon && iconMap[item.icon]) ? iconMap[item.icon] : CheckCircle2;
+                      return (
+                        <div
+                          key={idx}
+                          className={`group/card rounded-2xl p-4 transition-all duration-200 ${
+                            item.highlighted
+                              ? "border border-orange-300 bg-gradient-to-br from-orange-50/80 via-white to-amber-50/40 shadow-xs sm:col-span-2"
+                              : "border border-navy-100/70 bg-navy-50/25 hover:border-orange-300 hover:bg-white hover:shadow-xs"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-center gap-2.5">
+                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-orange-600 border border-orange-200/60 group-hover/card:bg-orange-500 group-hover/card:text-white transition-colors">
+                                <ItemIcon className="h-3.5 w-3.5" />
+                              </span>
+                              <h5 className="font-display text-sm font-bold text-navy-900 group-hover/card:text-orange-600 transition-colors">
+                                {item.title}
+                              </h5>
+                            </div>
+                            {item.highlighted && (
+                              <span className="rounded-full bg-orange-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-xs shrink-0">
+                                Featured Focus
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-2 text-xs leading-relaxed text-slate-600">
+                            {item.description}
+                          </p>
                         {item.platforms && (
                           <div className="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-orange-100/70 pt-2">
                             <span className="text-[10px] font-bold text-navy-500 uppercase mr-0.5">
@@ -212,7 +230,8 @@ export default function ServicesExplorer() {
                           </div>
                         )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>

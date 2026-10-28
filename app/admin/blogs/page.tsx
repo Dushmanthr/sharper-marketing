@@ -18,7 +18,6 @@ import {
   AlertCircle,
   ShieldCheck,
   RotateCcw,
-  Sparkles,
 } from "lucide-react";
 
 interface BlogPost {
