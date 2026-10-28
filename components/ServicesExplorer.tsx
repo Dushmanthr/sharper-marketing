@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { services, type Service } from "@/lib/site";
 import ConsultationModal from "./ConsultationModal";
+import Services3DHighlight from "./Services3DHighlight";
+import Stage3DHologram from "./Stage3DHologram";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Crown,
@@ -59,80 +61,93 @@ export default function ServicesExplorer() {
 
   return (
     <div className="relative w-full">
-      {/* 1. Symmetrical Full-Width 6-Discipline Interactive Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 mb-6 sm:mb-8 w-full">
-        {services.map((service, idx) => {
-          const isSelected = activeSlug === service.slug;
-          const ServiceIcon = iconMap[service.icon] || CheckCircle2;
-          const stepNum = String(idx + 1).padStart(2, "0");
+      {/* 1. Symmetrical Full-Width 6-Discipline Interactive Grid with Three.js 3D Highlight */}
+      <div className="relative mb-6 sm:mb-8 w-full rounded-3xl p-1.5 sm:p-2.5 bg-gradient-to-b from-navy-950/[0.03] via-orange-500/[0.02] to-transparent border border-navy-100/60 shadow-xs">
+        {/* Three.js 3D Interactive Animation in Theme Colors */}
+        <Services3DHighlight activeIndex={activeIndex} totalServices={services.length} />
 
-          return (
-            <button
-              key={service.slug}
-              type="button"
-              onClick={() => setActiveSlug(service.slug)}
-              className={`group relative flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl border transition-all duration-300 w-full ${
-                isSelected
-                  ? "bg-navy-950 text-white border-navy-900 shadow-xl shadow-navy-950/20 ring-2 ring-orange-500 scale-[1.02]"
-                  : "bg-white text-navy-900 border-navy-100 hover:border-orange-300 hover:bg-orange-50/20 hover:-translate-y-1 shadow-2xs"
-              }`}
-              aria-selected={isSelected}
-              role="tab"
-            >
-              {/* Active top orange accent line */}
-              {isSelected && (
-                <motion.div
-                  layoutId="activeDisciplinePill"
-                  className="absolute -top-1 left-4 right-4 h-1 rounded-full bg-orange-500"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                />
-              )}
+        <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3 w-full">
+          {services.map((service, idx) => {
+            const isSelected = activeSlug === service.slug;
+            const ServiceIcon = iconMap[service.icon] || CheckCircle2;
+            const stepNum = String(idx + 1).padStart(2, "0");
 
-              {/* Number Badge */}
-              <div className="flex items-center justify-between w-full">
+            return (
+              <motion.button
+                key={service.slug}
+                type="button"
+                onClick={() => setActiveSlug(service.slug)}
+                whileHover={{ y: -4, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className={`group relative flex flex-col items-center text-center p-3.5 sm:p-4 rounded-2xl border transition-all duration-300 w-full cursor-pointer ${
+                  isSelected
+                    ? "bg-gradient-to-b from-navy-900 to-navy-950 text-white border-orange-500/80 shadow-xl shadow-orange-500/15 ring-2 ring-orange-500"
+                    : "bg-white/95 text-navy-900 border-navy-100/90 hover:border-orange-300 hover:bg-white hover:shadow-lg hover:shadow-orange-500/10 shadow-xs"
+                }`}
+                aria-selected={isSelected}
+                role="tab"
+              >
+                {/* Active top orange accent line */}
+                {isSelected && (
+                  <motion.div
+                    layoutId="activeDisciplinePill"
+                    className="absolute -top-1 left-3 right-3 h-1 rounded-full bg-gradient-to-r from-orange-400 via-orange-500 to-amber-400 shadow-xs shadow-orange-500/50"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+
+                {/* Number Badge & Active Beacon */}
+                <div className="flex items-center justify-between w-full">
+                  <span
+                    className={`font-mono text-[11px] font-bold ${
+                      isSelected ? "text-orange-400" : "text-slate-400 group-hover:text-orange-600 transition-colors"
+                    }`}
+                  >
+                    {stepNum}
+                  </span>
+                  {isSelected ? (
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500" />
+                    </span>
+                  ) : (
+                    <span className="h-1.5 w-1.5 rounded-full bg-transparent group-hover:bg-orange-300 transition-colors" />
+                  )}
+                </div>
+
+                {/* Icon Container with Micro-Animation */}
                 <span
-                  className={`font-mono text-[11px] font-bold ${
-                    isSelected ? "text-orange-400" : "text-slate-400"
+                  className={`my-2 flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 ${
+                    isSelected
+                      ? "bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-md shadow-orange-500/35 ring-2 ring-orange-400/30 scale-105"
+                      : "bg-orange-50 text-orange-600 border border-orange-200/70 group-hover:bg-orange-500 group-hover:text-white group-hover:border-orange-500 group-hover:shadow-md group-hover:shadow-orange-500/25 group-hover:scale-105"
                   }`}
                 >
-                  {stepNum}
+                  <ServiceIcon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                 </span>
-                {isSelected && (
-                  <span className="h-1.5 w-1.5 rounded-full bg-orange-400 animate-pulse" />
-                )}
-              </div>
 
-              {/* Icon Container */}
-              <span
-                className={`my-2 flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 ${
-                  isSelected
-                    ? "bg-orange-500 text-white shadow-md shadow-orange-500/30 scale-105"
-                    : "bg-orange-50 text-orange-600 border border-orange-200/70 group-hover:bg-orange-500 group-hover:text-white group-hover:border-orange-500"
-                }`}
-              >
-                <ServiceIcon className="h-5 w-5" />
-              </span>
+                {/* Service Title */}
+                <h4
+                  className={`text-xs sm:text-[13px] font-bold font-display leading-tight line-clamp-2 min-h-[2rem] flex items-center justify-center transition-colors ${
+                    isSelected ? "text-white" : "text-navy-900 group-hover:text-orange-600"
+                  }`}
+                >
+                  {service.short}
+                </h4>
 
-              {/* Service Title */}
-              <h4
-                className={`text-xs sm:text-[13px] font-bold font-display leading-tight line-clamp-2 min-h-[2rem] flex items-center justify-center ${
-                  isSelected ? "text-white" : "text-navy-900 group-hover:text-orange-600"
-                }`}
-              >
-                {service.short}
-              </h4>
-
-              {/* Kicker Tag */}
-              <span
-                className={`text-[10px] font-semibold uppercase tracking-wider mt-1 truncate max-w-full ${
-                  isSelected ? "text-navy-300" : "text-slate-400"
-                }`}
-              >
-                {service.kicker}
-              </span>
-            </button>
-          );
-        })}
+                {/* Kicker Tag */}
+                <span
+                  className={`text-[10px] font-semibold uppercase tracking-wider mt-1 truncate max-w-full transition-colors ${
+                    isSelected ? "text-orange-300/90" : "text-slate-400 group-hover:text-navy-600"
+                  }`}
+                >
+                  {service.kicker}
+                </span>
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
 
       {/* 2. Full-Width Symmetrical Deep-Dive Stage */}
@@ -258,8 +273,14 @@ export default function ServicesExplorer() {
             </div>
 
             {/* Right Column: Executive Approach & Verified Outcomes (5 cols) */}
-            <div className="border-t border-navy-100 bg-navy-950 p-6 sm:p-8 text-white lg:col-span-5 lg:border-t-0 lg:border-l lg:border-navy-900 lg:p-10 2xl:p-12 flex flex-col justify-between">
-              <div>
+            <div className="relative overflow-hidden border-t border-navy-100 bg-navy-950 p-6 sm:p-8 text-white lg:col-span-5 lg:border-t-0 lg:border-l lg:border-navy-900 lg:p-10 2xl:p-12 flex flex-col justify-between">
+              {/* Three.js 3D Rotating Discipline Hologram in Theme Colors */}
+              <Stage3DHologram
+                activeIndex={activeIndex}
+                className="-right-10 -top-10 h-56 w-56 sm:h-64 sm:w-64 opacity-40 sm:opacity-50 pointer-events-none"
+              />
+
+              <div className="relative z-10">
                 {/* Our Approach Card */}
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6 backdrop-blur-xs">
                   <span className="text-xs font-semibold uppercase tracking-wider text-orange-400 flex items-center gap-1.5">
