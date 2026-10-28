@@ -40,7 +40,7 @@ function OfficeBlock({ office }: { office: Office }) {
 
 export default function Footer() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/admin") || pathname?.includes("/admin")) return null;
+  if (pathname?.startsWith("/admin") || pathname?.includes("/admin") || pathname?.startsWith("/demos")) return null;
 
   return (
     <footer className="bg-navy-950 text-white">

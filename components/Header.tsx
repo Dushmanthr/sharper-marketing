@@ -13,9 +13,37 @@ import SocialIcon from "./SocialIcon";
 import ConsultationModal from "./ConsultationModal";
 import { trackEvent } from "@/lib/analytics";
 
+// "Please press me, please press me" enticing micro-motions for navbar CTA buttons
+const pressMePrimary = {
+  y: [0, -3.5, 0, -3.5, 0, 0, 0],
+  scale: [1, 1.05, 0.98, 1.05, 1, 1, 1],
+  rotate: [0, -1.5, 1, -1.2, 0, 0, 0],
+  transition: {
+    duration: 3.4,
+    repeat: Infinity,
+    repeatType: "loop" as const,
+    times: [0, 0.08, 0.16, 0.24, 0.32, 0.4, 1],
+    ease: "easeInOut" as const,
+  },
+};
+
+const pressMeSecondary = {
+  y: [0, -2.5, 0, -2.5, 0, 0, 0],
+  scale: [1, 1.04, 0.99, 1.03, 1, 1, 1],
+  rotate: [0, 1.2, -0.8, 1, 0, 0, 0],
+  transition: {
+    duration: 3.4,
+    repeat: Infinity,
+    repeatType: "loop" as const,
+    times: [0, 0.08, 0.16, 0.24, 0.32, 0.4, 1],
+    ease: "easeInOut" as const,
+    delay: 0.16, // complementary staggered rhythm
+  },
+};
+
 export default function Header() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/admin") || pathname?.includes("/admin")) return null;
+  if (pathname?.startsWith("/admin") || pathname?.includes("/admin") || pathname?.startsWith("/demos")) return null;
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -270,38 +298,141 @@ export default function Header() {
             {/* Desktop Actions */}
             <div className="hidden items-center gap-3 lg:flex">
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                initial={{ y: 0, scale: 1, rotate: 0 }}
+                animate={pressMeSecondary}
+                whileHover={{ scale: 1.06, y: -1 }}
                 whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={() => openConsultation("quotation")}
-                className="text-xs font-semibold text-navy-700 hover:text-orange-600 transition-colors px-2 py-1"
+                className="relative inline-flex items-center justify-center rounded-full border border-navy-200/90 bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-navy-800 shadow-xs transition-colors hover:border-orange-500 hover:bg-orange-50/60 hover:text-orange-600"
               >
-                Request Quote
+                {/* Subtle sheen highlight on pulse */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
+                >
+                  <motion.span
+                    className="absolute -inset-full top-0 block h-full w-[200%] -translate-x-full bg-gradient-to-r from-transparent via-orange-400/15 to-transparent"
+                    animate={{ x: ["-100%", "200%"] }}
+                    transition={{
+                      duration: 1.2,
+                      repeat: Infinity,
+                      repeatDelay: 2.2,
+                      ease: "easeInOut",
+                      delay: 0.3,
+                    }}
+                  />
+                </span>
+                <span className="relative z-10">Request Quote</span>
               </motion.button>
+
               <motion.button
-                whileHover={{ scale: 1.05, y: -1 }}
+                initial={{ y: 0, scale: 1, rotate: 0 }}
+                animate={pressMePrimary}
+                whileHover={{ scale: 1.06, y: -1 }}
                 whileTap={{ scale: 0.95 }}
                 type="button"
                 onClick={() => openConsultation("consultation")}
-                className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-orange-500/20 transition-all hover:bg-orange-600 hover:shadow-orange-500/35 active:scale-95"
+                className="relative inline-flex items-center gap-2 rounded-full bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-orange-500/25 transition-colors hover:bg-orange-600 hover:shadow-orange-500/40"
               >
-                <Calendar className="h-3.5 w-3.5" /> Book Consultation
+                {/* Radiant "press me" halo aura that expands softly with the pulse */}
+                <motion.span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-1 -z-10 rounded-full bg-orange-500/35"
+                  animate={{
+                    scale: [1, 1.15, 1.25, 1, 1],
+                    opacity: [0, 0.55, 0, 0, 0],
+                  }}
+                  transition={{
+                    duration: 3.4,
+                    repeat: Infinity,
+                    times: [0, 0.12, 0.28, 0.4, 1],
+                    ease: "easeOut",
+                  }}
+                />
+
+                {/* Shimmer light flare sweeping across button face */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 -z-0 overflow-hidden rounded-full"
+                >
+                  <motion.span
+                    className="absolute -inset-full top-0 block h-full w-[200%] -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    animate={{ x: ["-100%", "200%"] }}
+                    transition={{
+                      duration: 1.2,
+                      repeat: Infinity,
+                      repeatDelay: 2.2,
+                      ease: "easeInOut",
+                    }}
+                  />
+                </span>
+
+                {/* Calendar Icon with micro-wiggle sync */}
+                <motion.span
+                  className="relative z-10 inline-flex items-center"
+                  animate={{
+                    rotate: [0, -14, 10, -8, 0, 0],
+                    scale: [1, 1.15, 1.15, 1, 1, 1],
+                  }}
+                  transition={{
+                    duration: 3.4,
+                    repeat: Infinity,
+                    times: [0, 0.08, 0.16, 0.24, 0.32, 1],
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Calendar className="h-3.5 w-3.5" />
+                </motion.span>
+                <span className="relative z-10">Book Consultation</span>
               </motion.button>
             </div>
 
             {/* Mobile Actions: Book Consultation CTA + Hamburger Toggle */}
             <div className="flex items-center gap-2 sm:gap-3 lg:hidden">
               <motion.button
+                initial={{ y: 0, scale: 1, rotate: 0 }}
+                animate={pressMePrimary}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.96 }}
                 type="button"
                 onClick={() => openConsultation("consultation")}
-                className="inline-flex items-center gap-1.5 rounded-full bg-orange-500 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-white shadow-md shadow-orange-500/20 transition-all hover:bg-orange-600 hover:shadow-orange-500/35 active:scale-95"
+                className="relative inline-flex items-center gap-1.5 rounded-full bg-orange-500 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-white shadow-md shadow-orange-500/25 transition-colors hover:bg-orange-600 hover:shadow-orange-500/40"
                 aria-label="Book Consultation"
               >
-                <Calendar className="h-3.5 w-3.5 shrink-0" />
-                <span className="xs:hidden">Book</span>
-                <span className="hidden xs:inline">Book Consultation</span>
+                {/* Mobile radiant aura */}
+                <motion.span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-1 -z-10 rounded-full bg-orange-500/35"
+                  animate={{
+                    scale: [1, 1.15, 1.25, 1, 1],
+                    opacity: [0, 0.5, 0, 0, 0],
+                  }}
+                  transition={{
+                    duration: 3.4,
+                    repeat: Infinity,
+                    times: [0, 0.12, 0.28, 0.4, 1],
+                    ease: "easeOut",
+                  }}
+                />
+
+                <motion.span
+                  className="relative z-10 inline-flex items-center"
+                  animate={{
+                    rotate: [0, -12, 10, -8, 0, 0],
+                    scale: [1, 1.12, 1.12, 1, 1, 1],
+                  }}
+                  transition={{
+                    duration: 3.4,
+                    repeat: Infinity,
+                    times: [0, 0.08, 0.16, 0.24, 0.32, 1],
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Calendar className="h-3.5 w-3.5 shrink-0" />
+                </motion.span>
+                <span className="relative z-10 xs:hidden">Book</span>
+                <span className="relative z-10 hidden xs:inline">Book Consultation</span>
               </motion.button>
 
               <button

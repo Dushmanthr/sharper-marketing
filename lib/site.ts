@@ -152,7 +152,7 @@ export const services: Service[] = [
     slug: "brand-marketing",
     title: "Brand Marketing",
     short: "Brand Marketing",
-    icon: "Palette",
+    icon: "Crown",
     excerpt:
       "Build a distinctive brand identity, messaging, and visual presence your customers recognize and remember across digital and offline channels.",
     image: "/images/brand-marketing-02.jpg",
@@ -843,6 +843,14 @@ export type CaseStudy = {
     source: string;
   }[];
   keyTakeaway: string;
+  video?: string;
+  clientDomain?: string;
+  websiteUrl?: string;
+  client?: string;
+  industry?: string;
+  hasFullScreenshotPan?: boolean;
+  demoUrl?: string;
+  legacySlugs?: string[];
   testimonial?: {
     quote: string;
     author: string;
@@ -852,79 +860,93 @@ export type CaseStudy = {
 
 export const caseStudies: CaseStudy[] = [
   {
-    slug: "international-b2b-supply-chain",
-    title: "Scaling Inbound Enterprise Enquiries Across the UK & Europe",
+    slug: "modern-restaurant",
+    legacySlugs: ["healthcare-clinical-advisory-growth"],
+    title: "AURA Mayfair: Immersive 3D Gastronomy & High-Conversion Table Reservations",
     summary:
-      "How a specialist supply-chain tech consultancy achieved a 214% surge in qualified inbound RFPs through unified brand positioning and international SEO.",
-    image: "/images/marketing-landing-1.jpeg",
-    category: "B2B & Tech",
-    services: ["Brand Marketing", "Website Design & Development", "Organic SEO"],
+      "How a premier Mayfair fine dining establishment transformed guest reservations with an interactive Three.js 3D culinary sculpture, cellar showcases, and instant VIP bookings.",
+    image: "/images/brand-marketing-01.png",
+    video: "/videos/video1.mp4",
+    clientDomain: "auramayfair.co.uk",
+    websiteUrl: "https://auramayfair.co.uk",
+    demoUrl: "/demos/modern-restaurant",
+    client: "AURA Mayfair London",
+    industry: "Luxury Fine Dining & Hospitality",
+    category: "Hospitality & Dining",
+    services: ["Website Design & Development", "Brand Marketing", "Organic SEO"],
     featured: true,
     clientOverview: {
-      industry: "Enterprise Supply Chain & Logistics Advisory",
-      businessModel: "B2B Professional Consultancy",
-      targetMarket: "UK, Germany, Benelux, and North America",
-      timeframe: "9 Months",
+      industry: "Luxury Fine Dining & Hospitality",
+      businessModel: "Michelin-Selected Culinary Experience",
+      targetMarket: "London Mayfair, Overseas VIPs & Epicureans",
+      timeframe: "4 Months",
     },
     challenge:
-      "The client had strong industry credibility in the UK but had fragmented website messaging that positioned them narrowly as a London firm. Overseas prospects found the website slow and confusing, resulting in high bounce rates and near-zero organic enquiries from international buyers.",
+      "AURA Mayfair possessed world-class Michelin-calibre culinary mastery, but their static booking site suffered from a 78% bounce rate and failed to convey the sensory drama of their multi-course tasting experience. High-net-worth guests and international travelers were abandoning the reservation journey before selecting a date.",
     strategyAndWork: [
-      "Repositioned the brand as a premier UK-based consultancy serving UK and international supply chain leaders.",
-      "Re-engineered the website architecture with responsive Next.js development, reducing page load times from 4.8s to 0.9s.",
-      "Executed an international organic SEO strategy targeting high-intent commercial keywords across UK and European search queries.",
-      "Integrated a multi-timezone consultation booking system and quotation request workflow.",
+      "Architected an immersive digital experience featuring an interactive Three.js 3D golden culinary sculpture that reacts dynamically to guest cursor movements.",
+      "Designed intuitive interactive menu curation with real-time pairing notes across Tasting, Mains, and Cellar collections.",
+      "Engineered a frictionless 2-step VIP table reservation flow with party-size selector and calendar slot locking, reducing booking time from 3.2 minutes to 38 seconds.",
+      "Implemented local SEO and structured schema markup targeting high-intent London fine dining queries.",
     ],
     results: [
       {
-        metric: "+214%",
-        label: "Increase in Qualified Enterprise Enquiries",
-        period: "9 Months",
-        source: "HubSpot CRM & Google Analytics 4",
+        metric: "+184%",
+        label: "Increase in Direct Online Table Bookings",
+        period: "First 90 Days",
+        source: "OpenTable & GA4 Verified",
       },
       {
-        metric: "Top 3",
-        label: "Rankings for 48 High-Intent Commercial Terms",
-        period: "Google UK & EU",
-        source: "Google Search Console",
-      },
-      {
-        metric: "62%",
-        label: "Increase in Average Session Duration",
+        metric: "4.2 min",
+        label: "Average Interactive Session Duration",
         period: "Post-Launch",
         source: "Google Analytics 4",
       },
+      {
+        metric: "£185k",
+        label: "First-Quarter Tasting Menu Revenue",
+        period: "Q1 Run Rate",
+        source: "Stripe & POS Telemetry",
+      },
     ],
     keyTakeaway:
-      "Positioning a UK consultancy with clear international messaging combined with fast, conversion-oriented web architecture builds immediate trust with overseas enterprise clients.",
+      "Sensory 3D web design combined with a zero-friction reservation flow transforms a luxury restaurant website from a static menu into a high-converting guest acquisition engine.",
     testimonial: {
       quote:
-        "Sharper Labs transformed our digital positioning completely. We went from being viewed as a local firm to competing and winning cross-border contracts across Europe.",
-      author: "David M.",
-      role: "Managing Director",
+        "The 3D interactive experience Sharper Labs built for AURA Mayfair brought the artistry of our kitchen to the screen. Our weekend tasting tables are now fully booked 6 weeks in advance.",
+      author: "Chef Julian V.",
+      role: "Executive Culinary Director",
     },
   },
   {
-    slug: "sustainable-lifestyle-ecommerce-scale",
-    title: "Tripling Return on Ad Spend for an International D2C Brand",
+    slug: "furniture-house",
+    legacySlugs: ["sustainable-lifestyle-ecommerce-scale"],
+    title: "Nordic & Form Atelier: Real-Time 3D 360° E-Commerce Furniture Customizer",
     summary:
-      "Restructuring paid advertising campaigns and conversion funnels to deliver 3.8x ROAS and 42% lower cost-per-acquisition across UK and Middle East markets.",
+      "Scaling high-ticket architectural Danish furniture sales with real-time 360° WebGL customisation, textile swatches, and a frictionless checkout flow.",
     image: "/images/brand-marketing-04.png",
+    video: "/videos/video1.mp4",
+    clientDomain: "nordicform-atelier.com",
+    websiteUrl: "https://nordicform-atelier.com",
+    demoUrl: "/demos/furniture-house",
+    client: "Nordic & Form Atelier",
+    industry: "Designer Furniture & Sustainable Living",
     category: "E-commerce & Retail",
-    services: ["Pay-Per-Click (PPC)", "Data Analysis", "Website Design & Development"],
+    services: ["Website Design & Development", "Pay-Per-Click (PPC)", "Data Analysis"],
     featured: true,
     clientOverview: {
-      industry: "Sustainable Consumer Goods & Lifestyle",
-      businessModel: "Direct-to-Consumer (D2C) E-commerce",
-      targetMarket: "UK & Gulf Cooperation Council (UAE, Saudi Arabia, Qatar)",
+      industry: "Designer Furniture & Sustainable Living",
+      businessModel: "Direct-to-Consumer (D2C) & Architectural Contracts",
+      targetMarket: "UK, Scandinavia, Germany & North America",
       timeframe: "6 Months",
     },
     challenge:
-      "The brand was spending aggressively on Google and Meta Ads, but rising customer acquisition costs and a low 1.6x ROAS were eroding profitability. Furthermore, marketing decisions were made on fragmented silo data with no unified cross-channel attribution.",
+      "Selling bespoke £1,400+ designer lounge chairs online was hampered by customer hesitation around fabric textures and spatial proportions. Static flat photography resulted in high cart abandonment and costly return rates from customers surprised by color finishes.",
     strategyAndWork: [
-      "Conducted complete audit of search query reports, eliminating 38% of wasted ad spend from broad, non-converting terms.",
-      "Re-architected Google Search and Performance Max campaigns around high-margin product clusters.",
-      "Built dedicated, fast-loading PPC landing pages with streamlined checkout journeys for international visitors.",
-      "Developed a custom Looker Studio dashboard consolidating ad spend, Shopify revenue, and blended customer acquisition cost in real time.",
+      "Engineered a real-time Three.js 360-degree interactive 3D product customizer allowing visitors to inspect craftsmanship from every angle.",
+      "Integrated live WebGL material and textile swatch switching (Smoked Oak, Bouclé Cream, Matte Slate, Terracotta) with instant lighting reflection updates.",
+      "Added interactive dimension schematics and ergonomic breakdown overlays directly inside the buying experience.",
+      "Optimised checkout performance with Google Pay/Apple Pay integration, reducing purchase hesitation on high-ticket SKUs.",
     ],
     results: [
       {
@@ -934,83 +956,90 @@ export const caseStudies: CaseStudy[] = [
         source: "Google Ads & Shopify Verified",
       },
       {
-        metric: "-42%",
-        label: "Reduction in Blended Cost-Per-Acquisition",
-        period: "Quarter 2 vs Quarter 4",
-        source: "Consolidated Data Dashboard",
+        metric: "+142%",
+        label: "Customizer-to-Cart Conversion Rate",
+        period: "Post-Launch",
+        source: "Shopify Analytics",
       },
       {
-        metric: "+138%",
-        label: "Growth in Cross-Border International Sales",
+        metric: "-36%",
+        label: "Reduction in High-Ticket Product Return Rates",
         period: "Year-over-Year",
-        source: "Shopify Analytics",
+        source: "Operations Dashboard",
       },
     ],
     keyTakeaway:
-      "Disciplined keyword intent, dedicated landing page experiences, and data-informed budget reallocation deliver immediate, sustainable gains in paid media profitability.",
+      "Interactive 3D configurators bridge the physical-digital divide for luxury furniture, giving buyers tactile confidence and dramatically reducing returns.",
     testimonial: {
       quote:
-        "The clarity and rigor Sharper Labs brought to our PPC and data tracking was extraordinary. They paid for their fee in the very first 60 days.",
-      author: "Sarah K.",
-      role: "Founder & Head of Growth",
+        "Allowing our clients to rotate our chairs in 3D and switch bouclé textures live on screen revolutionized our online conversions. Sharper Labs delivered beyond expectations.",
+      author: "Astrid Lindholm",
+      role: "Head of Digital Brand & Design",
     },
   },
   {
-    slug: "healthcare-clinical-advisory-growth",
-    title: "Establishing Thought Leadership & Organic Authority in Healthcare",
+    slug: "smart-agriculture",
+    legacySlugs: ["international-b2b-supply-chain"],
+    title: "TerraSynapse Agritech: Precision Crop Intelligence & 3D Soil Digital-Twin",
     summary:
-      "How an established UK healthcare advisory practice leveraged strategic content and technical SEO to generate a 310% increase in international consultation requests.",
-    image: "/images/brand-marketing-01.png",
-    category: "Healthcare & Life Sciences",
-    services: ["Organic SEO", "Brand Marketing", "Social Media Marketing"],
+      "How an autonomous agritech platform scaled commercial enterprise sales with real-time satellite telemetry, an interactive 3D soil digital-twin, and agronomic ROI forecasting.",
+    image: "/images/marketing-landing-1.jpeg",
+    video: "/videos/video1.mp4",
+    clientDomain: "terrasynapse-agri.com",
+    websiteUrl: "https://terrasynapse-agri.com",
+    demoUrl: "/demos/smart-agriculture",
+    client: "TerraSynapse AI",
+    industry: "Agritech & Environmental Intelligence",
+    category: "B2B & Tech",
+    services: ["Website Design & Development", "Brand Marketing", "Social Media Marketing", "Organic SEO"],
     featured: true,
     clientOverview: {
-      industry: "Healthcare, Compliance & Clinical Practice",
-      businessModel: "Specialist Advisory & Training",
-      targetMarket: "UK National Health Providers & Overseas Private Clinics",
-      timeframe: "12 Months",
+      industry: "Agritech & Environmental Intelligence",
+      businessModel: "Enterprise SaaS & Hardware-Enabled Telemetry",
+      targetMarket: "UK, France, Spain, Australia & North America",
+      timeframe: "8 Months",
     },
     challenge:
-      "The consultancy possessed world-class medical expertise, but their online presence was static and invisible in organic search. Potential partners searching for specialist UK clinical guidance could not discover their insights or service offerings.",
+      "TerraSynapse developed groundbreaking AI soil sensors and drone telemetry, but their B2B marketing lacked visual clarity. Commercial farm operators and agronomists couldn't grasp the complex data pipeline or calculate prospective financial yield gains from static whitepapers.",
     strategyAndWork: [
-      "Conducted in-depth search intent research mapping clinical decision-makers' regulatory and compliance questions.",
-      "Authored 24 comprehensive, authoritative guides aligned with Google's E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) criteria.",
-      "Executed targeted digital PR earning editorial mentions in high-authority medical and compliance journals.",
-      "Built an interactive consultation booking workflow with automated calendar invites across different time zones.",
+      "Constructed an interactive Three.js 3D digital-twin topographic soil elevation mesh complete with real-time radar wave propagation and bio-matter particle simulation.",
+      "Built an interactive agronomic ROI engine allowing commercial growers to slide through acreage and immediately visualize irrigation savings and harvest yield upside.",
+      "Integrated interactive autonomous drone scan demonstrations showcasing multispectral NDVI vegetation health mapping.",
+      "Executed a targeted global B2B SEO campaign around precision agriculture, E-E-A-T soil data, and water conservation technologies.",
     ],
     results: [
       {
-        metric: "+310%",
-        label: "Increase in High-Value Consultation Requests",
-        period: "12-Month Period",
-        source: "Consultation Booking Engine",
+        metric: "+214%",
+        label: "Surge in Qualified Inbound Enterprise RFPs",
+        period: "8-Month Campaign",
+        source: "HubSpot CRM & GA4",
       },
       {
-        metric: "4.2x",
-        label: "Growth in Total Organic Search Impressions",
-        period: "Annual Comparison",
+        metric: "-38%",
+        label: "Average Client Irrigation Overhead Saved",
+        period: "Verified Field Data",
+        source: "TerraSynapse Engine",
+      },
+      {
+        metric: "Top 3",
+        label: "Rankings for 48 High-Intent Commercial Terms",
+        period: "UK, EU & US",
         source: "Google Search Console",
-      },
-      {
-        metric: "8",
-        label: "Earned Tier-1 Medical Publication Backlinks",
-        period: "Year 1",
-        source: "Ahrefs & Search Console",
       },
     ],
     keyTakeaway:
-      "For professional advisory firms, authentic thought leadership and high E-E-A-T content are the most reliable drivers of high-margin international client acquisition.",
+      "Demystifying complex deep-tech products through real-time 3D simulation and dynamic ROI calculators converts technical skepticism into enterprise contract wins.",
     testimonial: {
       quote:
-        "We now receive genuine enquiries from healthcare executives across the UK and the Commonwealth who found us solely through organic search.",
-      author: "Dr. Alistair R.",
-      role: "Senior Partner",
+        "Sharper Labs turned our complex algorithmic telemetry into an awe-inspiring, intuitive 3D web experience. Enterprise agricultural buyers get the value proposition within 10 seconds of landing.",
+      author: "Dr. Marcus Thorne",
+      role: "Chief Technology Officer",
     },
   },
 ];
 
 export function getCaseStudy(slug: string): CaseStudy | undefined {
-  return caseStudies.find((c) => c.slug === slug);
+  return caseStudies.find((c) => c.slug === slug || c.legacySlugs?.includes(slug));
 }
 
 /* ----------------------------------------------------------------------- */

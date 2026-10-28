@@ -1,4 +1,6 @@
 import {
+  Crown,
+  Award,
   Palette,
   Code2,
   Share2,
@@ -18,6 +20,9 @@ import {
 } from "lucide-react";
 
 const map: Record<string, LucideIcon> = {
+  Crown,
+  Sparkles: Crown,
+  Award,
   Palette,
   Code2,
   Share2,
