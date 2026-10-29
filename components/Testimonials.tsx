@@ -280,7 +280,7 @@ export default function Testimonials({
       </div>
 
       {/* Bottom Pagination Dots (Matching Screenshot: Orange Pill for Active Dot) */}
-      <div className="relative z-10 mt-6 sm:mt-8 flex flex-col items-center gap-3">
+      <div className="relative z-10 mt-6 sm:mt-8 flex justify-center">
         <div className="flex items-center gap-2">
           {items.map((_, i) => (
             <button
@@ -295,13 +295,6 @@ export default function Testimonials({
               }`}
             />
           ))}
-        </div>
-
-        {/* Slide Counter */}
-        <div className="flex items-center gap-1.5 text-xs font-mono text-navy-400">
-          <span className="font-bold text-orange-600">0{active + 1}</span>
-          <span className="text-navy-300">/</span>
-          <span>0{total}</span>
         </div>
       </div>
     </div>
