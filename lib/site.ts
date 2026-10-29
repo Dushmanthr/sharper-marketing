@@ -88,8 +88,8 @@ export type ServiceCapability = {
 
 export type PlatformGrowthDetail = {
   name: string;
-  slug: "facebook" | "instagram" | "tiktok";
-  shortName: string; // "FB", "IG", "TikTok"
+  slug: "facebook" | "instagram" | "tiktok" | "linkedin";
+  shortName: string; // "FB", "IG", "TikTok", "LI"
   badge: string;
   focus: string;
   strategy: string;
@@ -394,11 +394,11 @@ export const services: Service[] = [
       {
         title: "Social Media Followers Increasing",
         description:
-          "Targeted organic and paid follower growth campaigns across Facebook, Instagram, and TikTok to build real, engaged audiences that convert.",
+          "Targeted organic and paid follower growth campaigns across LinkedIn, Facebook, Instagram, and TikTok to build real, engaged audiences that convert.",
         icon: "Users",
         highlighted: true,
         badge: "New Service",
-       // platforms: ["Facebook", "Instagram", "TikTok"],
+       // platforms: ["LinkedIn", "Facebook", "Instagram", "TikTok"],
         subServiceId: "followers-increasing",
       },
       {
@@ -433,10 +433,27 @@ export const services: Service[] = [
         title: "Social Media Followers Increasing",
         shortTitle: "Followers Increasing",
         badge: "Highlighted Sub-Service",
-        lead: "Strategic Audience Growth Across Facebook, Instagram & TikTok",
+        lead: "Strategic Audience Growth Across LinkedIn, Facebook, Instagram & TikTok",
         description:
-          "Accelerate your brand presence with authentic, algorithm-aligned follower growth. We combine hyper-targeted paid acceleration, high-impact viral content formats, and community engagement loops across Facebook, Instagram, and TikTok to turn casual scrollers into loyal followers and paying customers.",
+          "Accelerate your brand presence with authentic, algorithm-aligned follower growth. We combine hyper-targeted paid acceleration, high-impact viral content formats, and community engagement loops across LinkedIn, Facebook, Instagram, and TikTok to turn casual scrollers into loyal followers and paying customers.",
         platforms: [
+          {
+            name: "LinkedIn",
+            slug: "linkedin",
+            shortName: "LI",
+            badge: "B2B & Executive Authority",
+            focus: "Decision-Maker Reach & Professional Follower Scale",
+            strategy:
+              "Deploy executive thought leadership, data-driven industry insights, and targeted B2B growth frameworks to attract founders, C-suite executives, and enterprise decision-makers who follow and do business with your brand.",
+            deliverables: [
+              "Company page and executive profile follower growth architecture",
+              "Thought-leadership carousel and long-form post frameworks",
+              "High-intent B2B audience targeting and industry hashtag strategy",
+              "InMail and executive network connection amplification loops",
+            ],
+            metricLabel: "B2B Intent",
+            metricValue: "Decision-Maker Scale",
+          },
           {
             name: "Facebook",
             slug: "facebook",
@@ -505,7 +522,7 @@ export const services: Service[] = [
           {
             title: "Cross-Platform Synergies",
             description:
-              "Synchronize your Facebook, Instagram, and TikTok presence so momentum on one channel compounds the others.",
+              "Synchronize your LinkedIn, Facebook, Instagram, and TikTok presence so momentum on one channel compounds the others.",
             icon: "Layers",
           },
           {
@@ -516,7 +533,7 @@ export const services: Service[] = [
           },
         ],
         deliverables: [
-          "Platform-specific follower growth roadmap for Facebook, Instagram, and TikTok",
+          "Platform-specific follower growth roadmap for LinkedIn, Facebook, Instagram, and TikTok",
           "Comprehensive profile optimization (bio, call-to-action, highlights, link-in-bio)",
           "Viral content hooks, trending templates, and posting schedule calendar",
           "Audience retention tactics to ensure followers stay engaged over time",
