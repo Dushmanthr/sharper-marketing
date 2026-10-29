@@ -241,7 +241,7 @@ export default async function ServicePage({ params }: Params) {
                 {service.approach}
               </p>
               <p className="mt-4 text-xs font-medium text-navy-600">
-                🤝 We operate with full transparency: clear agreed milestones, transparent performance indicators, and continuous iteration based on real market response.
+                 We operate with full transparency: clear agreed milestones, transparent performance indicators, and continuous iteration based on real market response.
               </p>
             </div>
 
@@ -297,14 +297,39 @@ export default async function ServicePage({ params }: Params) {
               )}
             </div>
 
-            <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5 xs:p-6 shadow-xs">
-              <h4 className="font-display text-sm font-semibold text-navy-900">
-                Ready to review your {service.short} requirements?
-              </h4>
-              <p className="mt-1 text-xs text-ink-muted">
-                Our UK consultancy provides complimentary initial assessments with transparent pricing.
-              </p>
-              <div className="mt-4 flex flex-col xs:flex-row gap-2.5 sm:gap-3">
+            {/* Standard in-column CTA for services with multi-step execution processes on the left */}
+            {service.slug !== "brand-marketing" && (
+              <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5 xs:p-6 shadow-xs">
+                <h4 className="font-display text-sm font-semibold text-navy-900">
+                  Ready to review your {service.short} requirements?
+                </h4>
+                <p className="mt-1 text-xs text-ink-muted">
+                  Our UK consultancy provides complimentary initial assessments with transparent pricing.
+                </p>
+                <div className="mt-4 flex flex-col xs:flex-row gap-2.5 sm:gap-3">
+                  <Button href="/contact" variant="primary" size="sm" className="w-full xs:w-auto">
+                    Request Consultation
+                  </Button>
+                  <Button href={site.phoneHref} external variant="outline" size="sm" className="w-full xs:w-auto">
+                    Call {site.phone}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Full-width wide CTA bar spanning both sides (Only for Brand Marketing) */}
+          {service.slug === "brand-marketing" && (
+            <div className="lg:col-span-2 rounded-2xl sm:rounded-3xl border border-navy-100 bg-white p-5 xs:p-6 sm:p-8 lg:p-10 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-5 sm:gap-6">
+              <div className="max-w-2xl">
+                <h4 className="font-display text-base sm:text-lg font-bold text-navy-900">
+                  Ready to review your {service.short} requirements?
+                </h4>
+                <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-ink-muted leading-relaxed">
+                  Our UK consultancy provides complimentary initial assessments with transparent pricing.
+                </p>
+              </div>
+              <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-3 shrink-0">
                 <Button href="/contact" variant="primary" size="sm" className="w-full xs:w-auto">
                   Request Consultation
                 </Button>
@@ -313,7 +338,7 @@ export default async function ServicePage({ params }: Params) {
                 </Button>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </Section>
 
