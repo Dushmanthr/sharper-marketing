@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Star,
   ArrowUpRight,
   ShieldCheck,
   MapPin,
@@ -323,6 +322,42 @@ export default function Testimonials({
   );
 }
 
+/** Bespoke 3D Faceted Dimensional Rating Star (Elevated luxury medal finish, distinct from flat generic stars) */
+function RatingStar({
+  className = "h-4.5 w-4.5 sm:h-5 sm:w-5",
+  isActive = false,
+}: {
+  className?: string;
+  isActive?: boolean;
+}) {
+  const lightColor = isActive ? "#FDE047" : "#FBBF24";
+  const shadowColor = isActive ? "#F59E0B" : "#D97706";
+  const strokeColor = isActive ? "rgba(255, 255, 255, 0.28)" : "rgba(217, 119, 6, 0.25)";
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      {/* Light-facing facets */}
+      <path
+        d="M12 12L12 1.8L9.18 8.12ZM12 12L21.7 8.85L14.82 8.12ZM12 12L18 20.25L16.56 13.48ZM12 12L6 20.25L12 16.8ZM12 12L2.3 8.85L7.44 13.48Z"
+        fill={lightColor}
+      />
+      {/* Shadow-facing facets */}
+      <path
+        d="M12 12L12 1.8L14.82 8.12ZM12 12L21.7 8.85L16.56 13.48ZM12 12L18 20.25L12 16.8ZM12 12L6 20.25L7.44 13.48ZM12 12L2.3 8.85L9.18 8.12Z"
+        fill={shadowColor}
+      />
+      {/* Outer silhouette rim */}
+      <polygon
+        points="12,1.8 14.82,8.12 21.7,8.85 16.56,13.48 18,20.25 12,16.8 6,20.25 7.44,13.48 2.3,8.85 9.18,8.12"
+        fill="none"
+        stroke={strokeColor}
+        strokeWidth="0.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 /** Individual Card matching the reference screenshot design:
  * - Center card: Dark Navy with white circle avatar & gold stars
  * - Flanking cards: Crisp White with soft shadow & dark navy typography
@@ -343,18 +378,15 @@ function TestimonialCard({
       }`}
     >
       <div>
-        {/* CARD TOP ROW: 5 Golden Stars (Left) & Metric Tag (Right) */}
+        {/* CARD TOP ROW: 5 Bespoke Dimensional Stars (Left) & Metric Tag (Right) */}
         <div className="flex items-center justify-between gap-2.5">
-          {/* 5 Golden Stars matching reference screenshot */}
-          <div className="flex items-center gap-1">
+          {/* 5 Bespoke Dimensional Stars */}
+          <div className="flex items-center gap-1 sm:gap-1.5">
             {Array.from({ length: 5 }).map((_, s) => (
-              <Star
+              <RatingStar
                 key={s}
-                className={`h-4.5 w-4.5 sm:h-5 sm:w-5 ${
-                  isActive
-                    ? "fill-amber-400 text-amber-400"
-                    : "fill-amber-400/90 text-amber-400/90"
-                }`}
+                isActive={isActive}
+                className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0"
               />
             ))}
           </div>
