@@ -201,20 +201,6 @@ export default function Testimonials({
       <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-[600px] rounded-full bg-orange-500/5 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-navy-600/5 blur-3xl" />
 
-      {/* Subtle Quote Watermark on Bottom Right (Matches Reference Screenshot) */}
-      <div
-        className="pointer-events-none absolute -bottom-4 right-4 sm:bottom-4 sm:right-8 lg:right-12 select-none opacity-[0.06] text-navy-900"
-        aria-hidden="true"
-      >
-        <svg
-          viewBox="0 0 100 80"
-          fill="currentColor"
-          className="h-24 w-24 sm:h-32 sm:w-32 lg:h-36 lg:w-36"
-        >
-          <path d="M28 0C12.5 0 0 12.5 0 28v52h45V28H15c0-7.2 5.8-13 13-13V0zm55 0C67.5 0 55 12.5 55 28v52h45V28H70c0-7.2 5.8-13 13-13V0z" />
-        </svg>
-      </div>
-
       {/* Section Header: Badge & Heading */}
       <div className="relative z-10 mx-auto max-w-3xl text-center pb-6 sm:pb-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-orange-600 shadow-2xs">
