@@ -55,9 +55,7 @@ export default async function ServicePage({ params }: Params) {
 
   const path = `/services/${service.slug}`;
 
-  const isWideCTA =
-    service.slug === "brand-marketing" ||
-    service.slug === "website-design-and-development";
+  const isWideCTA = service.slug !== "organic-seo";
 
   // Find relevant case studies for this service
   const relevantCaseStudies = caseStudies.filter(
@@ -341,7 +339,7 @@ export default async function ServicePage({ params }: Params) {
             {!isWideCTA && service.slug !== "organic-seo" && ctaCard}
           </div>
 
-          {/* Full-width wide CTA bar spanning both sides (Brand Marketing & Website Design & Development) */}
+          {/* Full-width wide CTA bar spanning both sides (All services except Organic SEO) */}
           {isWideCTA && (
             <div className="lg:col-span-2 rounded-2xl sm:rounded-3xl border border-navy-100 bg-white p-5 xs:p-6 sm:p-8 lg:p-10 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-5 sm:gap-6">
               <div className="max-w-2xl">
