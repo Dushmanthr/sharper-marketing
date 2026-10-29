@@ -146,16 +146,39 @@ export default async function ServicePage({ params }: Params) {
           description={`Comprehensive, data-driven ${service.short} capabilities delivered by our UK and international marketing consultants.`}
         />
 
-        <div className="mt-12 grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:gap-8">
-          {service.whatWeDo.map((item, idx) => (
-            <Reveal key={idx} index={idx} className="h-full">
-              <div
-                className={`flex h-full flex-col justify-between rounded-3xl p-5 sm:p-6 2xl:p-7 transition-all ${
-                  item.highlighted
-                    ? "border-2 border-orange-400 bg-linear-to-b from-orange-50/70 via-white to-amber-50/30 shadow-md ring-2 ring-orange-200/50 hover:shadow-xl"
-                    : "border border-navy-100 bg-white shadow-xs hover:border-orange-300 hover:shadow-md"
-                }`}
-              >
+        {/* Dynamic Responsive Capabilities Grid:
+            - 4 cards: 4 columns in 1 row (Brand Marketing)
+            - 5 cards: Row 1 has 3 cards, Row 2 has 2 cards centered in the middle (Web Design, PPC, Data Analysis)
+            - 6 cards: Balanced 3x2 grid with 3 cards per row (Social Media, SEO)
+        */}
+        <div
+          className={`mt-12 grid gap-5 sm:gap-6 2xl:gap-8 ${
+            service.whatWeDo.length === 5
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-6"
+              : service.whatWeDo.length >= 6
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+          }`}
+        >
+          {service.whatWeDo.map((item, idx) => {
+            const isFiveCards = service.whatWeDo.length === 5;
+            const revealClasses = isFiveCards
+              ? idx === 3
+                ? "h-full lg:col-span-2 sm:col-start-auto lg:col-start-2"
+                : idx === 4
+                ? "h-full sm:col-span-2 sm:max-w-md sm:mx-auto w-full lg:col-span-2 lg:max-w-none lg:mx-0"
+                : "h-full lg:col-span-2"
+              : "h-full";
+
+            return (
+              <Reveal key={idx} index={idx} className={revealClasses}>
+                <div
+                  className={`flex h-full flex-col justify-between rounded-3xl p-5 sm:p-6 2xl:p-7 transition-all ${
+                    item.highlighted
+                      ? "border-2 border-orange-400 bg-linear-to-b from-orange-50/70 via-white to-amber-50/30 shadow-md ring-2 ring-orange-200/50 hover:shadow-xl"
+                      : "border border-navy-100 bg-white shadow-xs hover:border-orange-300 hover:shadow-md"
+                  }`}
+                >
                 <div>
                   {item.highlighted && (
                     <div className="mb-3.5 flex items-center justify-start">
@@ -200,7 +223,8 @@ export default async function ServicePage({ params }: Params) {
                 )}
               </div>
             </Reveal>
-          ))}
+          );
+        })}
         </div>
       </Section>
 
