@@ -134,22 +134,15 @@ h1, h2, h3, h4, h5 {
   background-size: 44px 44px;
 }
 
-/* Section heading kicker underline */
+/* Section heading kicker */
 .kicker {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: 0.78rem;
   color: var(--color-orange-600);
-}
-.kicker::before {
-  content: "";
-  width: 1.6rem;
-  height: 2px;
-  background: var(--color-orange-500);
 }
 
 /* Custom scrollbar (desktop) */
@@ -323,4 +316,3 @@ h1, h2, h3, h4, h5 {
     animation-play-state: paused;
   }
 }
-
