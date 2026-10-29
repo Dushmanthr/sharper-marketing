@@ -217,14 +217,9 @@ export default function FollowersGrowthSubService({
                         />
                       </span>
                       <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <h3 className="font-display text-lg font-bold text-navy-950">
-                            {platform.name}
-                          </h3>
-                          <span className="rounded-md bg-navy-50 px-1.5 py-0.5 text-[10px] font-bold text-navy-700 uppercase">
-                            {platform.shortName}
-                          </span>
-                        </div>
+                        <h3 className="font-display text-lg font-bold text-navy-950">
+                          {platform.name}
+                        </h3>
                         <p className="text-xs font-semibold text-orange-600 mt-0.5">
                           {platform.badge}
                         </p>
