@@ -55,9 +55,32 @@ export default async function ServicePage({ params }: Params) {
 
   const path = `/services/${service.slug}`;
 
+  const isWideCTA =
+    service.slug === "brand-marketing" ||
+    service.slug === "website-design-and-development";
+
   // Find relevant case studies for this service
   const relevantCaseStudies = caseStudies.filter(
     (c) => c.services.includes(service.title) || c.services.includes(service.short),
+  );
+
+  const ctaCard = (
+    <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5 xs:p-6 shadow-xs">
+      <h4 className="font-display text-sm font-semibold text-navy-900">
+        Ready to review your {service.short} requirements?
+      </h4>
+      <p className="mt-1 text-xs text-ink-muted">
+        Our UK consultancy provides complimentary initial assessments with transparent pricing.
+      </p>
+      <div className="mt-4 flex flex-col xs:flex-row gap-2.5 sm:gap-3">
+        <Button href="/contact" variant="primary" size="sm" className="w-full xs:w-auto">
+          Request Consultation
+        </Button>
+        <Button href={site.phoneHref} external variant="outline" size="sm" className="w-full xs:w-auto">
+          Call {site.phone}
+        </Button>
+      </div>
+    </div>
   );
 
   return (
@@ -260,19 +283,19 @@ export default async function ServicePage({ params }: Params) {
               </p>
             </div>
 
-            {service.process && (
+            {service.process && service.slug !== "website-design-and-development" && (
               <div className="mt-8">
                 <h3 className="font-display text-lg font-bold text-navy-900 mb-4">
                   Step-by-Step Execution
                 </h3>
-                <div className="space-y-3">
+                <div className="rounded-3xl border border-navy-100 bg-surface-muted p-5 xs:p-7 sm:p-8 2xl:p-10 space-y-4">
                   {service.process.map((step, i) => (
-                    <div key={i} className="flex gap-3 text-sm text-navy-800">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500 text-white font-bold text-xs">
+                    <div key={i} className="flex items-start gap-3 text-sm text-navy-800">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500 text-white font-bold text-xs shadow-2xs">
                         {i + 1}
                       </span>
-                      <div>
-                        <strong className="text-navy-900">{step.title}:</strong>{" "}
+                      <div className="leading-relaxed">
+                        <strong className="text-navy-900 font-semibold">{step.title}:</strong>{" "}
                         <span className="text-ink-muted">{step.description}</span>
                       </div>
                     </div>
@@ -280,6 +303,8 @@ export default async function ServicePage({ params }: Params) {
                 </div>
               </div>
             )}
+            {/* CTA Box placed in the left-hand column specifically for Organic SEO */}
+            {service.slug === "organic-seo" && ctaCard}
           </div>
 
           {/* What You Can Expect */}
@@ -312,29 +337,12 @@ export default async function ServicePage({ params }: Params) {
               )}
             </div>
 
-            {/* Standard in-column CTA for services with multi-step execution processes on the left */}
-            {service.slug !== "brand-marketing" && (
-              <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5 xs:p-6 shadow-xs">
-                <h4 className="font-display text-sm font-semibold text-navy-900">
-                  Ready to review your {service.short} requirements?
-                </h4>
-                <p className="mt-1 text-xs text-ink-muted">
-                  Our UK consultancy provides complimentary initial assessments with transparent pricing.
-                </p>
-                <div className="mt-4 flex flex-col xs:flex-row gap-2.5 sm:gap-3">
-                  <Button href="/contact" variant="primary" size="sm" className="w-full xs:w-auto">
-                    Request Consultation
-                  </Button>
-                  <Button href={site.phoneHref} external variant="outline" size="sm" className="w-full xs:w-auto">
-                    Call {site.phone}
-                  </Button>
-                </div>
-              </div>
-            )}
+            {/* Standard in-column CTA on the right for other services */}
+            {!isWideCTA && service.slug !== "organic-seo" && ctaCard}
           </div>
 
-          {/* Full-width wide CTA bar spanning both sides (Only for Brand Marketing) */}
-          {service.slug === "brand-marketing" && (
+          {/* Full-width wide CTA bar spanning both sides (Brand Marketing & Website Design & Development) */}
+          {isWideCTA && (
             <div className="lg:col-span-2 rounded-2xl sm:rounded-3xl border border-navy-100 bg-white p-5 xs:p-6 sm:p-8 lg:p-10 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-5 sm:gap-6">
               <div className="max-w-2xl">
                 <h4 className="font-display text-base sm:text-lg font-bold text-navy-900">
