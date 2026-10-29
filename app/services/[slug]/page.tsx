@@ -157,24 +157,15 @@ export default async function ServicePage({ params }: Params) {
                 }`}
               >
                 <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span
-                      className={`flex h-11 w-11 items-center justify-center rounded-xl font-bold ${
-                        item.highlighted
-                          ? "bg-orange-500 text-white shadow-xs"
-                          : "bg-orange-50 text-orange-600"
-                      }`}
-                    >
-                      {idx + 1}
-                    </span>
-                    {item.highlighted && (
+                  {item.highlighted && (
+                    <div className="mb-3.5 flex items-center justify-start">
                       <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-orange-800">
                         ★ New Service
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
-                  <h3 className="mt-4 font-display text-base font-bold text-navy-900">
+                  <h3 className="font-display text-base font-bold text-orange-600">
                     {item.title}
                   </h3>
 

@@ -397,8 +397,8 @@ export const services: Service[] = [
           "Targeted organic and paid follower growth campaigns across Facebook, Instagram, and TikTok to build real, engaged audiences that convert.",
         icon: "Users",
         highlighted: true,
-        badge: "Highlighted Sub-Service",
-        platforms: ["Facebook", "Instagram", "TikTok"],
+        badge: "New Service",
+       // platforms: ["Facebook", "Instagram", "TikTok"],
         subServiceId: "followers-increasing",
       },
       {
