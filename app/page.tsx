@@ -115,42 +115,42 @@ const howWeHelp = [
 
 const whyPartnerPillars = [
   {
-    step: "01",
+    
     tag: "Tailored Strategy",
     title: "Marketing Built Around Your Business",
     text: "We begin by understanding your business objectives, target audience, challenges, and priorities. Our recommendations are designed around your specific needs rather than a rigid, one-size-fits-all package.",
     icon: MuiTrackChanges,
   },
   {
-    step: "02",
+    
     tag: "Unified Services",
     title: "Strategy and Execution Under One Roof",
     text: "Our six core services cover brand marketing, website design and development, social media, PPC, data analysis, and organic SEO, allowing us to coordinate different marketing activities around shared business goals.",
     icon: MuiHub,
   },
   {
-    step: "03",
+    
     tag: "Data Intelligence",
     title: "Decisions Informed by Data",
     text: "We use relevant performance information to assess what is working, identify areas for improvement, and guide marketing decisions. Our aim is to make performance easier to understand and opportunities easier to identify.",
     icon: MuiInsights,
   },
   {
-    step: "04",
+    
     tag: "Iterative Growth",
     title: "Continuous Improvement",
     text: "Our Initiation, Iteration, and Integration approach focuses on understanding the audience, improving campaigns based on feedback and performance, and connecting marketing activities into a more consistent strategy.",
     icon: MuiAutorenew,
   },
   {
-    step: "05",
+    
     tag: "Transparent Reporting",
     title: "Clear Communication & Reporting",
     text: "We aim to provide clear updates on agreed activities, performance indicators, and next steps, helping clients understand the work being delivered and the reasons behind our recommendations.",
     icon: MuiAssessment,
   },
   {
-    step: "06",
+    
     tag: "Adaptive Partnership",
     title: "Flexible Support for Different Goals",
     text: "Whether you need support with one service or a coordinated digital marketing strategy, we work with you to identify an approach that reflects your priorities, resources, and commercial timeline.",
@@ -371,10 +371,10 @@ export default function Home() {
                       </span>
                     </div>
 
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-200/70 bg-orange-50/80 px-2.5 py-1 font-mono text-xs font-bold text-orange-600 transition-colors group-hover:border-orange-500 group-hover:bg-orange-500 group-hover:text-white">
+                    {/* <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-200/70 bg-orange-50/80 px-2.5 py-1 font-mono text-xs font-bold text-orange-600 transition-colors group-hover:border-orange-500 group-hover:bg-orange-500 group-hover:text-white">
                       <span className="h-1.5 w-1.5 rounded-full bg-orange-500 transition-colors group-hover:bg-white" />
                       {p.step}
-                    </span>
+                    </span> */}
                   </div>
 
                   {/* Title (strictly unchanged) */}
