@@ -169,7 +169,7 @@ export default async function ServicePage({ params }: Params) {
                     </span>
                     {item.highlighted && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-orange-800">
-                        ★ Highlighted Sub-Service
+                        ★ New Service
                       </span>
                     )}
                   </div>
