@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  ArrowUpRight,
   ShieldCheck,
   MapPin,
   CheckCircle2,
@@ -357,36 +356,15 @@ function TestimonialCard({
       }`}
     >
       <div>
-        {/* CARD TOP ROW: 5 Bespoke Dimensional Stars (Left) & Metric Tag (Right) */}
-        <div className="flex items-center justify-between gap-2.5">
-          {/* 5 Bespoke Dimensional Stars */}
-          <div className="flex items-center gap-1 sm:gap-1.5">
-            {Array.from({ length: 5 }).map((_, s) => (
-              <RatingStar
-                key={s}
-                isActive={isActive}
-                className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0"
-              />
-            ))}
-          </div>
-
-          {/* Metric Pill Badge */}
-          {item.metric && (
-            <div
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold truncate ${
-                isActive
-                  ? "border border-orange-500/40 bg-orange-500/15 text-orange-300"
-                  : "border border-navy-200/80 bg-navy-50 text-navy-800"
-              }`}
-            >
-              <ArrowUpRight
-                className={`h-3.5 w-3.5 shrink-0 ${
-                  isActive ? "text-orange-400" : "text-orange-600"
-                }`}
-              />
-              <span className="truncate">{item.metric}</span>
-            </div>
-          )}
+        {/* CARD TOP ROW: 5 Bespoke Dimensional Stars */}
+        <div className="flex items-center gap-1 sm:gap-1.5">
+          {Array.from({ length: 5 }).map((_, s) => (
+            <RatingStar
+              key={s}
+              isActive={isActive}
+              className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0"
+            />
+          ))}
         </div>
 
         {/* QUOTATION TEXT */}
