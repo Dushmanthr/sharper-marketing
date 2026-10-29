@@ -67,26 +67,31 @@ export default function FollowersGrowthSubService({
         </div>
 
         {/* Channels Quick Indicator Capsule */}
-        <div className="flex flex-wrap items-center gap-2 rounded-2xl bg-white/90 border border-orange-100 p-2 sm:p-2.5 shadow-2xs">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-navy-500 px-1 hidden sm:inline">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5 sm:gap-3.5 rounded-2xl bg-white/90 border border-orange-100 p-2.5 sm:p-3 shadow-2xs">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-navy-600 shrink-0">
             Supported Channels:
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-800">
-            <SocialIcon name="linkedin" className="h-3 w-3 text-[#0077b5]" />
-            <span>LinkedIn</span>
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
-            <SocialIcon name="facebook" className="h-3 w-3 text-blue-600" />
-            <span>Facebook</span>
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2.5 py-1 text-xs font-semibold text-rose-700">
-            <SocialIcon name="instagram" className="h-3 w-3 text-rose-500" />
-            <span>Instagram</span>
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-900 px-2.5 py-1 text-xs font-semibold text-white">
-            <SocialIcon name="tiktok" className="h-3 w-3 text-cyan-400" />
-            <span>TikTok</span>
-          </span>
+          <div className="grid grid-cols-2 gap-2 w-full sm:w-auto">
+            {/* Row 1: Col 1 = LinkedIn, Col 2 = Facebook */}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-800 whitespace-nowrap">
+              <SocialIcon name="linkedin" className="h-3.5 w-3.5 text-[#0077b5]" />
+              <span>LinkedIn</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 whitespace-nowrap">
+              <SocialIcon name="facebook" className="h-3.5 w-3.5 text-blue-600" />
+              <span>Facebook</span>
+            </span>
+
+            {/* Row 2: Col 1 = Instagram (aligned directly under LinkedIn), Col 2 = TikTok (aligned directly under Facebook) */}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700 whitespace-nowrap">
+              <SocialIcon name="instagram" className="h-3.5 w-3.5 text-rose-500" />
+              <span>Instagram</span>
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-900 px-3 py-1 text-xs font-semibold text-white whitespace-nowrap">
+              <SocialIcon name="tiktok" className="h-3.5 w-3.5 text-cyan-400" />
+              <span>TikTok</span>
+            </span>
+          </div>
         </div>
       </div>
 
