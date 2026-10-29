@@ -88,8 +88,8 @@ export type ServiceCapability = {
 
 export type PlatformGrowthDetail = {
   name: string;
-  slug: "facebook" | "instagram" | "tiktok";
-  shortName: string; // "FB", "IG", "TikTok"
+  slug: "facebook" | "instagram" | "tiktok" | "linkedin";
+  shortName: string; // "FB", "IG", "TikTok", "LI"
   badge: string;
   focus: string;
   strategy: string;
@@ -171,7 +171,7 @@ export const services: Service[] = [
         title: "Brand Strategy and Positioning",
         description:
           "Research your market, audience, and competitors to clarify what your business stands for and how it should be positioned.",
-        icon: "Target",
+        icon: "Compass",
       },
       {
         title: "Visual Identity Development",
@@ -183,13 +183,13 @@ export const services: Service[] = [
         title: "Brand Messaging and Tone of Voice",
         description:
           "Create clear messaging that communicates your value proposition and gives your brand a distinctive, trusted personality.",
-        icon: "MessageSquare",
+        icon: "Megaphone",
       },
       {
         title: "Marketing Materials & Collateral",
         description:
           "Develop branded digital assets and marketing collateral that support campaigns and maintain absolute consistency across channels.",
-        icon: "LayoutTemplate",
+        icon: "Briefcase",
       },
     ],
     approach:
@@ -213,7 +213,7 @@ export const services: Service[] = [
       {
         title: "Brand Strategy and Positioning",
         description: "Research your market and competitors to define where your business wins.",
-        icon: "Target",
+        icon: "Compass",
       },
       {
         title: "Visual Identity Design",
@@ -223,12 +223,12 @@ export const services: Service[] = [
       {
         title: "Tone of Voice & Messaging",
         description: "Words and narratives that resonate across UK and international markets.",
-        icon: "MessageSquare",
+        icon: "Megaphone",
       },
       {
         title: "Brand Guidelines & Collateral",
         description: "Complete asset libraries and guidelines your teams and partners can execute with ease.",
-        icon: "LayoutTemplate",
+        icon: "Briefcase",
       },
     ],
     faqs: [
@@ -282,13 +282,13 @@ export const services: Service[] = [
         title: "Website Planning and Structure",
         description:
           "Understand your requirements, audience, and goals before planning the site architecture and key user conversion journeys.",
-        icon: "Layers",
+        icon: "Workflow",
       },
       {
         title: "UI/UX Design",
         description:
           "Create clear layouts, intuitive navigation, and consistent visual experiences that help users find relevant information effortlessly.",
-        icon: "LayoutTemplate",
+        icon: "Layout",
       },
       {
         title: "Responsive Website Development",
@@ -300,13 +300,13 @@ export const services: Service[] = [
         title: "Conversion-Focused Content and Design",
         description:
           "Structure pages around clear messages, compelling proof points, and strategic calls to action that encourage visitors to enquire.",
-        icon: "Target",
+        icon: "MousePointerClick",
       },
       {
         title: "Testing, Launch and Ongoing Maintenance",
         description:
           "Test agreed functionality and cross-browser compatibility before launch, with ongoing maintenance and support.",
-        icon: "CheckCircle2",
+        icon: "ShieldCheck",
       },
     ],
     approach:
@@ -394,11 +394,11 @@ export const services: Service[] = [
       {
         title: "Social Media Followers Increasing",
         description:
-          "Targeted organic and paid follower growth campaigns across Facebook, Instagram, and TikTok to build real, engaged audiences that convert.",
-        icon: "TrendingUp",
+          "Targeted organic and paid follower growth campaigns across LinkedIn, Facebook, Instagram, and TikTok to build real, engaged audiences that convert.",
+        icon: "Users",
         highlighted: true,
-        badge: "Highlighted Sub-Service",
-        platforms: ["Facebook", "Instagram", "TikTok"],
+        badge: "New Service",
+       // platforms: ["LinkedIn", "Facebook", "Instagram", "TikTok"],
         subServiceId: "followers-increasing",
       },
       {
@@ -409,12 +409,12 @@ export const services: Service[] = [
       {
         title: "Content Planning and Creation",
         description: "Develop content calendars, compelling captions, creative briefs, and platform-appropriate graphics and copy.",
-        icon: "LayoutTemplate",
+        icon: "PenTool",
       },
       {
         title: "Social Media Management",
         description: "Support publishing, scheduling, profile consistency, and agreed community management activities.",
-        icon: "MessageSquare",
+        icon: "MessageCircle",
       },
       {
         title: "Campaigns and Promotions",
@@ -424,7 +424,7 @@ export const services: Service[] = [
       {
         title: "Performance Analysis",
         description: "Review available metrics such as reach, engagement, clicks, and conversions to identify what resonates.",
-        icon: "BarChart3",
+        icon: "Activity",
       },
     ],
     subServices: [
@@ -433,10 +433,27 @@ export const services: Service[] = [
         title: "Social Media Followers Increasing",
         shortTitle: "Followers Increasing",
         badge: "Highlighted Sub-Service",
-        lead: "Strategic Audience Growth Across Facebook, Instagram & TikTok",
+        lead: "Strategic Audience Growth Across LinkedIn, Facebook, Instagram & TikTok",
         description:
-          "Accelerate your brand presence with authentic, algorithm-aligned follower growth. We combine hyper-targeted paid acceleration, high-impact viral content formats, and community engagement loops across Facebook, Instagram, and TikTok to turn casual scrollers into loyal followers and paying customers.",
+          "Accelerate your brand presence with authentic, algorithm-aligned follower growth. We combine hyper-targeted paid acceleration, high-impact viral content formats, and community engagement loops across LinkedIn, Facebook, Instagram, and TikTok to turn casual scrollers into loyal followers and paying customers.",
         platforms: [
+          {
+            name: "LinkedIn",
+            slug: "linkedin",
+            shortName: "LI",
+            badge: "B2B & Executive Authority",
+            focus: "Decision-Maker Reach & Professional Follower Scale",
+            strategy:
+              "Deploy executive thought leadership, data-driven industry insights, and targeted B2B growth frameworks to attract founders, C-suite executives, and enterprise decision-makers who follow and do business with your brand.",
+            deliverables: [
+              "Company page and executive profile follower growth architecture",
+              "Thought-leadership carousel and long-form post frameworks",
+              "High-intent B2B audience targeting and industry hashtag strategy",
+              "InMail and executive network connection amplification loops",
+            ],
+            metricLabel: "B2B Intent",
+            metricValue: "Decision-Maker Scale",
+          },
           {
             name: "Facebook",
             slug: "facebook",
@@ -505,7 +522,7 @@ export const services: Service[] = [
           {
             title: "Cross-Platform Synergies",
             description:
-              "Synchronize your Facebook, Instagram, and TikTok presence so momentum on one channel compounds the others.",
+              "Synchronize your LinkedIn, Facebook, Instagram, and TikTok presence so momentum on one channel compounds the others.",
             icon: "Layers",
           },
           {
@@ -516,7 +533,7 @@ export const services: Service[] = [
           },
         ],
         deliverables: [
-          "Platform-specific follower growth roadmap for Facebook, Instagram, and TikTok",
+          "Platform-specific follower growth roadmap for LinkedIn, Facebook, Instagram, and TikTok",
           "Comprehensive profile optimization (bio, call-to-action, highlights, link-in-bio)",
           "Viral content hooks, trending templates, and posting schedule calendar",
           "Audience retention tactics to ensure followers stay engaged over time",
@@ -592,7 +609,7 @@ export const services: Service[] = [
       {
         title: "Keyword & Search Intent Research",
         description: "Identify high-commercial-intent search queries to reach buyers who are ready to take action.",
-        icon: "Search",
+        icon: "KeyRound",
       },
       {
         title: "Campaign Architecture & Build",
@@ -607,7 +624,7 @@ export const services: Service[] = [
       {
         title: "Bid & Budget Management",
         description: "Actively manage keyword bids, negative keyword lists, and daily allocations to eliminate wasted spend.",
-        icon: "Target",
+        icon: "Coins",
       },
       {
         title: "Performance Analysis & Optimisation",
@@ -670,27 +687,27 @@ export const services: Service[] = [
       {
         title: "Marketing Performance Analysis",
         description: "Review available data to understand traffic, engagement, leads, conversions, and campaign outcomes.",
-        icon: "BarChart3",
+        icon: "BarChart2",
       },
       {
         title: "Audience and Market Insights",
         description: "Examine audience behaviour, market trends, and competitor activity to identify growth opportunities.",
-        icon: "Search",
+        icon: "Eye",
       },
       {
         title: "Channel and Campaign Comparison",
         description: "Compare performance across channels and campaigns to identify which activities contribute to agreed objectives.",
-        icon: "Layers",
+        icon: "SlidersHorizontal",
       },
       {
         title: "Reporting and Dashboards",
         description: "Organise key performance indicators into clear, easy-to-understand executive dashboards.",
-        icon: "LayoutTemplate",
+        icon: "Presentation",
       },
       {
         title: "Actionable Recommendations",
         description: "Translate findings into prioritised actions, such as refining content, improving landing pages, or adjusting budgets.",
-        icon: "Target",
+        icon: "Lightbulb",
       },
     ],
     approach:
@@ -758,22 +775,22 @@ export const services: Service[] = [
       {
         title: "On-Page SEO & Content Optimisation",
         description: "Improve page titles, meta descriptions, headings, internal links, content structure, and keyword relevance.",
-        icon: "LayoutTemplate",
+        icon: "FileEdit",
       },
       {
         title: "Content Strategy & Topic Clusters",
         description: "Identify high-value topics and content opportunities that answer customer questions and earn organic traffic.",
-        icon: "Layers",
+        icon: "Network",
       },
       {
         title: "Authority and Backlink Development",
         description: "Identify opportunities to earn genuine backlinks through useful content, industry directories, and reputable publications.",
-        icon: "CheckCircle2",
+        icon: "Link2",
       },
       {
         title: "Performance Monitoring & Analytics",
         description: "Use Google Search Console and analytics platforms to monitor impressions, clicks, rankings, and conversions.",
-        icon: "BarChart3",
+        icon: "LineChart",
       },
     ],
     approach:

@@ -6,18 +6,23 @@ import { useEffect, useRef, useState } from "react";
 
 const slides = [
   {
-    src: "/images/hero-marketing-team.jpg",
-    alt: "Sharper Labs Marketing consultancy team in London office reviewing growth dashboard",
+    src: "/images/hero1.jpeg",
+    alt: "Sharper Labs Marketing consultancy team collaborating on campaign strategy and growth goals",
     pos: "object-center",
   },
   {
-    src: "/images/hero-data-analytics.jpg",
-    alt: "Senior digital marketing strategist analyzing global performance analytics and search data",
+    src: "/images/hero2.jpeg",
+    alt: "Senior digital marketing strategist analyzing website traffic analytics and performance metrics",
     pos: "object-center",
   },
   {
-    src: "/images/hero-brand-design.jpg",
-    alt: "Brand marketing and UI/UX design strategists collaborating on campaign prototypes",
+    src: "/images/hero3.jpeg",
+    alt: "Marketing consultants presenting campaign performance data and strategy insights to clients",
+    pos: "object-center",
+  },
+  {
+    src: "/images/hero4.jpeg",
+    alt: "Creative content production and commercial photography for brand campaigns in agency studio",
     pos: "object-center",
   },
 ];

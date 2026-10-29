@@ -10,6 +10,7 @@ import {
   Share2,
   MousePointerClick,
   BarChart3,
+  BarChart2,
   Search,
   CheckCircle2,
   ArrowRight,
@@ -19,6 +20,27 @@ import {
   MessageSquare,
   LayoutTemplate,
   TrendingUp,
+  Compass,
+  Megaphone,
+  Briefcase,
+  Workflow,
+  Layout,
+  Users,
+  PenTool,
+  MessageCircle,
+  Rocket,
+  Activity,
+  KeyRound,
+  Layers,
+  Coins,
+  Eye,
+  SlidersHorizontal,
+  Presentation,
+  Lightbulb,
+  FileEdit,
+  Network,
+  Link2,
+  LineChart,
 } from "lucide-react";
 import { services, type Service } from "@/lib/site";
 import ConsultationModal from "./ConsultationModal";
@@ -27,17 +49,40 @@ import Stage3DHologram from "./Stage3DHologram";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Crown,
-  Sparkles: Crown,
   Palette,
   Code2,
   Share2,
   MousePointerClick,
   BarChart3,
+  BarChart2,
   Search,
+  CheckCircle2,
+  ShieldCheck,
   Target,
   MessageSquare,
   LayoutTemplate,
   TrendingUp,
+  Compass,
+  Megaphone,
+  Briefcase,
+  Workflow,
+  Layout,
+  Users,
+  PenTool,
+  MessageCircle,
+  Rocket,
+  Activity,
+  KeyRound,
+  Layers,
+  Coins,
+  Eye,
+  SlidersHorizontal,
+  Presentation,
+  Lightbulb,
+  FileEdit,
+  Network,
+  Link2,
+  LineChart,
 };
 
 export default function ServicesExplorer() {
@@ -70,7 +115,7 @@ export default function ServicesExplorer() {
           {services.map((service, idx) => {
             const isSelected = activeSlug === service.slug;
             const ServiceIcon = iconMap[service.icon] || CheckCircle2;
-            const stepNum = String(idx + 1).padStart(2, "0");
+           // const stepNum = String(idx + 1).padStart(2, "0");
 
             return (
               <motion.button
@@ -97,24 +142,7 @@ export default function ServicesExplorer() {
                   />
                 )}
 
-                {/* Number Badge & Active Beacon */}
-                <div className="flex items-center justify-between w-full">
-                  <span
-                    className={`font-mono text-[11px] font-bold ${
-                      isSelected ? "text-orange-400" : "text-slate-400 group-hover:text-orange-600 transition-colors"
-                    }`}
-                  >
-                    {stepNum}
-                  </span>
-                  {isSelected ? (
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500" />
-                    </span>
-                  ) : (
-                    <span className="h-1.5 w-1.5 rounded-full bg-transparent group-hover:bg-orange-300 transition-colors" />
-                  )}
-                </div>
+                
 
                 {/* Icon Container with Micro-Animation */}
                 <span
@@ -189,7 +217,6 @@ export default function ServicesExplorer() {
                 <div className="mt-6 sm:mt-7">
                   <div className="flex items-center justify-between border-b border-navy-50 pb-2 mb-3.5">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-navy-800 flex items-center gap-1.5">
-                      <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
                       What We Deliver
                     </h4>
                     {activeService.subServices && activeService.subServices.length > 0 && (

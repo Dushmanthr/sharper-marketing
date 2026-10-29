@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { site } from "@/lib/site";
@@ -11,44 +12,57 @@ type PageHeroProps = {
 };
 
 /**
- * The signature navy banner with an orange triangle motif used on every inner
- * page, plus breadcrumbs.
+ * Signature 3D isometric glowing cubes hero banner used across inner pages,
+ * with responsive scaling and breadcrumbs.
  */
 export default function PageHero({ title, crumbs = [], showTagline = true }: PageHeroProps) {
   return (
-    <section className="relative overflow-hidden bg-navy-900 text-white">
-      <div className="hero-grid absolute inset-0 opacity-40" aria-hidden />
-      {/* Orange triangle motif */}
-      <div
-        aria-hidden
-        className="absolute left-[8%] top-0 h-0 w-0 border-l-34 border-r-34 border-t-46 border-l-transparent border-r-transparent border-t-orange-500 opacity-90"
-      />
-      <div
-        aria-hidden
-        className="absolute -right-16 bottom-0 h-48 w-48 rotate-12 border border-white/10"
-      />
-      <div className="container-page relative py-8 sm:py-10 md:py-12 lg:py-14 2xl:py-16 text-center">
-        <h1 className="text-2xl xs:text-3xl font-bold sm:text-4xl lg:text-5xl 2xl:text-6xl tracking-tight break-words max-w-5xl mx-auto leading-tight">
+    <section className="relative overflow-hidden bg-navy-950 text-white min-h-[220px] xs:min-h-[240px] sm:min-h-[260px] md:min-h-[280px] lg:min-h-[300px] flex items-center justify-center">
+      {/* 3D Isometric Geometric Cubes Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <Image
+          src="/images/page-hero-bg.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center pointer-events-none select-none"
+        />
+        {/* Ambient gradient overlays for contrast and text clarity */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-r from-navy-950/60 via-navy-950/20 to-navy-950/60"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-b from-navy-950/40 via-transparent to-navy-950/50"
+        />
+      </div>
+
+      <div className="container-page relative z-10 py-10 xs:py-12 sm:py-14 md:py-16 lg:py-20 2xl:py-24 text-center">
+        <h1 className="text-2xl xs:text-3xl font-bold sm:text-4xl lg:text-5xl 2xl:text-6xl tracking-tight break-words max-w-5xl mx-auto leading-tight text-white drop-shadow-sm">
           {title}
         </h1>
         {showTagline ? (
-          <p className="mt-3 font-display text-sm sm:text-base font-semibold text-orange-400 max-w-2xl mx-auto">{site.tagline}</p>
+          <p className="mt-3 font-display text-sm sm:text-base font-semibold text-orange-400 max-w-2xl mx-auto drop-shadow-sm">
+            {site.tagline}
+          </p>
         ) : null}
         {crumbs.length ? (
           <nav
             aria-label="Breadcrumb"
-            className="mt-5 flex flex-wrap items-center justify-center gap-1.5 text-sm text-navy-200"
+            className="mt-5 flex flex-wrap items-center justify-center gap-1.5 text-xs sm:text-sm text-navy-200"
           >
-            <Link href="/" className="hover:text-orange-400">
+            <Link href="/" className="hover:text-orange-400 transition-colors">
               Home
             </Link>
             {crumbs.map((c, i) => (
               <span key={c.path} className="flex items-center gap-1.5">
-                <ChevronRight className="h-3.5 w-3.5 text-navy-400" />
+                <ChevronRight className="h-3.5 w-3.5 text-navy-400 shrink-0" />
                 {i === crumbs.length - 1 ? (
-                  <span className="text-white">{c.name}</span>
+                  <span className="text-white font-medium">{c.name}</span>
                 ) : (
-                  <Link href={c.path} className="hover:text-orange-400">
+                  <Link href={c.path} className="hover:text-orange-400 transition-colors">
                     {c.name}
                   </Link>
                 )}

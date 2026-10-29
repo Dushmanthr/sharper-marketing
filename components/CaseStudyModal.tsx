@@ -8,15 +8,13 @@ import {
   ExternalLink,
   Lock,
   ArrowRight,
-  Sparkles,
+
   Monitor,
   Tablet,
   Smartphone,
   Maximize2,
   Loader2,
   Calendar,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import { caseStudies, type CaseStudy } from "@/lib/site";
 
@@ -64,12 +62,6 @@ export default function CaseStudyModal({
     setCurrentIndex(nextIdx);
     setIframeLoading(true);
     if (onSelectStudy) onSelectStudy(caseStudies[nextIdx]);
-  };
-
-  const handleSelectIndex = (idx: number) => {
-    setCurrentIndex(idx);
-    setIframeLoading(true);
-    if (onSelectStudy) onSelectStudy(caseStudies[idx]);
   };
 
   // Close on Escape & Arrow keys navigation & Lock body scroll
@@ -189,75 +181,11 @@ export default function CaseStudyModal({
 
             {/* 2. Scrollable Modal Content */}
             <div className="flex-1 overflow-y-auto p-3 xs:p-4 sm:p-6 lg:p-8 space-y-5 sm:space-y-6">
-              {/* Stepper Navigation: Change One By One */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-navy-100 bg-navy-50/70 p-2.5 sm:p-3">
-                {/* Stepper Case Study Switcher Pills */}
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2 w-full sm:w-auto">
-                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-navy-500 mr-1 hidden md:inline">
-                    Case Studies:
-                  </span>
-                  {caseStudies.map((item, idx) => {
-                    const isSelected = idx === currentIndex;
-                    const icons = ["🍽️", "🛋️", "🌾"];
-                    const shortNames = ["Modern Restaurant", "Furniture House", "Smart Agriculture"];
-                    return (
-                      <button
-                        key={item.slug}
-                        type="button"
-                        onClick={() => handleSelectIndex(idx)}
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 sm:px-3.5 sm:py-1.5 text-xs font-semibold transition-all ${
-                          isSelected
-                            ? "bg-navy-900 text-white shadow-xs border border-navy-900 scale-102"
-                            : "bg-white text-navy-700 border border-navy-200/80 hover:border-orange-400 hover:text-navy-950"
-                        }`}
-                      >
-                        <span>{icons[idx] || "✨"}</span>
-                        <span>{shortNames[idx] || item.client}</span>
-                        {isSelected && (
-                          <span className="rounded-md bg-orange-500 px-1.5 py-0.2 text-[9px] font-bold text-white uppercase tracking-wider">
-                            Active
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Previous & Next Buttons */}
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <button
-                    type="button"
-                    onClick={handlePrev}
-                    title="Previous Case Study (Left Arrow)"
-                    className="inline-flex items-center gap-1 rounded-xl border border-navy-200/80 bg-white px-2.5 py-1.5 text-xs font-semibold text-navy-800 transition-colors hover:border-orange-400 hover:text-orange-600 shadow-2xs"
-                  >
-                    <ChevronLeft className="h-3.5 w-3.5" />
-                    <span className="hidden xs:inline">Prev</span>
-                  </button>
-
-                  <span className="text-xs font-mono font-semibold text-navy-500 px-1">
-                    {currentIndex + 1} / {caseStudies.length}
-                  </span>
-
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    title="Next Case Study (Right Arrow)"
-                    className="inline-flex items-center gap-1 rounded-xl border border-navy-200/80 bg-white px-2.5 py-1.5 text-xs font-semibold text-navy-800 transition-colors hover:border-orange-400 hover:text-orange-600 shadow-2xs"
-                  >
-                    <span className="hidden xs:inline">Next</span>
-                    <ChevronRight className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-
               {/* Interactive Toolbar (100% Focused on Live Interactive Experience) */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-navy-100 shadow-2xs">
                 {/* Live Sandbox Status Indicator */}
                 <div className="flex items-center gap-2 px-2 py-1">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-500/10 text-orange-600">
-                    <Sparkles className="h-4 w-4" />
-                  </div>
+                  
                   <div>
                     <span className="text-xs font-bold text-navy-900 block leading-tight">
                       Live Interactive Experience

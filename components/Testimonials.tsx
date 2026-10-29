@@ -4,8 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Star,
-  ArrowUpRight,
   ShieldCheck,
   MapPin,
   CheckCircle2,
@@ -202,20 +200,6 @@ export default function Testimonials({
       <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-[600px] rounded-full bg-orange-500/5 blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-navy-600/5 blur-3xl" />
 
-      {/* Subtle Quote Watermark on Bottom Right (Matches Reference Screenshot) */}
-      <div
-        className="pointer-events-none absolute -bottom-4 right-4 sm:bottom-4 sm:right-8 lg:right-12 select-none opacity-[0.06] text-navy-900"
-        aria-hidden="true"
-      >
-        <svg
-          viewBox="0 0 100 80"
-          fill="currentColor"
-          className="h-24 w-24 sm:h-32 sm:w-32 lg:h-36 lg:w-36"
-        >
-          <path d="M28 0C12.5 0 0 12.5 0 28v52h45V28H15c0-7.2 5.8-13 13-13V0zm55 0C67.5 0 55 12.5 55 28v52h45V28H70c0-7.2 5.8-13 13-13V0z" />
-        </svg>
-      </div>
-
       {/* Section Header: Badge & Heading */}
       <div className="relative z-10 mx-auto max-w-3xl text-center pb-6 sm:pb-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-orange-600 shadow-2xs">
@@ -295,7 +279,7 @@ export default function Testimonials({
       </div>
 
       {/* Bottom Pagination Dots (Matching Screenshot: Orange Pill for Active Dot) */}
-      <div className="relative z-10 mt-6 sm:mt-8 flex flex-col items-center gap-3">
+      <div className="relative z-10 mt-6 sm:mt-8 flex justify-center">
         <div className="flex items-center gap-2">
           {items.map((_, i) => (
             <button
@@ -311,15 +295,44 @@ export default function Testimonials({
             />
           ))}
         </div>
-
-        {/* Slide Counter */}
-        <div className="flex items-center gap-1.5 text-xs font-mono text-navy-400">
-          <span className="font-bold text-orange-600">0{active + 1}</span>
-          <span className="text-navy-300">/</span>
-          <span>0{total}</span>
-        </div>
       </div>
     </div>
+  );
+}
+
+/** Bespoke 3D Faceted Dimensional Rating Star (Elevated luxury medal finish, distinct from flat generic stars) */
+function RatingStar({
+  className = "h-4.5 w-4.5 sm:h-5 sm:w-5",
+  isActive = false,
+}: {
+  className?: string;
+  isActive?: boolean;
+}) {
+  const lightColor = isActive ? "#FDE047" : "#FBBF24";
+  const shadowColor = isActive ? "#F59E0B" : "#D97706";
+  const strokeColor = isActive ? "rgba(255, 255, 255, 0.28)" : "rgba(217, 119, 6, 0.25)";
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      {/* Light-facing facets */}
+      <path
+        d="M12 12L12 1.8L9.18 8.12ZM12 12L21.7 8.85L14.82 8.12ZM12 12L18 20.25L16.56 13.48ZM12 12L6 20.25L12 16.8ZM12 12L2.3 8.85L7.44 13.48Z"
+        fill={lightColor}
+      />
+      {/* Shadow-facing facets */}
+      <path
+        d="M12 12L12 1.8L14.82 8.12ZM12 12L21.7 8.85L16.56 13.48ZM12 12L18 20.25L12 16.8ZM12 12L6 20.25L7.44 13.48ZM12 12L2.3 8.85L9.18 8.12Z"
+        fill={shadowColor}
+      />
+      {/* Outer silhouette rim */}
+      <polygon
+        points="12,1.8 14.82,8.12 21.7,8.85 16.56,13.48 18,20.25 12,16.8 6,20.25 7.44,13.48 2.3,8.85 9.18,8.12"
+        fill="none"
+        stroke={strokeColor}
+        strokeWidth="0.5"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
@@ -343,39 +356,15 @@ function TestimonialCard({
       }`}
     >
       <div>
-        {/* CARD TOP ROW: 5 Golden Stars (Left) & Metric Tag (Right) */}
-        <div className="flex items-center justify-between gap-2.5">
-          {/* 5 Golden Stars matching reference screenshot */}
-          <div className="flex items-center gap-1">
-            {Array.from({ length: 5 }).map((_, s) => (
-              <Star
-                key={s}
-                className={`h-4.5 w-4.5 sm:h-5 sm:w-5 ${
-                  isActive
-                    ? "fill-amber-400 text-amber-400"
-                    : "fill-amber-400/90 text-amber-400/90"
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* Metric Pill Badge */}
-          {item.metric && (
-            <div
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs font-bold truncate ${
-                isActive
-                  ? "border border-orange-500/40 bg-orange-500/15 text-orange-300"
-                  : "border border-navy-200/80 bg-navy-50 text-navy-800"
-              }`}
-            >
-              <ArrowUpRight
-                className={`h-3.5 w-3.5 shrink-0 ${
-                  isActive ? "text-orange-400" : "text-orange-600"
-                }`}
-              />
-              <span className="truncate">{item.metric}</span>
-            </div>
-          )}
+        {/* CARD TOP ROW: 5 Bespoke Dimensional Stars */}
+        <div className="flex items-center gap-1 sm:gap-1.5">
+          {Array.from({ length: 5 }).map((_, s) => (
+            <RatingStar
+              key={s}
+              isActive={isActive}
+              className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0"
+            />
+          ))}
         </div>
 
         {/* QUOTATION TEXT */}

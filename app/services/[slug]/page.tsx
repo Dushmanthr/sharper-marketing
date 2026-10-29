@@ -55,9 +55,30 @@ export default async function ServicePage({ params }: Params) {
 
   const path = `/services/${service.slug}`;
 
+  const isWideCTA = service.slug !== "organic-seo";
+
   // Find relevant case studies for this service
   const relevantCaseStudies = caseStudies.filter(
     (c) => c.services.includes(service.title) || c.services.includes(service.short),
+  );
+
+  const ctaCard = (
+    <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5 xs:p-6 shadow-xs">
+      <h4 className="font-display text-sm font-semibold text-navy-900">
+        Ready to review your {service.short} requirements?
+      </h4>
+      <p className="mt-1 text-xs text-ink-muted">
+        Our UK consultancy provides complimentary initial assessments with transparent pricing.
+      </p>
+      <div className="mt-4 flex flex-col xs:flex-row gap-2.5 sm:gap-3">
+        <Button href="/contact" variant="primary" size="sm" className="w-full xs:w-auto">
+          Request Consultation
+        </Button>
+        <Button href={site.phoneHref} external variant="outline" size="sm" className="w-full xs:w-auto">
+          Call {site.phone}
+        </Button>
+      </div>
+    </div>
   );
 
   return (
@@ -146,35 +167,49 @@ export default async function ServicePage({ params }: Params) {
           description={`Comprehensive, data-driven ${service.short} capabilities delivered by our UK and international marketing consultants.`}
         />
 
-        <div className="mt-12 grid gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:gap-8">
-          {service.whatWeDo.map((item, idx) => (
-            <Reveal key={idx} index={idx} className="h-full">
-              <div
-                className={`flex h-full flex-col justify-between rounded-3xl p-5 sm:p-6 2xl:p-7 transition-all ${
-                  item.highlighted
-                    ? "border-2 border-orange-400 bg-linear-to-b from-orange-50/70 via-white to-amber-50/30 shadow-md ring-2 ring-orange-200/50 hover:shadow-xl"
-                    : "border border-navy-100 bg-white shadow-xs hover:border-orange-300 hover:shadow-md"
-                }`}
-              >
-                <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span
-                      className={`flex h-11 w-11 items-center justify-center rounded-xl font-bold ${
-                        item.highlighted
-                          ? "bg-orange-500 text-white shadow-xs"
-                          : "bg-orange-50 text-orange-600"
-                      }`}
-                    >
-                      {idx + 1}
-                    </span>
-                    {item.highlighted && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-orange-800">
-                        ★ Highlighted Sub-Service
-                      </span>
-                    )}
-                  </div>
+        {/* Dynamic Responsive Capabilities Grid:
+            - 4 cards: 4 columns in 1 row (Brand Marketing)
+            - 5 cards: Row 1 has 3 cards, Row 2 has 2 cards centered in the middle (Web Design, PPC, Data Analysis)
+            - 6 cards: Balanced 3x2 grid with 3 cards per row (Social Media, SEO)
+        */}
+        <div
+          className={`mt-12 grid gap-5 sm:gap-6 2xl:gap-8 ${
+            service.whatWeDo.length === 5
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-6"
+              : service.whatWeDo.length >= 6
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+          }`}
+        >
+          {service.whatWeDo.map((item, idx) => {
+            const isFiveCards = service.whatWeDo.length === 5;
+            const revealClasses = isFiveCards
+              ? idx === 3
+                ? "h-full lg:col-span-2 sm:col-start-auto lg:col-start-2"
+                : idx === 4
+                ? "h-full sm:col-span-2 sm:max-w-md sm:mx-auto w-full lg:col-span-2 lg:max-w-none lg:mx-0"
+                : "h-full lg:col-span-2"
+              : "h-full";
 
-                  <h3 className="mt-4 font-display text-base font-bold text-navy-900">
+            return (
+              <Reveal key={idx} index={idx} className={revealClasses}>
+                <div
+                  className={`flex h-full flex-col justify-between rounded-3xl p-5 sm:p-6 2xl:p-7 transition-all ${
+                    item.highlighted
+                      ? "border-2 border-orange-400 bg-linear-to-b from-orange-50/70 via-white to-amber-50/30 shadow-md ring-2 ring-orange-200/50 hover:shadow-xl"
+                      : "border border-navy-100 bg-white shadow-xs hover:border-orange-300 hover:shadow-md"
+                  }`}
+                >
+                <div>
+                  {item.highlighted && (
+                    <div className="mb-3.5 flex items-center justify-start">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-orange-800">
+                        ★ New Service
+                      </span>
+                    </div>
+                  )}
+
+                  <h3 className="font-display text-base font-bold text-orange-600">
                     {item.title}
                   </h3>
 
@@ -209,7 +244,8 @@ export default async function ServicePage({ params }: Params) {
                 )}
               </div>
             </Reveal>
-          ))}
+          );
+        })}
         </div>
       </Section>
 
@@ -241,23 +277,23 @@ export default async function ServicePage({ params }: Params) {
                 {service.approach}
               </p>
               <p className="mt-4 text-xs font-medium text-navy-600">
-                🤝 We operate with full transparency: clear agreed milestones, transparent performance indicators, and continuous iteration based on real market response.
+                 We operate with full transparency: clear agreed milestones, transparent performance indicators, and continuous iteration based on real market response.
               </p>
             </div>
 
-            {service.process && (
+            {service.process && service.slug !== "website-design-and-development" && (
               <div className="mt-8">
                 <h3 className="font-display text-lg font-bold text-navy-900 mb-4">
                   Step-by-Step Execution
                 </h3>
-                <div className="space-y-3">
+                <div className="rounded-3xl border border-navy-100 bg-surface-muted p-5 xs:p-7 sm:p-8 2xl:p-10 space-y-4">
                   {service.process.map((step, i) => (
-                    <div key={i} className="flex gap-3 text-sm text-navy-800">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500 text-white font-bold text-xs">
+                    <div key={i} className="flex items-start gap-3 text-sm text-navy-800">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500 text-white font-bold text-xs shadow-2xs">
                         {i + 1}
                       </span>
-                      <div>
-                        <strong className="text-navy-900">{step.title}:</strong>{" "}
+                      <div className="leading-relaxed">
+                        <strong className="text-navy-900 font-semibold">{step.title}:</strong>{" "}
                         <span className="text-ink-muted">{step.description}</span>
                       </div>
                     </div>
@@ -265,6 +301,8 @@ export default async function ServicePage({ params }: Params) {
                 </div>
               </div>
             )}
+            {/* CTA Box placed in the left-hand column specifically for Organic SEO */}
+            {service.slug === "organic-seo" && ctaCard}
           </div>
 
           {/* What You Can Expect */}
@@ -297,14 +335,22 @@ export default async function ServicePage({ params }: Params) {
               )}
             </div>
 
-            <div className="mt-6 rounded-2xl border border-navy-100 bg-white p-5 xs:p-6 shadow-xs">
-              <h4 className="font-display text-sm font-semibold text-navy-900">
-                Ready to review your {service.short} requirements?
-              </h4>
-              <p className="mt-1 text-xs text-ink-muted">
-                Our UK consultancy provides complimentary initial assessments with transparent pricing.
-              </p>
-              <div className="mt-4 flex flex-col xs:flex-row gap-2.5 sm:gap-3">
+            {/* Standard in-column CTA on the right for other services */}
+            {!isWideCTA && service.slug !== "organic-seo" && ctaCard}
+          </div>
+
+          {/* Full-width wide CTA bar spanning both sides (All services except Organic SEO) */}
+          {isWideCTA && (
+            <div className="lg:col-span-2 rounded-2xl sm:rounded-3xl border border-navy-100 bg-white p-5 xs:p-6 sm:p-8 lg:p-10 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-5 sm:gap-6">
+              <div className="max-w-2xl">
+                <h4 className="font-display text-base sm:text-lg font-bold text-navy-900">
+                  Ready to review your {service.short} requirements?
+                </h4>
+                <p className="mt-1 sm:mt-1.5 text-xs sm:text-sm text-ink-muted leading-relaxed">
+                  Our UK consultancy provides complimentary initial assessments with transparent pricing.
+                </p>
+              </div>
+              <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-3 shrink-0">
                 <Button href="/contact" variant="primary" size="sm" className="w-full xs:w-auto">
                   Request Consultation
                 </Button>
@@ -313,7 +359,7 @@ export default async function ServicePage({ params }: Params) {
                 </Button>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </Section>
 
