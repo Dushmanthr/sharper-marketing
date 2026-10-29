@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Lock, ExternalLink, Sparkles, Play, Eye } from "lucide-react";
+import { ArrowRight, Lock, ExternalLink, TrendingUp, Play, Eye } from "lucide-react";
 import type { CaseStudy } from "@/lib/site";
 
 export default function CaseStudyCard({
@@ -253,7 +253,7 @@ export default function CaseStudyCard({
 
           {topResult && (
             <div className="flex items-center gap-1 rounded-md border border-orange-100 bg-orange-50/90 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold text-orange-600">
-              <Sparkles className="h-3 w-3 text-orange-500 shrink-0" />
+              <TrendingUp className="h-3 w-3 text-orange-500 shrink-0" />
               <span>{topResult.metric}</span>
               <span className="hidden sm:inline font-normal text-orange-700/80">
                 {topResult.label.split(" ").slice(0, 2).join(" ")}
