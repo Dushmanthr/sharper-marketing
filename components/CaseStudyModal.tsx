@@ -14,7 +14,8 @@ import {
   Loader2,
   Calendar,
 } from "lucide-react";
-import { caseStudies, type CaseStudy } from "@/lib/site";
+import { caseStudies, services, type CaseStudy } from "@/lib/site";
+import ConsultationModal from "./ConsultationModal";
 
 interface CaseStudyModalProps {
   study: CaseStudy | null;
@@ -33,6 +34,7 @@ export default function CaseStudyModal({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [deviceViewport, setDeviceViewport] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const [iframeLoading, setIframeLoading] = useState(true);
+  const [isConsultationOpen, setIsConsultationOpen] = useState(false);
 
   // Sync index when study prop changes
   useEffect(() => {
@@ -45,7 +47,31 @@ export default function CaseStudyModal({
     }
   }, [study]);
 
+  // Reset consultation modal state when main modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setIsConsultationOpen(false);
+    }
+  }, [isOpen]);
+
+  // Re-lock body scroll if consultation modal closes while case study modal is still open
+  useEffect(() => {
+    if (isOpen && !isConsultationOpen) {
+      document.body.style.overflow = "hidden";
+    }
+  }, [isOpen, isConsultationOpen]);
+
   const activeStudy = caseStudies[currentIndex] || caseStudies[0];
+
+  // Map case study service to matching consultation modal service slug
+  const matchedServiceSlug =
+    services.find((s) =>
+      activeStudy.services.some(
+        (srv) =>
+          srv.toLowerCase() === s.title.toLowerCase() ||
+          s.slug.includes(srv.toLowerCase().replace(/[^a-z0-9]/g, ""))
+      )
+    )?.slug || "website-design-and-development";
 
   // Navigation handlers to change one by one
   const handlePrev = () => {
@@ -67,6 +93,9 @@ export default function CaseStudyModal({
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Do not intercept keyboard shortcuts if consultation modal is open
+      if (isConsultationOpen) return;
+
       if (e.key === "Escape") {
         onClose();
       } else if (e.key === "ArrowLeft") {
@@ -84,14 +113,15 @@ export default function CaseStudyModal({
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = originalOverflow;
     };
-  }, [isOpen, currentIndex, onClose]);
+  }, [isOpen, currentIndex, onClose, isConsultationOpen]);
 
   if (!isOpen || !activeStudy) return null;
 
   const demoUrl = activeStudy.demoUrl || "/demos/modern-restaurant";
 
   return (
-    <AnimatePresence>
+    <>
+      <AnimatePresence>
       {isOpen && (
         <div
           role="dialog"
@@ -133,9 +163,6 @@ export default function CaseStudyModal({
                     >
                       {activeStudy.client || activeStudy.title}
                     </h2>
-                    <span className="hidden sm:inline-flex rounded-full bg-orange-50 px-2.5 py-0.5 text-[10px] font-semibold text-orange-600 border border-orange-200">
-                      Case Study {currentIndex + 1} of {caseStudies.length}
-                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-ink-muted">
                     <span className="font-medium text-navy-700">Sharper Labs Marketing</span>
@@ -147,24 +174,13 @@ export default function CaseStudyModal({
 
               {/* Action Buttons & Close */}
               <div className="flex items-center gap-2 sm:gap-3">
-                {activeStudy.websiteUrl && (
-                  <a
-                    href={activeStudy.websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-navy-200 bg-navy-50/60 px-3.5 py-1.5 text-xs font-semibold text-navy-800 transition-colors hover:border-orange-400 hover:text-orange-600"
-                  >
-                    <span>Production Site</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                )}
-
-                <Link
-                  href="/contact"
-                  className="rounded-full bg-navy-900 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-orange-600 shadow-xs"
+                <button
+                  type="button"
+                  onClick={() => setIsConsultationOpen(true)}
+                  className="rounded-full bg-navy-900 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-orange-600 shadow-xs cursor-pointer"
                 >
                   Get in touch
-                </Link>
+                </button>
 
                 <button
                   type="button"
@@ -397,5 +413,13 @@ export default function CaseStudyModal({
         </div>
       )}
     </AnimatePresence>
+
+    <ConsultationModal
+      isOpen={isConsultationOpen}
+      onClose={() => setIsConsultationOpen(false)}
+      initialTab="consultation"
+      preselectedService={matchedServiceSlug}
+    />
+  </>
   );
 }

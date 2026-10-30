@@ -175,9 +175,9 @@ export default function ModernRestaurantDemo() {
             sizes="100vw"
             className="object-cover object-center"
           />
-          {/* Deep Racing Green & Charcoal Atmosphere Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0d1a12]/95 via-[#112017]/85 to-[#0d1a12]/75" />
-          <div className="absolute inset-0 bg-[#0d1a12]/40" />
+          {/* Softened Atmosphere Overlay to reveal the estate background image clearly */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0d1a12]/70 via-[#112017]/40 to-transparent" />
+          <div className="absolute inset-0 bg-[#0d1a12]/20" />
         </motion.div>
 
         <div className="container mx-auto grid lg:grid-cols-12 gap-8 items-center relative z-10">
@@ -189,13 +189,13 @@ export default function ModernRestaurantDemo() {
               <span>16th-Century Coaching Inn · Norfolk &amp; Suffolk Border</span>
             </div>
 
-            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal leading-[1.15] tracking-tight text-white">
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal leading-[1.15] tracking-tight text-white drop-shadow-md">
               For Moments <br />
               <span className="italic font-normal text-[#deb574]">That Matter Most</span> <br />
               At Green Haven
             </h1>
 
-            <p className="max-w-xl text-sm sm:text-base leading-relaxed text-white/80 font-light">
+            <p className="max-w-xl text-sm sm:text-base leading-relaxed text-white/90 font-light drop-shadow-xs">
               Wrapped in four acres of peaceful Suffolk grounds near Diss &amp; Eye. Experience our farm-to-table Courtyard Restaurant, traditional afternoon tea, 44 country bedrooms, and romantic celebrations in our 16th-century Tithe Barn.
             </p>
 
