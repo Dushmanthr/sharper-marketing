@@ -10,7 +10,6 @@ import {
   Sliders,
   Check,
   Ruler,
-  Sparkles,
   ArrowRight,
   ShieldCheck,
   ChevronRight,
@@ -127,8 +126,7 @@ export default function FurnitureCollectionPage() {
       {/* Header */}
       <section className="relative px-4 sm:px-8 lg:px-16 pt-12 pb-8 border-b border-[#e5e0d4] bg-[#f0ede4] text-center space-y-4">
         <div className="container mx-auto max-w-4xl space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#d6cfc0] bg-white px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#856046] shadow-2xs">
-            <Sparkles className="h-3 w-3 text-[#aa4c33]" />
+          <div className="inline-flex items-center rounded-full border border-[#d6cfc0] bg-white px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#856046] shadow-2xs">
             <span>2026 London Living Catalog</span>
           </div>
 

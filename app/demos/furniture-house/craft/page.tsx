@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Leaf,
   ShieldCheck,
-  Sparkles,
   TreePine,
   CheckCircle2,
   Calendar,

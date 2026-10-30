@@ -16,7 +16,6 @@ import {
   Play,
   X,
   Compass,
-  Sparkles,
   Truck,
   Award,
   Layers,
@@ -547,8 +546,7 @@ export default function FurnitureHouseDemo() {
                       <span className="text-[10px] font-mono tracking-wider bg-black/65 backdrop-blur-md px-2 py-0.5 rounded-md">
                         {product.weight}
                       </span>
-                      <span className="inline-flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider bg-white/95 text-[#171513] px-2 py-0.5 rounded-md font-semibold shadow-xs">
-                        <Sparkles className="h-2.5 w-2.5 text-[#8e7861]" />
+                      <span className="inline-flex items-center text-[9px] font-mono uppercase tracking-wider bg-white/95 text-[#171513] px-2 py-0.5 rounded-md font-semibold shadow-xs">
                         Tactile Finish
                       </span>
                     </div>
@@ -647,8 +645,7 @@ export default function FurnitureHouseDemo() {
 
             {/* Customizer Controls & Specification */}
             <div className="lg:col-span-5 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#c9a87d]/30 bg-[#c9a87d]/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-[#c9a87d]">
-                <Sparkles className="h-3 w-3" />
+              <div className="inline-flex items-center rounded-full border border-[#c9a87d]/30 bg-[#c9a87d]/10 px-3.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-[#c9a87d]">
                 <span>Custom Atelier Studio</span>
               </div>
 

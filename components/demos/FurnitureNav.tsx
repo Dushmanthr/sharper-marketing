@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   Search,
   Globe,
-  Sparkles,
 } from "lucide-react";
 
 export default function FurnitureNav({
@@ -54,7 +53,6 @@ export default function FurnitureNav({
     <>
       {/* 1. Top Announcement Strip */}
       <div className="w-full bg-[#171513] text-[#e8dfd5] text-[10px] sm:text-[11px] font-sans tracking-[0.2em] uppercase py-2 px-4 text-center border-b border-white/10 flex items-center justify-center gap-2 select-none">
-        <Sparkles className="h-3 w-3 text-[#c9a87d] shrink-0" />
         <span>Complimentary White-Glove UK &amp; Global Delivery Over £1,500</span>
         <span className="text-white/30 hidden sm:inline">·</span>
         <span className="hidden sm:inline text-[#c9a87d]">10-Year Master Structural Warranty</span>
