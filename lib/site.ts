@@ -941,7 +941,7 @@ export const caseStudies: CaseStudy[] = [
     title: "Stone & Timber Atelier: Real-Time 3D 360° E-Commerce Furniture Customizer",
     summary:
       "Scaling high-ticket architectural stone & timber furniture sales with real-time 360° WebGL customisation, tactile swatches, and a frictionless checkout flow.",
-    image: "/images/brand-marketing-04.png",
+    image: "/images/furniture/hero.jpg",
     video: "/videos/video1.mp4",
     clientDomain: "stoneandtimber-atelier.co.uk",
     websiteUrl: "https://stoneandtimber-atelier.co.uk",

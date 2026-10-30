@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Leaf,
@@ -198,17 +199,30 @@ export default function FurnitureCraftPage() {
               </div>
             </div>
 
-            {/* Visual Graphic Representation */}
-            <div className="md:col-span-5 rounded-2xl bg-[#f0ede4] p-8 border border-[#e5e0d4] text-center space-y-3">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-xs text-[#aa4c33]">
-                <Hammer className="h-10 w-10" />
+            {/* Visual Photography Representation */}
+            <div className="md:col-span-5 rounded-2xl bg-[#f0ede4] overflow-hidden border border-[#e5e0d4] relative aspect-4/3 group shadow-inner">
+              <motion.div
+                className="relative w-full h-full"
+                whileHover={{ scale: 1.06 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <Image
+                  src="/images/furniture/craft-workshop.jpg"
+                  alt="London Atelier Craft Workshop"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  className="object-cover object-center"
+                />
+              </motion.div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent p-6 flex flex-col justify-end text-left text-white">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#e8ded3]">Traditional Joinery</span>
+                <h4 className="font-serif text-base font-bold text-white mt-1">
+                  Zero Metallic Fasteners
+                </h4>
+                <p className="text-[11px] text-white/80 mt-1 leading-relaxed">
+                  Balanced wood grain expansion ensures joint strength endures across generations.
+                </p>
               </div>
-              <h4 className="font-display text-sm font-bold text-[#1a1c20]">
-                Zero Metallic Fasteners
-              </h4>
-              <p className="text-xs text-[#5a5f68]">
-                By balancing wood grain expansion directions, each piece becomes stronger over time.
-              </p>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShoppingBag,
@@ -68,6 +69,7 @@ const signatureDesigns = [
     dimensions: "W 160cm × D 42cm × H 82cm",
     tag: "Atelier Signature",
     weight: "84 kg",
+    image: "/images/furniture/console-table.jpg",
   },
   {
     id: "pebble-table",
@@ -78,6 +80,7 @@ const signatureDesigns = [
     dimensions: "L 145cm × W 78cm × H 36cm",
     tag: "Architect Choice",
     weight: "68 kg",
+    image: "/images/furniture/pebble-table.jpg",
   },
   {
     id: "fluted-plinth",
@@ -88,6 +91,7 @@ const signatureDesigns = [
     dimensions: "W 38cm × D 38cm × H 85cm",
     tag: "Master Chiseled",
     weight: "42 kg",
+    image: "/images/furniture/fluted-plinth.jpg",
   },
   {
     id: "cantilever-desk",
@@ -98,6 +102,7 @@ const signatureDesigns = [
     dimensions: "L 200cm × W 90cm × H 76cm",
     tag: "Limited Release",
     weight: "112 kg",
+    image: "/images/furniture/cantilever-table.jpg",
   },
 ];
 
@@ -109,6 +114,7 @@ const journalArticles = [
     category: "Materiality",
     readTime: "5 min read",
     date: "Autumn 2026",
+    image: "/images/furniture/journal-patina.jpg",
     excerpt:
       "Formed by thermal mineral springs over millennia, Italian travertine introduces organic warmth and irreplaceable tactile topography to modern architectural interiors.",
   },
@@ -118,6 +124,7 @@ const journalArticles = [
     category: "Spatial Design",
     readTime: "4 min read",
     date: "Autumn 2026",
+    image: "/images/furniture/journal-plinth.jpg",
     excerpt:
       "By keeping horizon lines low and surfaces massive, monolithic low tables allow light and proportion to breathe in generous contemporary residences.",
   },
@@ -127,6 +134,7 @@ const journalArticles = [
     category: "Provenance",
     readTime: "6 min read",
     date: "Winter 2026",
+    image: "/images/furniture/journal-quarry.jpg",
     excerpt:
       "Inside the historic Rapolano Terme quarry, our artisans inspect raw extracted blocks to curate slabs where natural porosity and density achieve ideal balance.",
   },
@@ -141,6 +149,7 @@ const provenanceSteps = [
     location: "Rapolano Terme, Siena, Italy",
     desc: "Blocks of premium travertine are selected at the quarry face using diamond-wire saws, respecting natural fault lines to ensure structural integrity across generations.",
     duration: "1:45 min",
+    image: "/images/furniture/journal-quarry.jpg",
   },
   {
     id: "diamond-cut",
@@ -149,6 +158,7 @@ const provenanceSteps = [
     location: "Artisan Stoneworks, Carrara",
     desc: "Raw boulders weighing up to 18 tonnes are calibrated and sliced into monolithic 50mm slabs with water-cooled multi-diamond blades to reveal hidden geologic veining.",
     duration: "2:10 min",
+    image: "/images/furniture/cantilever-table.jpg",
   },
   {
     id: "shaping",
@@ -157,6 +167,7 @@ const provenanceSteps = [
     location: "Mayfair Atelier, London",
     desc: "Architectural components are dimensioned with sub-millimeter precision before master stonemasons hand-soften every radius and chiseled fluting detail.",
     duration: "2:35 min",
+    image: "/images/furniture/craft-workshop.jpg",
   },
   {
     id: "finishing",
@@ -165,6 +176,7 @@ const provenanceSteps = [
     location: "Artisan Finishing Hall, London",
     desc: "Surfaces are hand-buffed with non-toxic botanical oils and breathable natural waxes that nourish the stone while preserving its velvety matte tactile sensation.",
     duration: "1:55 min",
+    image: "/images/furniture/journal-patina.jpg",
   },
 ];
 
@@ -413,58 +425,26 @@ export default function FurnitureHouseDemo() {
       <DemoBadge studySlug="furniture-house" studyName="Stone & Timber" />
 
       {/* 2. Full-Bleed Editorial Hero: TRAVERTINE COLLECTION */}
-      <section className="relative min-h-[85vh] sm:min-h-[92vh] flex flex-col items-center justify-between overflow-hidden bg-[#735843] text-white px-4 sm:px-8 py-12 select-none">
-        {/* Warm Ambient Studio Vignette & Architectural Table Graphic */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 pointer-events-none z-10" />
-
-        {/* Artistic Architectural Console Table Silhouette Composition */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-85">
-          <svg
-            className="w-full h-full max-w-5xl object-cover scale-110 sm:scale-100 transition-transform duration-1000"
-            viewBox="0 0 1000 650"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient id="travertineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#d9caa8" />
-                <stop offset="50%" stopColor="#bfae8b" />
-                <stop offset="100%" stopColor="#9e8b69" />
-              </linearGradient>
-              <linearGradient id="legGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#b8a786" />
-                <stop offset="100%" stopColor="#6e5e45" />
-              </linearGradient>
-              <filter id="softShadow" x="-10%" y="-10%" width="120%" height="130%">
-                <feDropShadow dx="0" dy="25" stdDeviation="28" floodColor="#000000" floodOpacity="0.45" />
-              </filter>
-            </defs>
-
-            {/* Back Studio Shadow */}
-            <ellipse cx="500" cy="560" rx="420" ry="45" fill="#000000" opacity="0.35" filter="url(#softShadow)" />
-
-            {/* Solid Console Table Top Slab */}
-            <path
-              d="M 120 220 Q 500 200 880 220 L 890 260 Q 500 240 110 260 Z"
-              fill="url(#travertineGrad)"
-              filter="url(#softShadow)"
-            />
-
-            {/* Slab Bevel Thickness */}
-            <path d="M 110 260 Q 500 240 890 260 L 885 280 Q 500 260 115 280 Z" fill="#8c7a5c" />
-
-            {/* Left Monolithic Pillar Leg */}
-            <path d="M 240 270 L 320 270 L 300 550 L 220 550 Z" fill="url(#legGrad)" filter="url(#softShadow)" />
-            {/* Fluting Line Accents */}
-            <line x1="265" y1="272" x2="245" y2="550" stroke="#68563d" strokeWidth="2" opacity="0.6" />
-            <line x1="295" y1="272" x2="275" y2="550" stroke="#68563d" strokeWidth="2" opacity="0.6" />
-
-            {/* Right Monolithic Pillar Leg */}
-            <path d="M 680 270 L 760 270 L 780 550 L 700 550 Z" fill="url(#legGrad)" filter="url(#softShadow)" />
-            <line x1="705" y1="272" x2="725" y2="550" stroke="#68563d" strokeWidth="2" opacity="0.6" />
-            <line x1="735" y1="272" x2="755" y2="550" stroke="#68563d" strokeWidth="2" opacity="0.6" />
-          </svg>
-        </div>
+      <section className="relative min-h-[85vh] sm:min-h-[92vh] flex flex-col items-center justify-between overflow-hidden bg-[#171513] text-white px-4 sm:px-8 py-12 select-none">
+        {/* Real Architectural Furniture Photography Background with Slow Floating Zoom */}
+        <motion.div
+          initial={{ scale: 1.08, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.8, ease: "easeOut" }}
+          className="absolute inset-0 z-0"
+        >
+          <Image
+            src="/images/furniture/hero.jpg"
+            alt="Stone & Timber Travertine Collection Atelier"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          {/* Atmospheric editorial vignette for ultra-luxury depth & typography readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/35 to-black/80" />
+          <div className="absolute inset-0 bg-[#3a2f26]/30 mix-blend-multiply" />
+        </motion.div>
 
         {/* Top spacer */}
         <div />
@@ -534,51 +514,44 @@ export default function FurnitureHouseDemo() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
+                whileHover={{ y: -6 }}
                 className="group flex flex-col justify-between bg-white rounded-2xl border border-[#e5ded2] p-5 sm:p-6 transition-all duration-300 hover:border-[#171513] hover:shadow-xl"
               >
                 <div>
-                  {/* Clean Sculptural Geometric Illustration for each piece */}
-                  <div className="relative aspect-4/3 w-full rounded-xl bg-[#f5f1ea] border border-[#ece6db] flex items-center justify-center overflow-hidden mb-5">
-                    {/* Minimalist SVG Stone Furniture Art */}
-                    {idx === 0 && (
-                      <svg className="w-4/5 h-4/5 object-contain" viewBox="0 0 200 140" fill="none">
-                        <rect x="20" y="38" width="160" height="14" rx="2" fill="#d6c7b2" />
-                        <rect x="42" y="52" width="22" height="65" fill="#c4b39b" />
-                        <rect x="136" y="52" width="22" height="65" fill="#c4b39b" />
-                        <ellipse cx="100" cy="120" rx="75" ry="6" fill="#000" opacity="0.08" />
-                      </svg>
-                    )}
-                    {idx === 1 && (
-                      <svg className="w-4/5 h-4/5 object-contain" viewBox="0 0 200 140" fill="none">
-                        <path d="M 30 55 Q 100 35 170 55 Q 180 75 160 80 Q 90 85 40 75 Z" fill="#d6c7b2" />
-                        <circle cx="65" cy="95" r="18" fill="#a8957c" />
-                        <circle cx="135" cy="95" r="18" fill="#a8957c" />
-                        <ellipse cx="100" cy="116" rx="65" ry="5" fill="#000" opacity="0.08" />
-                      </svg>
-                    )}
-                    {idx === 2 && (
-                      <svg className="w-4/5 h-4/5 object-contain" viewBox="0 0 200 140" fill="none">
-                        <rect x="70" y="24" width="60" height="10" fill="#d6c7b2" />
-                        <path d="M 75 34 L 125 34 L 120 110 L 80 110 Z" fill="#c4b39b" />
-                        <line x1="88" y1="34" x2="90" y2="110" stroke="#9a8770" strokeWidth="1.5" />
-                        <line x1="100" y1="34" x2="100" y2="110" stroke="#9a8770" strokeWidth="1.5" />
-                        <line x1="112" y1="34" x2="110" y2="110" stroke="#9a8770" strokeWidth="1.5" />
-                        <rect x="65" y="110" width="70" height="10" fill="#a8957c" />
-                        <ellipse cx="100" cy="122" rx="45" ry="4" fill="#000" opacity="0.08" />
-                      </svg>
-                    )}
-                    {idx === 3 && (
-                      <svg className="w-4/5 h-4/5 object-contain" viewBox="0 0 200 140" fill="none">
-                        <rect x="18" y="35" width="164" height="12" fill="#d6c7b2" />
-                        <path d="M 30 47 L 55 47 L 70 112 L 45 112 Z" fill="#704d30" />
-                        <path d="M 145 47 L 170 47 L 155 112 L 130 112 Z" fill="#704d30" />
-                        <ellipse cx="100" cy="118" rx="70" ry="5" fill="#000" opacity="0.08" />
-                      </svg>
-                    )}
+                  {/* Real Photography with Framer-Motion Hover Zoom & Hotspot Overlay */}
+                  <div className="relative aspect-4/3 w-full rounded-xl bg-[#f5f1ea] border border-[#ece6db] overflow-hidden mb-5 group/img">
+                    <motion.div
+                      className="relative w-full h-full"
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                    >
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover object-center"
+                      />
+                    </motion.div>
 
-                    <span className="absolute top-3 left-3 text-[9px] font-mono tracking-widest uppercase px-2 py-0.5 rounded-full bg-white/90 text-[#8e7861] border border-[#e5ded2]">
+                    {/* Gradient overlay for contrast */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                    {/* Top Tag Badge */}
+                    <span className="absolute top-3 left-3 text-[9px] font-mono tracking-widest uppercase px-2.5 py-1 rounded-full bg-white/95 text-[#8e7861] border border-[#e5ded2] shadow-2xs backdrop-blur-xs z-10">
                       {product.tag}
                     </span>
+
+                    {/* Quick Specs Overlay on Hover */}
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 z-10 pointer-events-none">
+                      <span className="text-[10px] font-mono tracking-wider bg-black/65 backdrop-blur-md px-2 py-0.5 rounded-md">
+                        {product.weight}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider bg-white/95 text-[#171513] px-2 py-0.5 rounded-md font-semibold shadow-xs">
+                        <Sparkles className="h-2.5 w-2.5 text-[#8e7861]" />
+                        Tactile Finish
+                      </span>
+                    </div>
                   </div>
 
                   {/* Product Details */}
@@ -798,38 +771,22 @@ export default function FurnitureHouseDemo() {
                 className="group flex flex-col justify-between bg-white rounded-2xl border border-[#e5ded2] p-6 hover:border-[#171513] transition-all duration-300 hover:shadow-lg"
               >
                 <div>
-                  {/* Clean Editorial Architectural Art */}
-                  <div className="aspect-16/10 w-full rounded-xl bg-[#f5f1ea] border border-[#ece6db] flex items-center justify-center overflow-hidden mb-5">
-                    {idx === 0 && (
-                      <div className="w-full h-full p-6 flex flex-col justify-center items-center bg-radial from-[#eadecc] to-[#c7b599]">
-                        <span className="font-serif text-base tracking-widest uppercase text-[#5a4c38] text-center">
-                          Tuscan Travertine
-                        </span>
-                        <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#7d6b52] mt-1">
-                          Mineral Cavities &amp; Patina
-                        </span>
-                      </div>
-                    )}
-                    {idx === 1 && (
-                      <div className="w-full h-full p-6 flex flex-col justify-center items-center bg-radial from-[#dfd7ca] to-[#b3a896]">
-                        <span className="font-serif text-base tracking-widest uppercase text-[#473e31] text-center">
-                          Monolithic Plinths
-                        </span>
-                        <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#6d6150] mt-1">
-                          Low Horizon Lines
-                        </span>
-                      </div>
-                    )}
-                    {idx === 2 && (
-                      <div className="w-full h-full p-6 flex flex-col justify-center items-center bg-radial from-[#ece5db] to-[#c2b7a7]">
-                        <span className="font-serif text-base tracking-widest uppercase text-[#524535] text-center">
-                          Vein Direction
-                        </span>
-                        <span className="text-[9px] font-mono uppercase tracking-[0.3em] text-[#776751] mt-1">
-                          Quarry Face Selection
-                        </span>
-                      </div>
-                    )}
+                  {/* Clean Editorial Architectural Real Photography */}
+                  <div className="relative aspect-16/10 w-full rounded-xl bg-[#f5f1ea] border border-[#ece6db] overflow-hidden mb-5">
+                    <motion.div
+                      className="relative w-full h-full"
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                    >
+                      <Image
+                        src={article.image}
+                        alt={article.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover object-center"
+                      />
+                    </motion.div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   </div>
 
                   <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-[#8e7861] mb-2">
@@ -935,19 +892,21 @@ export default function FurnitureHouseDemo() {
               >
                 {/* Visual Banner Styling */}
                 <div className="relative aspect-21/9 sm:aspect-24/8 w-full flex items-center justify-center overflow-hidden">
-                  {/* Procedural Landscape Gradient representation for each process */}
-                  <div
-                    className={`absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105 ${
-                      idx === 0
-                        ? "bg-gradient-to-r from-[#3e3429] via-[#635342] to-[#2b241d]"
-                        : idx === 1
-                        ? "bg-gradient-to-r from-[#29323c] via-[#485563] to-[#1e2329]"
-                        : idx === 2
-                        ? "bg-gradient-to-r from-[#36322d] via-[#524b43] to-[#26231f]"
-                        : "bg-gradient-to-r from-[#423223] via-[#6e5338] to-[#2e2318]"
-                    }`}
-                  />
-                  <div className="absolute inset-0 bg-black/45 backdrop-blur-2xs" />
+                  {/* Real Cinematic Material Provenance Photography */}
+                  <motion.div
+                    className="absolute inset-0"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                  >
+                    <Image
+                      src={step.image}
+                      alt={step.title}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 1200px"
+                      className="object-cover object-center"
+                    />
+                  </motion.div>
+                  <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px] group-hover:bg-black/50 transition-colors duration-500" />
 
                   {/* Centered Circular Play Button */}
                   <button
