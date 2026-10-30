@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowUpRight, Sparkles, Box, UtensilsCrossed, Sprout } from "lucide-react";
+import { ArrowUpRight, Sparkles, Box, UtensilsCrossed, Dumbbell } from "lucide-react";
 
 export const metadata = {
   title: "Interactive Client Demos · Sharper Labs",
@@ -32,16 +32,16 @@ const demos = [
     icon: UtensilsCrossed,
   },
   {
-    title: "TerraSynapse AI",
-    subtitle: "3D Soil Digital-Twin & Telemetry",
-    category: "Agritech & Environmental Intelligence",
+    title: "IRONPULSE",
+    subtitle: "High-Performance Athletic Club & Gym",
+    category: "Fitness & Athletic Performance",
     slug: "smart-agriculture",
     href: "/demos/smart-agriculture",
     description:
-      "Commercial agritech platform scaling enterprise sales with real-time drone fleet control, 3D soil digital-twin, and agronomic ROI forecasting.",
-    accent: "from-[#059669] to-[#10b981]",
-    badge: "v4.2 Telemetry",
-    icon: Sprout,
+      "Elite fitness club platform with live zone floor telemetry, 3D kinetic barbell visualizer, transformation ROI planner, and membership booking.",
+    accent: "from-[#ea580c] to-[#e11d48]",
+    badge: "24/7 Athletic Club",
+    icon: Dumbbell,
   },
 ];
 
