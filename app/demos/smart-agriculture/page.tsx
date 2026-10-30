@@ -173,13 +173,13 @@ export default function SmartAgricultureDemo() {
             playsInline
             preload="metadata"
             poster="/images/fitness/hero-gym.jpg"
-            className="w-full h-full object-cover scale-105 will-change-transform opacity-45 sm:opacity-55"
+            className="w-full h-full object-cover scale-105 will-change-transform opacity-80 sm:opacity-85"
           >
             <source src="/videos/gym1.mp4" type="video/mp4" />
           </video>
-          {/* Subtle dark athletic gradient overlays for maximum contrast and readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0f17]/95 via-[#0e121a]/80 to-[#0c0f17]/95" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f17] via-transparent to-[#0c0f17]/85" />
+          {/* Lighter athletic overlays to reveal the video clearly while maintaining text contrast */}
+          <div className="absolute inset-0 bg-[#0c0f17]/45" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f17] via-transparent to-[#0c0f17]/60" />
         </div>
 
         {/* Ambient decorative soft orange glow */}
@@ -191,15 +191,15 @@ export default function SmartAgricultureDemo() {
             <span>Unleash Your Ultimate Athletic Potential</span>
           </div>
 
-          <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight">
+          <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight drop-shadow-xl">
             FORGE STRENGTH. <br />
-            <span className="bg-gradient-to-r from-orange-400 via-rose-500 to-amber-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-orange-400 via-rose-500 to-amber-400 bg-clip-text text-transparent drop-shadow-md">
               IGNITE YOUR PULSE.
             </span> <br />
             TRANSFORM FOR LIFE.
           </h1>
 
-          <p className="text-base sm:text-lg leading-relaxed text-slate-300 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg leading-relaxed text-slate-200 max-w-2xl mx-auto drop-shadow-md">
             IRONPULSE combines elite Olympic lifting platforms, biometric zone telemetry, certified 1-on-1 performance coaching, and customized nutrition to sculpt real, undeniable results.
           </p>
 
