@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,7 +23,6 @@ import {
   Calendar,
   Award,
 } from "lucide-react";
-import { loadThreeJs } from "@/lib/threeLoader";
 import AgricultureNav from "@/components/demos/AgricultureNav";
 import DemoBadge from "@/components/demos/DemoBadge";
 
@@ -141,182 +140,6 @@ export default function SmartAgricultureDemo() {
   const [workoutMinutes, setWorkoutMinutes] = useState(180);
   const [trainerBooking, setTrainerBooking] = useState(false);
   const [scanToast, setScanToast] = useState(false);
-  const threeCanvasRef = useRef<HTMLDivElement>(null);
-
-  // Initialize Three.js 3D Kinetic Iron Barbell & Energy Pulse Orb
-  useEffect(() => {
-    let animId: number;
-    let cleanup: (() => void) | null = null;
-
-    loadThreeJs().then((THREE) => {
-      const container = threeCanvasRef.current;
-      if (!container) return;
-
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-      camera.position.set(0, 3, 7.5);
-      camera.lookAt(0, 0, 0);
-
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      container.appendChild(renderer.domElement);
-
-      // Central Athletic Kinetic Group
-      const athleteGroup = new THREE.Group();
-      scene.add(athleteGroup);
-
-      // 1. Kinetic Iron Geodesic Cage / Hexagonal Gym Plate Core
-      const coreGeo = new THREE.IcosahedronGeometry(1.6, 1);
-      const coreMat = new THREE.MeshStandardMaterial({
-        color: 0x1a2130,
-        emissive: 0x0f1420,
-        roughness: 0.3,
-        metalness: 0.8,
-        wireframe: true,
-      });
-      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-      athleteGroup.add(coreMesh);
-
-      // Inner Glowing Pulse Core
-      const innerGeo = new THREE.SphereGeometry(0.8, 24, 24);
-      const innerMat = new THREE.MeshBasicMaterial({
-        color: 0xf97316,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.6,
-      });
-      const innerMesh = new THREE.Mesh(innerGeo, innerMat);
-      athleteGroup.add(innerMesh);
-
-      // 2. Twin Rotating Orbit Energy Rings
-      const ringGeo1 = new THREE.TorusGeometry(2.3, 0.04, 16, 100);
-      const ringMat1 = new THREE.MeshBasicMaterial({
-        color: 0xff5722,
-        transparent: true,
-        opacity: 0.8,
-      });
-      const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
-      ring1.rotation.x = Math.PI / 3;
-      athleteGroup.add(ring1);
-
-      const ringGeo2 = new THREE.TorusGeometry(2.6, 0.03, 16, 100);
-      const ringMat2 = new THREE.MeshBasicMaterial({
-        color: 0xfb923c,
-        transparent: true,
-        opacity: 0.6,
-      });
-      const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
-      ring2.rotation.y = Math.PI / 4;
-      athleteGroup.add(ring2);
-
-      // 3. Floating Stamina / Bio-Metabolic Energy Particles
-      const particleCount = 220;
-      const particleGeo = new THREE.BufferGeometry();
-      const positions = new Float32Array(particleCount * 3);
-      for (let i = 0; i < particleCount * 3; i += 3) {
-        const radius = 2.5 + Math.random() * 2.0;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(Math.random() * 2 - 1);
-        positions[i] = radius * Math.sin(phi) * Math.cos(theta);
-        positions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
-        positions[i + 2] = radius * Math.cos(phi);
-      }
-      particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      const particleMat = new THREE.PointsMaterial({
-        color: 0xf97316,
-        size: 0.05,
-        transparent: true,
-        opacity: 0.85,
-      });
-      const particleSystem = new THREE.Points(particleGeo, particleMat);
-      scene.add(particleSystem);
-
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-      scene.add(ambientLight);
-
-      const orangeLight = new THREE.DirectionalLight(0xf97316, 2.5);
-      orangeLight.position.set(5, 8, 4);
-      scene.add(orangeLight);
-
-      const cyanLight = new THREE.PointLight(0x38bdf8, 1.2, 15);
-      cyanLight.position.set(-4, -2, 3);
-      scene.add(cyanLight);
-
-      // Parallax interaction
-      let mouseX = 0;
-      let mouseY = 0;
-      const onMouseMove = (e: MouseEvent) => {
-        const rect = container.getBoundingClientRect();
-        mouseX = ((e.clientX - rect.left) / width - 0.5) * 2;
-        mouseY = -((e.clientY - rect.top) / height - 0.5) * 2;
-      };
-      window.addEventListener("mousemove", onMouseMove);
-
-      let pulse = 0;
-      const animate = () => {
-        animId = requestAnimationFrame(animate);
-
-        // Kinetic rotations
-        coreMesh.rotation.y += 0.008;
-        coreMesh.rotation.x += 0.004;
-        ring1.rotation.z += 0.012;
-        ring2.rotation.x += 0.009;
-        particleSystem.rotation.y += 0.002;
-
-        // Heartbeat breath scale
-        pulse += 0.035;
-        const scale = 1 + Math.sin(pulse) * 0.06;
-        innerMesh.scale.set(scale, scale, scale);
-
-        // Smooth camera follow
-        camera.position.x += (mouseX * 1.5 - camera.position.x) * 0.05;
-        camera.position.y += (3 + mouseY * 0.8 - camera.position.y) * 0.05;
-        camera.lookAt(0, 0, 0);
-
-        renderer.render(scene, camera);
-      };
-      animate();
-
-      const onResize = () => {
-        if (!container) return;
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
-      };
-      window.addEventListener("resize", onResize);
-
-      cleanup = () => {
-        window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("resize", onResize);
-        cancelAnimationFrame(animId);
-        renderer.dispose();
-        coreGeo.dispose();
-        coreMat.dispose();
-        innerGeo.dispose();
-        innerMat.dispose();
-        ringGeo1.dispose();
-        ringMat1.dispose();
-        ringGeo2.dispose();
-        ringMat2.dispose();
-        particleGeo.dispose();
-        particleMat.dispose();
-        if (container.contains(renderer.domElement)) {
-          container.removeChild(renderer.domElement);
-        }
-      };
-    }).catch(() => {});
-
-    return () => {
-      if (cleanup) cleanup();
-    };
-  }, []);
 
   const handleBookSession = () => {
     setTrainerBooking(true);
@@ -339,106 +162,93 @@ export default function SmartAgricultureDemo() {
       <AgricultureNav />
       <DemoBadge studySlug="smart-agriculture" studyName="IRONPULSE" />
 
-      {/* 2. Hero Section with Real Athletics Photography & 3D Kinetic Pulse Engine */}
-      <section className="relative px-4 sm:px-8 lg:px-16 pt-8 sm:pt-14 pb-14 overflow-hidden border-b border-slate-800/80 bg-gradient-to-b from-[#121722] via-[#0e121a] to-[#0a0d14]">
-        {/* Subtle dynamic background glow */}
-        <div className="absolute top-0 right-1/4 -z-10 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-10 -z-10 h-80 w-80 rounded-full bg-rose-500/10 blur-3xl pointer-events-none" />
+      {/* 2. Hero Section - Kept Freely with Full gym1 Background Video */}
+      <section className="relative px-4 sm:px-8 lg:px-16 pt-16 sm:pt-24 pb-20 sm:pb-28 overflow-hidden border-b border-slate-800 bg-[#0c0f17]">
+        {/* Full Background Video gym1 */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            poster="/images/fitness/hero-gym.jpg"
+            className="w-full h-full object-cover scale-105 will-change-transform opacity-45 sm:opacity-55"
+          >
+            <source src="/videos/gym1.mp4" type="video/mp4" />
+          </video>
+          {/* Subtle dark athletic gradient overlays for maximum contrast and readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0f17]/95 via-[#0e121a]/80 to-[#0c0f17]/95" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0f17] via-transparent to-[#0c0f17]/85" />
+        </div>
 
-        <div className="container mx-auto grid lg:grid-cols-12 gap-10 items-center">
-          {/* Left Column: Energetic Value Proposition */}
-          <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-orange-400">
-              <Flame className="h-3.5 w-3.5 text-orange-400" />
-              <span>Unleash Your Ultimate Athletic Potential</span>
-            </div>
+        {/* Ambient decorative soft orange glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 h-[500px] w-[500px] rounded-full bg-orange-500/10 blur-3xl pointer-events-none" />
 
-            <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-              FORGE STRENGTH. <br />
-              <span className="bg-gradient-to-r from-orange-400 via-rose-500 to-amber-400 bg-clip-text text-transparent">
-                IGNITE YOUR PULSE.
-              </span> <br />
-              TRANSFORM FOR LIFE.
-            </h1>
-
-            <p className="text-sm sm:text-base leading-relaxed text-slate-300 max-w-xl">
-              IRONPULSE combines elite Olympic lifting platforms, biometric zone telemetry, certified 1-on-1 performance coaching, and customized nutrition to sculpt real, undeniable results.
-            </p>
-
-            {/* Quick Actions */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href="#programs"
-                className="rounded-full bg-gradient-to-r from-orange-500 via-rose-500 to-orange-500 hover:from-orange-400 hover:to-rose-400 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-orange-500/25 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
-              >
-                <span>Explore Programs</span>
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="#calculator"
-                className="rounded-full border border-slate-700 hover:border-orange-500/60 bg-slate-800/80 hover:bg-slate-800 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-200 transition-all"
-              >
-                Estimate Calorie Burn
-              </Link>
-            </div>
-
-            {/* Live Stats Pills */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4">
-              <div className="rounded-xl border border-slate-800 bg-[#141926]/80 p-3 shadow-md hover:border-orange-500/30 transition-colors">
-                <span className="text-[10px] uppercase text-orange-400 font-bold tracking-wider">
-                  Club Capacity
-                </span>
-                <p className="font-display text-xl font-extrabold text-white mt-0.5">42% Active</p>
-                <span className="text-[10px] text-emerald-400 font-mono">● Zero Queue</span>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-[#141926]/80 p-3 shadow-md hover:border-orange-500/30 transition-colors">
-                <span className="text-[10px] uppercase text-orange-400 font-bold tracking-wider">
-                  Free Weights
-                </span>
-                <p className="font-display text-xl font-extrabold text-white mt-0.5">Up to 60kg</p>
-                <span className="text-[10px] text-slate-300 font-mono">● Eleiko Spec</span>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-[#141926]/80 p-3 shadow-md hover:border-orange-500/30 transition-colors">
-                <span className="text-[10px] uppercase text-orange-400 font-bold tracking-wider">
-                  Coaching Staff
-                </span>
-                <p className="font-display text-xl font-extrabold text-white mt-0.5">12 Masters</p>
-                <span className="text-[10px] text-slate-300 font-mono">● CSCS Certified</span>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-[#141926]/80 p-3 shadow-md hover:border-orange-500/30 transition-colors">
-                <span className="text-[10px] uppercase text-orange-400 font-bold tracking-wider">
-                  Operating Hours
-                </span>
-                <p className="font-display text-xl font-extrabold text-white mt-0.5">24/7 Access</p>
-                <span className="text-[10px] text-emerald-400 font-mono">● Always Open</span>
-              </div>
-            </div>
+        <div className="container relative z-10 mx-auto max-w-4xl text-center space-y-7">
+          <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-orange-400">
+            <Flame className="h-3.5 w-3.5 text-orange-400" />
+            <span>Unleash Your Ultimate Athletic Potential</span>
           </div>
 
-          {/* Right Column: Dynamic Three.js Kinetic Pulse Engine & Hero Media */}
-          <div className="lg:col-span-5 relative h-[380px] sm:h-[460px] w-full rounded-3xl border border-slate-700/80 bg-gradient-to-b from-[#141a27] to-[#0c0f17] shadow-2xl flex items-center justify-center overflow-hidden group">
-            {/* Real gym background overlay with blend */}
-            <div className="absolute inset-0 z-0 opacity-25 group-hover:opacity-35 transition-opacity">
-              <Image
-                src="/images/fitness/hero-gym.jpg"
-                alt="IRONPULSE Gym Athletic Floor"
-                fill
-                className="object-cover"
-                priority
-              />
+          <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight">
+            FORGE STRENGTH. <br />
+            <span className="bg-gradient-to-r from-orange-400 via-rose-500 to-amber-400 bg-clip-text text-transparent">
+              IGNITE YOUR PULSE.
+            </span> <br />
+            TRANSFORM FOR LIFE.
+          </h1>
+
+          <p className="text-base sm:text-lg leading-relaxed text-slate-300 max-w-2xl mx-auto">
+            IRONPULSE combines elite Olympic lifting platforms, biometric zone telemetry, certified 1-on-1 performance coaching, and customized nutrition to sculpt real, undeniable results.
+          </p>
+
+          {/* Quick Actions */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <Link
+              href="#programs"
+              className="rounded-full bg-gradient-to-r from-orange-500 via-rose-500 to-orange-500 hover:from-orange-400 hover:to-rose-400 px-8 py-4 text-xs font-bold uppercase tracking-wider text-white shadow-xl shadow-orange-500/25 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+            >
+              <span>Explore Programs</span>
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="#calculator"
+              className="rounded-full border border-slate-700 hover:border-orange-500/60 bg-slate-800/80 hover:bg-slate-800 px-8 py-4 text-xs font-bold uppercase tracking-wider text-slate-200 transition-all flex items-center gap-2"
+            >
+              <span>Estimate Calorie Burn</span>
+            </Link>
+          </div>
+
+          {/* Live Stats Pills */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-6 max-w-3xl mx-auto text-left">
+            <div className="rounded-2xl border border-slate-800 bg-[#141926]/85 backdrop-blur-sm p-4 shadow-md hover:border-orange-500/30 transition-colors">
+              <span className="text-[10px] uppercase text-orange-400 font-bold tracking-wider">
+                Club Capacity
+              </span>
+              <p className="font-display text-xl font-extrabold text-white mt-0.5">42% Active</p>
+              <span className="text-[10px] text-emerald-400 font-mono">● Zero Queue</span>
             </div>
-
-            {/* Three.js Interactive WebGL Layer */}
-            <div
-              ref={threeCanvasRef}
-              className="relative z-10 w-full h-full cursor-grab active:cursor-grabbing"
-              title="Interactive 3D Kinetic Barbell Pulse Engine: move cursor to rotate"
-            />
-
-            {/* Live Telemetry Pill */}
-            <div className="pointer-events-none absolute bottom-4 z-20 flex items-center gap-2 rounded-full border border-orange-500/30 bg-[#121622]/90 px-3.5 py-1 text-[11px] font-semibold text-orange-300 backdrop-blur-md shadow-lg">
-              <span className="h-2 w-2 rounded-full bg-orange-400 animate-ping" />
-              <span>3D Kinetic Pulse Engine · Interactive Parallax</span>
+            <div className="rounded-2xl border border-slate-800 bg-[#141926]/85 backdrop-blur-sm p-4 shadow-md hover:border-orange-500/30 transition-colors">
+              <span className="text-[10px] uppercase text-orange-400 font-bold tracking-wider">
+                Free Weights
+              </span>
+              <p className="font-display text-xl font-extrabold text-white mt-0.5">Up to 60kg</p>
+              <span className="text-[10px] text-slate-300 font-mono">● Eleiko Spec</span>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-[#141926]/85 backdrop-blur-sm p-4 shadow-md hover:border-orange-500/30 transition-colors">
+              <span className="text-[10px] uppercase text-orange-400 font-bold tracking-wider">
+                Coaching Staff
+              </span>
+              <p className="font-display text-xl font-extrabold text-white mt-0.5">12 Masters</p>
+              <span className="text-[10px] text-slate-300 font-mono">● CSCS Certified</span>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-[#141926]/85 backdrop-blur-sm p-4 shadow-md hover:border-orange-500/30 transition-colors">
+              <span className="text-[10px] uppercase text-orange-400 font-bold tracking-wider">
+                Operating Hours
+              </span>
+              <p className="font-display text-xl font-extrabold text-white mt-0.5">24/7 Access</p>
+              <span className="text-[10px] text-emerald-400 font-mono">● Always Open</span>
             </div>
           </div>
         </div>
@@ -562,84 +372,108 @@ export default function SmartAgricultureDemo() {
         </div>
       </section>
 
-      {/* 5. Interactive Calorie Burn & Transformation Progress Estimator */}
-      <section id="calculator" className="py-14 px-4 sm:px-8 lg:px-16 border-b border-slate-800 bg-[#0c0f17]">
-        <div className="container mx-auto max-w-4xl rounded-3xl border border-orange-500/30 bg-[#131826] p-6 sm:p-10 space-y-6 shadow-2xl">
-          <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-orange-400 font-bold">
-              Dynamic Transformation Engine
-            </span>
-            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
-              Calculate Your Monthly Calorie Burn &amp; Results
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
-              Drag the slider below to simulate your weekly workout commitment and discover projected monthly energy expenditure and strength uplift.
-            </p>
-          </div>
-
-          {/* Slider */}
-          <div className="space-y-3 pt-4">
-            <div className="flex items-center justify-between text-sm font-semibold">
-              <span className="text-white flex items-center gap-2">
-                <Clock className="h-4 w-4 text-orange-400" /> Weekly Workout Time:
-              </span>
-              <span className="font-mono text-orange-400 text-lg font-bold">
-                {workoutMinutes} Minutes ({weeklyHours} hrs/wk)
-              </span>
+      {/* 5. Calorie Burn Calculator with gym2 Portrait Video on Left Side in Same Height */}
+      <section id="calculator" className="py-16 px-4 sm:px-8 lg:px-16 border-b border-slate-800 bg-[#0c0f17]">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+            {/* Left Side: gym2 Native Portrait Video - Auto Playing, Clean without badges */}
+            <div className="lg:col-span-5 h-full flex flex-col">
+              <div className="relative w-full h-[450px] sm:h-[520px] lg:h-full min-h-full rounded-3xl overflow-hidden border border-orange-500/30 bg-black/70 shadow-2xl shadow-orange-500/10">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  poster="/images/fitness/functional-rig.jpg"
+                  className="w-full h-full object-cover"
+                >
+                  <source src="/videos/gym2.mp4" type="video/mp4" />
+                </video>
+              </div>
             </div>
 
-            <input
-              type="range"
-              min="60"
-              max="600"
-              step="30"
-              value={workoutMinutes}
-              onChange={(e) => setWorkoutMinutes(Number(e.target.value))}
-              className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-orange-500"
-            />
-            <div className="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>60 Mins (Beginner)</span>
-              <span>300 Mins (Athlete)</span>
-              <span>600 Mins (Pro Conditioning)</span>
-            </div>
-          </div>
+            {/* Right Side: Calculator Card Aligned More Right */}
+            <div className="lg:col-span-7 h-full flex flex-col">
+              <div className="rounded-3xl border border-orange-500/30 bg-[#131826] p-6 sm:p-8 lg:p-10 flex flex-col justify-between space-y-6 shadow-2xl h-full text-left">
+                <div className="space-y-2 text-left">
+                  <span className="text-xs font-mono uppercase tracking-widest text-orange-400 font-bold">
+                    Dynamic Transformation Engine
+                  </span>
+                  <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
+                    Calculate Your Monthly Calorie Burn &amp; Results
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                    Drag the slider below to simulate your weekly workout commitment and discover projected monthly energy expenditure and strength uplift.
+                  </p>
+                </div>
 
-          {/* Dynamic Real-time Calculations */}
-          <div className="grid sm:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
-            <div className="rounded-2xl border border-slate-800 bg-[#0f1420] p-4 text-left space-y-1">
-              <span className="text-xs text-orange-400 font-medium">Monthly Energy Burned</span>
-              <p className="font-display text-2xl sm:text-3xl font-extrabold text-white">
-                {monthlyCaloriesBurned.toLocaleString()} <span className="text-sm font-normal text-slate-400">kcal</span>
-              </p>
-              <p className="text-[11px] text-slate-400">Calculated across high-output metabolic sets</p>
-            </div>
+                {/* Slider */}
+                <div className="space-y-3 pt-2">
+                  <div className="flex items-center justify-between text-sm font-semibold">
+                    <span className="text-white flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-orange-400" /> Weekly Workout Time:
+                    </span>
+                    <span className="font-mono text-orange-400 text-lg font-bold">
+                      {workoutMinutes} Minutes ({weeklyHours} hrs/wk)
+                    </span>
+                  </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-[#0f1420] p-4 text-left space-y-1">
-              <span className="text-xs text-orange-400 font-medium">Estimated Fat Deficit</span>
-              <p className="font-display text-2xl sm:text-3xl font-extrabold text-emerald-400">
-                ~{projectedMonthlyFatLoss} <span className="text-sm font-normal text-slate-400">kg / mo</span>
-              </p>
-              <p className="text-[11px] text-slate-400">Coupled with baseline caloric maintenance</p>
-            </div>
+                  <input
+                    type="range"
+                    min="60"
+                    max="600"
+                    step="30"
+                    value={workoutMinutes}
+                    onChange={(e) => setWorkoutMinutes(Number(e.target.value))}
+                    className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                  />
+                  <div className="flex justify-between text-[11px] text-slate-400 font-mono">
+                    <span>60 Mins (Beginner)</span>
+                    <span>300 Mins (Athlete)</span>
+                    <span>600 Mins (Pro Conditioning)</span>
+                  </div>
+                </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-[#0f1420] p-4 text-left space-y-1">
-              <span className="text-xs text-orange-400 font-medium">Strength Compound Gain</span>
-              <p className="font-display text-2xl sm:text-3xl font-extrabold text-orange-400">
-                +{strengthProgressPcts}%
-              </p>
-              <p className="text-[11px] text-slate-400">Estimated progressive overload uplift (12 wks)</p>
-            </div>
-          </div>
+                {/* Dynamic Real-time Calculations */}
+                <div className="grid sm:grid-cols-3 gap-3.5 pt-2 border-t border-slate-800">
+                  <div className="rounded-2xl border border-slate-800 bg-[#0f1420] p-3.5 text-left space-y-1">
+                    <span className="text-[11px] text-orange-400 font-medium">Monthly Burn</span>
+                    <p className="font-display text-xl sm:text-2xl font-extrabold text-white">
+                      {monthlyCaloriesBurned.toLocaleString()} <span className="text-xs font-normal text-slate-400">kcal</span>
+                    </p>
+                    <p className="text-[10px] text-slate-400">Metabolic output</p>
+                  </div>
 
-          {/* Direct CTA */}
-          <div className="pt-2 text-center">
-            <Link
-              href="/demos/smart-agriculture/roi-calculator"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 via-rose-500 to-orange-500 hover:opacity-90 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-105"
-            >
-              <span>Build Complete 12-Week Body Transformation Plan</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+                  <div className="rounded-2xl border border-slate-800 bg-[#0f1420] p-3.5 text-left space-y-1">
+                    <span className="text-[11px] text-orange-400 font-medium">Estimated Fat</span>
+                    <p className="font-display text-xl sm:text-2xl font-extrabold text-emerald-400">
+                      ~{projectedMonthlyFatLoss} <span className="text-xs font-normal text-slate-400">kg/mo</span>
+                    </p>
+                    <p className="text-[10px] text-slate-400">Pure deficit rate</p>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-800 bg-[#0f1420] p-3.5 text-left space-y-1">
+                    <span className="text-[11px] text-orange-400 font-medium">Strength Gain</span>
+                    <p className="font-display text-xl sm:text-2xl font-extrabold text-orange-400">
+                      +{strengthProgressPcts}%
+                    </p>
+                    <p className="text-[10px] text-slate-400">Overload uplift</p>
+                  </div>
+                </div>
+
+                {/* Direct CTA */}
+                <div className="pt-2">
+                  <Link
+                    href="/demos/smart-agriculture/roi-calculator"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 via-rose-500 to-orange-500 hover:opacity-90 px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-orange-500/20 transition-all hover:scale-105"
+                  >
+                    <span>Build Complete 12-Week Body Transformation Plan</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
