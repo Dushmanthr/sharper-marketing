@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Armchair,
@@ -9,7 +10,6 @@ import {
   Sliders,
   Check,
   Ruler,
-  Sparkles,
   ArrowRight,
   ShieldCheck,
   ChevronRight,
@@ -23,15 +23,16 @@ const categories = ["All Pieces", "Lounge Seating", "Dining & Tables", "Lighting
 const products = [
   {
     id: "kobenhavn-chair",
-    title: "København Lounge Chair",
+    title: "The Kensington Lounge Chair",
     category: "Lounge Seating",
     price: 1480,
     timber: "Solid European White Oak",
-    textile: "Danish Bouclé Wool",
+    textile: "Heritage Bouclé Wool",
     dimensions: "W 86cm × D 92cm × H 78cm",
     tag: "3D Configurator Ready",
     inStock: true,
     colors: ["#b47238", "#e8e4dc", "#272b30", "#aa4c33"],
+    image: "/images/furniture/chair-kensington.jpg",
   },
   {
     id: "strata-coffee-table",
@@ -44,6 +45,7 @@ const products = [
     tag: "Architect Favorite",
     inStock: true,
     colors: ["#b47238", "#272b30"],
+    image: "/images/furniture/strata-table.jpg",
   },
   {
     id: "aer-dining-chair",
@@ -56,6 +58,7 @@ const products = [
     tag: "Stackable Craft",
     inStock: true,
     colors: ["#e8e4dc", "#aa4c33"],
+    image: "/images/furniture/aer-chair.jpg",
   },
   {
     id: "fjord-arc-lamp",
@@ -68,6 +71,7 @@ const products = [
     tag: "Warm 2700K Glow",
     inStock: true,
     colors: ["#272b30", "#b47238"],
+    image: "/images/furniture/arc-lamp.jpg",
   },
   {
     id: "solstice-dining-table",
@@ -80,10 +84,11 @@ const products = [
     tag: "Master Artisan Made",
     inStock: false,
     colors: ["#b47238", "#272b30"],
+    image: "/images/furniture/solstice-table.jpg",
   },
   {
-    id: "lykke-low-bench",
-    title: "Lykke Sculptural Entryway Bench",
+    id: "highgate-low-bench",
+    title: "The Highgate Sculptural Bench",
     category: "Lounge Seating",
     price: 780,
     timber: "Smoked European Oak",
@@ -92,6 +97,7 @@ const products = [
     tag: "Traditional Weave",
     inStock: true,
     colors: ["#b47238", "#e8e4dc"],
+    image: "/images/furniture/highgate-bench.jpg",
   },
 ];
 
@@ -115,14 +121,13 @@ export default function FurnitureCollectionPage() {
   return (
     <div className="w-full min-h-screen bg-[#f7f5f0] text-[#1a1c20] font-sans selection:bg-[#aa4c33] selection:text-white">
       <FurnitureNav cartCount={cartCount} />
-      <DemoBadge studySlug="furniture-house" studyName="Nordic & Form" />
+      <DemoBadge studySlug="furniture-house" studyName="Stone & Timber" />
 
       {/* Header */}
       <section className="relative px-4 sm:px-8 lg:px-16 pt-12 pb-8 border-b border-[#e5e0d4] bg-[#f0ede4] text-center space-y-4">
         <div className="container mx-auto max-w-4xl space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#d6cfc0] bg-white px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#856046] shadow-2xs">
-            <Sparkles className="h-3 w-3 text-[#aa4c33]" />
-            <span>2026 Copenhagen Living Catalog</span>
+          <div className="inline-flex items-center rounded-full border border-[#d6cfc0] bg-white px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#856046] shadow-2xs">
+            <span>2026 London Living Catalog</span>
           </div>
 
           <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#1a1c20]">
@@ -165,25 +170,38 @@ export default function FurnitureCollectionPage() {
               className="rounded-2xl sm:rounded-3xl border border-[#e5e0d4] bg-white overflow-hidden shadow-xs hover:border-[#aa4c33]/60 hover:shadow-lg transition-all group flex flex-col justify-between"
             >
               <div>
-                {/* Visual Header Box */}
-                <div className="relative aspect-[4/3] w-full bg-[#f0ede4] flex items-center justify-center p-6 overflow-hidden">
-                  <div className="flex h-28 w-28 items-center justify-center rounded-2xl bg-white text-[#856046] shadow-sm group-hover:scale-105 transition-transform duration-300">
-                    <Armchair className="h-14 w-14" />
-                  </div>
+                {/* Visual Header Box with Real Image and Framer-Motion Zoom */}
+                <div className="relative aspect-4/3 w-full bg-[#f0ede4] overflow-hidden">
+                  <motion.div
+                    className="relative w-full h-full"
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  >
+                    <Image
+                      src={prod.image}
+                      alt={prod.title}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover object-center"
+                    />
+                  </motion.div>
+
+                  {/* Subtle vignette gradient on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
                   {/* Badges */}
-                  <div className="absolute top-3 left-3">
-                    <span className="rounded-md bg-white/90 px-2 py-0.5 text-[10px] font-mono font-bold uppercase tracking-wider text-[#aa4c33] shadow-2xs">
+                  <div className="absolute top-3 left-3 z-10">
+                    <span className="rounded-md bg-white/95 backdrop-blur-xs px-2.5 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-[#aa4c33] shadow-2xs border border-black/5">
                       {prod.tag}
                     </span>
                   </div>
 
                   {/* Swatches Preview */}
-                  <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-white/90 px-2 py-1 rounded-full shadow-2xs">
+                  <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-2xs z-10">
                     {prod.colors.map((c, i) => (
                       <span
                         key={i}
-                        className="h-2.5 w-2.5 rounded-full border border-black/10"
+                        className="h-2.5 w-2.5 rounded-full border border-black/15 shadow-2xs"
                         style={{ backgroundColor: c }}
                       />
                     ))}
@@ -289,6 +307,16 @@ export default function FurnitureCollectionPage() {
                 </button>
               </div>
 
+              {/* Real Product Photography Preview */}
+              <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-[#f0ede4]">
+                <Image
+                  src={dimensionItem.image}
+                  alt={dimensionItem.title}
+                  fill
+                  className="object-cover object-center"
+                />
+              </div>
+
               <div className="space-y-2 text-xs text-[#5a5f68]">
                 <div className="flex justify-between py-1 border-b border-gray-100">
                   <span className="font-medium">Total Dimensions:</span>
@@ -304,7 +332,7 @@ export default function FurnitureCollectionPage() {
                 </div>
                 <div className="flex justify-between py-1">
                   <span className="font-medium">Origin:</span>
-                  <span className="font-semibold text-emerald-600">Copenhagen Workshop</span>
+                  <span className="font-semibold text-emerald-600">London Workshop</span>
                 </div>
               </div>
 
@@ -326,9 +354,9 @@ export default function FurnitureCollectionPage() {
       {/* Footer */}
       <footer className="border-t border-[#e5e0d4] bg-[#f0ede4] px-4 sm:px-8 py-8 text-center text-xs text-[#5a5f68] space-y-1">
         <p className="font-display font-bold uppercase tracking-wider text-[#1a1c20]">
-          Nordic &amp; Form Atelier · Copenhagen &amp; London
+          Stone &amp; Timber Atelier · London
         </p>
-        <p>© 2026 Nordic &amp; Form. Sustainable furniture design.</p>
+        <p>© 2026 Stone &amp; Timber Atelier. Sustainable furniture design.</p>
       </footer>
     </div>
   );
