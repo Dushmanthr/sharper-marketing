@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
   Crown,
   Palette,
@@ -85,6 +85,32 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   LineChart,
 };
 
+// Distinct one-by-one slide-in/out animation variants from left to right on every scroll
+const cardItemVariants: Variants = {
+  hidden: (i: number) => ({
+    opacity: 0,
+    x: -100,
+    scale: 0.92,
+    transition: {
+      type: "spring" as const,
+      stiffness: 300,
+      damping: 26,
+      delay: (5 - i) * 0.05,
+    },
+  }),
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      type: "spring" as const,
+      stiffness: 220,
+      damping: 20,
+      delay: i * 0.14,
+    },
+  }),
+};
+
 export default function ServicesExplorer() {
   const [activeSlug, setActiveSlug] = useState(services[0].slug);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -107,7 +133,7 @@ export default function ServicesExplorer() {
   return (
     <div className="relative w-full">
       {/* 1. Symmetrical Full-Width 6-Discipline Interactive Grid with Three.js 3D Highlight */}
-      <div className="relative mb-6 sm:mb-8 w-full rounded-3xl p-1.5 sm:p-2.5 bg-gradient-to-b from-navy-950/[0.03] via-orange-500/[0.02] to-transparent border border-navy-100/60 shadow-xs">
+      <div className="relative mb-6 sm:mb-8 w-full rounded-3xl p-1.5 sm:p-2.5 bg-gradient-to-b from-navy-950/[0.03] via-orange-500/[0.02] to-transparent border border-navy-100/60 shadow-xs overflow-hidden">
         {/* Three.js 3D Interactive Animation in Theme Colors */}
         <Services3DHighlight activeIndex={activeIndex} totalServices={services.length} />
 
@@ -122,9 +148,13 @@ export default function ServicesExplorer() {
                 key={service.slug}
                 type="button"
                 onClick={() => setActiveSlug(service.slug)}
-                whileHover={{ y: -4, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                custom={idx}
+                variants={cardItemVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.2 }}
+                whileHover={{ y: -4, scale: 1.02, transition: { type: "spring", stiffness: 400, damping: 25, delay: 0 } }}
+                whileTap={{ scale: 0.98, transition: { delay: 0 } }}
                 className={`group relative flex flex-col items-center text-center p-3.5 sm:p-4 rounded-2xl border transition-all duration-300 w-full cursor-pointer ${
                   isSelected
                     ? "bg-gradient-to-b from-navy-900 to-navy-950 text-white border-orange-500/80 shadow-xl shadow-orange-500/15 ring-2 ring-orange-500"
