@@ -163,9 +163,6 @@ export default function CaseStudyModal({
                     >
                       {activeStudy.client || activeStudy.title}
                     </h2>
-                    <span className="hidden sm:inline-flex rounded-full bg-orange-50 px-2.5 py-0.5 text-[10px] font-semibold text-orange-600 border border-orange-200">
-                      Case Study {currentIndex + 1} of {caseStudies.length}
-                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-ink-muted">
                     <span className="font-medium text-navy-700">Sharper Labs Marketing</span>
