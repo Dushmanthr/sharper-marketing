@@ -174,18 +174,6 @@ export default function CaseStudyModal({
 
               {/* Action Buttons & Close */}
               <div className="flex items-center gap-2 sm:gap-3">
-                {activeStudy.websiteUrl && (
-                  <a
-                    href={activeStudy.websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-navy-200 bg-navy-50/60 px-3.5 py-1.5 text-xs font-semibold text-navy-800 transition-colors hover:border-orange-400 hover:text-orange-600"
-                  >
-                    <span>Production Site</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                )}
-
                 <button
                   type="button"
                   onClick={() => setIsConsultationOpen(true)}
