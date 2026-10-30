@@ -6,9 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
   ExternalLink,
-  Lock,
   ArrowRight,
-
   Monitor,
   Tablet,
   Smartphone,
@@ -255,20 +253,13 @@ export default function CaseStudyModal({
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
                   </div>
 
-                  <div className="flex max-w-[60%] sm:max-w-[70%] items-center gap-1.5 rounded-full border border-navy-100 bg-white px-3 py-1 text-xs font-mono text-navy-700 shadow-2xs">
-                    <Lock className="h-3 w-3 text-navy-400 shrink-0" />
-                    <span className="truncate">
-                      {`https://sharper-labs.com${demoUrl}`}
-                    </span>
-                  </div>
-
                   <div className="flex items-center gap-1.5">
                     <span className="relative flex h-2 w-2">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75" />
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
                     </span>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 hidden xs:inline">
-                      Live 3D Sandbox
+                      Live Sandbox
                     </span>
                   </div>
                 </div>
@@ -287,7 +278,7 @@ export default function CaseStudyModal({
                     {iframeLoading && (
                       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-navy-950/80 text-white backdrop-blur-xs">
                         <Loader2 className="h-8 w-8 animate-spin text-orange-500 mb-2" />
-                        <p className="text-xs font-semibold">Loading Live 3D Experience...</p>
+                        <p className="text-xs font-semibold">Loading Live Experience...</p>
                       </div>
                     )}
 
