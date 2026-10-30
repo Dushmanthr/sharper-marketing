@@ -6,9 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
   ExternalLink,
-  Lock,
   ArrowRight,
-
   Monitor,
   Tablet,
   Smartphone,
@@ -253,13 +251,6 @@ export default function CaseStudyModal({
                     <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
                     <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
-                  </div>
-
-                  <div className="flex max-w-[60%] sm:max-w-[70%] items-center gap-1.5 rounded-full border border-navy-100 bg-white px-3 py-1 text-xs font-mono text-navy-700 shadow-2xs">
-                    <Lock className="h-3 w-3 text-navy-400 shrink-0" />
-                    <span className="truncate">
-                      {`https://sharper-labs.com${demoUrl}`}
-                    </span>
                   </div>
 
                   <div className="flex items-center gap-1.5">

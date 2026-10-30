@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink, TrendingUp, Play, Eye } from "lucide-react";
+import { ArrowRight, ExternalLink, Play, Eye } from "lucide-react";
 import type { CaseStudy } from "@/lib/site";
 
 export default function CaseStudyCard({
@@ -24,7 +24,6 @@ export default function CaseStudyCard({
   const [isHovered, setIsHovered] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const topResult = study.results[0];
 
   const hasVideo = Boolean(study.video) && !videoError;
   const hasScreenshotPan = !hasVideo && Boolean(study.hasFullScreenshotPan);
@@ -218,21 +217,11 @@ export default function CaseStudyCard({
 
       {/* 3. Simple & Clean Card Content (Theme Colors only) */}
       <div className="flex flex-1 flex-col p-4 sm:p-5 lg:p-6 text-left">
-        {/* Category Pill & Primary Metric */}
-        <div className="flex items-center justify-between gap-2 mb-3">
+        {/* Category Pill */}
+        <div className="flex items-center gap-2 mb-3">
           <span className="inline-flex items-center rounded-full border border-navy-100 bg-navy-50 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-semibold text-navy-800">
             {study.category}
           </span>
-
-          {topResult && (
-            <div className="flex items-center gap-1 rounded-md border border-orange-100 bg-orange-50/90 px-2 py-0.5 text-[10px] sm:text-[11px] font-bold text-orange-600">
-              <TrendingUp className="h-3 w-3 text-orange-500 shrink-0" />
-              <span>{topResult.metric}</span>
-              <span className="hidden sm:inline font-normal text-orange-700/80">
-                {topResult.label.split(" ").slice(0, 2).join(" ")}
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Clean Website / Project Headline */}
