@@ -230,7 +230,7 @@ Notes / Competitors: ${notes || "None"}`;
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-8">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-5 md:p-8">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
