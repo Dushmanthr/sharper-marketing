@@ -20,14 +20,14 @@ import DemoBadge from "@/components/demos/DemoBadge";
 const craftStages = [
   {
     step: "01",
-    title: "Certified Jutland Timber",
-    desc: "100% of our European white oak and beech is harvested from managed PEFC & FSC certified forests in northern Denmark. For every mature oak harvested, four saplings are planted.",
+    title: "Certified British & European Timber",
+    desc: "100% of our European white oak and beech is harvested from managed PEFC & FSC certified forests. For every mature oak harvested, four saplings are planted.",
     icon: TreePine,
   },
   {
     step: "02",
     title: "90-Day Natural Seasoning",
-    desc: "Timber planks rest in open-air sheds for three months, equalizing cellular moisture with Scandinavian atmospheric humidity before kiln stabilization to 8% core moisture.",
+    desc: "Timber planks rest in open-air sheds for three months, equalizing cellular moisture before kiln stabilization to 8% core moisture.",
     icon: Compass,
   },
   {
@@ -39,7 +39,7 @@ const craftStages = [
   {
     step: "04",
     title: "Organic Cold-Pressed Oils",
-    desc: "Surfaces are hand-sanded to 400 grit and hand-rubbed with organic Danish linseed and beeswax oils that protect while allowing the wood grain to breathe and patina gracefully.",
+    desc: "Surfaces are hand-sanded to 400 grit and hand-rubbed with organic cold-pressed linseed and beeswax oils that protect while allowing the wood grain to breathe and patina gracefully.",
     icon: Leaf,
   },
 ];
@@ -55,7 +55,7 @@ const joineryTechniques = [
   {
     id: "dovetail",
     title: "Mitred Japanese Dovetail",
-    desc: "A fusion of Kyoto joinery philosophy and Danish minimalism. Interlocking trapezoidal fingers distribute torsional stress without synthetic fasteners.",
+    desc: "A fusion of Kyoto joinery philosophy and British architectural minimalism. Interlocking trapezoidal fingers distribute torsional stress without synthetic fasteners.",
     loadRating: "420 kg Tensile Strength",
     lifespan: "Lifelong Heritage",
   },
@@ -77,7 +77,7 @@ export default function FurnitureCraftPage() {
   return (
     <div className="w-full min-h-screen bg-[#f7f5f0] text-[#1a1c20] font-sans selection:bg-[#aa4c33] selection:text-white">
       <FurnitureNav />
-      <DemoBadge studySlug="furniture-house" studyName="Nordic & Form" />
+      <DemoBadge studySlug="furniture-house" studyName="Stone & Timber" />
 
       {/* Header */}
       <section className="relative px-4 sm:px-8 lg:px-16 pt-12 pb-8 border-b border-[#e5e0d4] bg-[#f0ede4] text-center space-y-4">
@@ -92,7 +92,7 @@ export default function FurnitureCraftPage() {
           </h1>
 
           <p className="mx-auto max-w-2xl text-xs sm:text-sm text-[#5a5f68] leading-relaxed">
-            We reject ephemeral fast-furniture. Every piece leaving our Copenhagen atelier is engineered to endure through multiple generations, growing richer with age.
+            We reject ephemeral fast-furniture. Every piece leaving our London atelier is engineered to endure through multiple generations, growing richer with age.
           </p>
         </div>
       </section>
@@ -220,10 +220,10 @@ export default function FurnitureCraftPage() {
               Personalized Consultation
             </span>
             <h3 className="font-display text-2xl font-bold text-[#1a1c20]">
-              Book an Atelier Materials Session in London or Copenhagen
+              Book an Atelier Materials Session in Mayfair, London
             </h3>
             <p className="text-xs text-[#5a5f68]">
-              Touch our raw timber samples, feel tactile Danish bouclé weaves, and collaborate with our master cabinetmakers on bespoke dimensions.
+              Touch our raw timber samples, feel tactile heritage bouclé weaves, and collaborate with our master cabinetmakers on bespoke dimensions.
             </p>
           </div>
 
@@ -249,9 +249,9 @@ export default function FurnitureCraftPage() {
       {/* Footer */}
       <footer className="border-t border-[#e5e0d4] bg-[#f0ede4] px-4 sm:px-8 py-8 text-center text-xs text-[#5a5f68] space-y-1">
         <p className="font-display font-bold uppercase tracking-wider text-[#1a1c20]">
-          Nordic &amp; Form Atelier · Copenhagen &amp; London
+          Stone &amp; Timber Atelier · London
         </p>
-        <p>© 2026 Nordic &amp; Form. Sustainable furniture design.</p>
+        <p>© 2026 Stone &amp; Timber Atelier. Sustainable furniture design.</p>
       </footer>
     </div>
   );

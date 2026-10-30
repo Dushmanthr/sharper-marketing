@@ -8,7 +8,7 @@ export const metadata = {
 
 const demos = [
   {
-    title: "Nordic & Form Atelier",
+    title: "Stone & Timber Atelier",
     subtitle: "Travertine Collection & 3D Configurator",
     category: "Luxury E-Commerce & Retail",
     slug: "furniture-house",

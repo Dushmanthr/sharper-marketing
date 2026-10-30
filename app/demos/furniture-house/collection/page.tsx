@@ -23,11 +23,11 @@ const categories = ["All Pieces", "Lounge Seating", "Dining & Tables", "Lighting
 const products = [
   {
     id: "kobenhavn-chair",
-    title: "København Lounge Chair",
+    title: "The Kensington Lounge Chair",
     category: "Lounge Seating",
     price: 1480,
     timber: "Solid European White Oak",
-    textile: "Danish Bouclé Wool",
+    textile: "Heritage Bouclé Wool",
     dimensions: "W 86cm × D 92cm × H 78cm",
     tag: "3D Configurator Ready",
     inStock: true,
@@ -82,8 +82,8 @@ const products = [
     colors: ["#b47238", "#272b30"],
   },
   {
-    id: "lykke-low-bench",
-    title: "Lykke Sculptural Entryway Bench",
+    id: "highgate-low-bench",
+    title: "The Highgate Sculptural Bench",
     category: "Lounge Seating",
     price: 780,
     timber: "Smoked European Oak",
@@ -115,14 +115,14 @@ export default function FurnitureCollectionPage() {
   return (
     <div className="w-full min-h-screen bg-[#f7f5f0] text-[#1a1c20] font-sans selection:bg-[#aa4c33] selection:text-white">
       <FurnitureNav cartCount={cartCount} />
-      <DemoBadge studySlug="furniture-house" studyName="Nordic & Form" />
+      <DemoBadge studySlug="furniture-house" studyName="Stone & Timber" />
 
       {/* Header */}
       <section className="relative px-4 sm:px-8 lg:px-16 pt-12 pb-8 border-b border-[#e5e0d4] bg-[#f0ede4] text-center space-y-4">
         <div className="container mx-auto max-w-4xl space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#d6cfc0] bg-white px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#856046] shadow-2xs">
             <Sparkles className="h-3 w-3 text-[#aa4c33]" />
-            <span>2026 Copenhagen Living Catalog</span>
+            <span>2026 London Living Catalog</span>
           </div>
 
           <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#1a1c20]">
@@ -304,7 +304,7 @@ export default function FurnitureCollectionPage() {
                 </div>
                 <div className="flex justify-between py-1">
                   <span className="font-medium">Origin:</span>
-                  <span className="font-semibold text-emerald-600">Copenhagen Workshop</span>
+                  <span className="font-semibold text-emerald-600">London Workshop</span>
                 </div>
               </div>
 
@@ -326,9 +326,9 @@ export default function FurnitureCollectionPage() {
       {/* Footer */}
       <footer className="border-t border-[#e5e0d4] bg-[#f0ede4] px-4 sm:px-8 py-8 text-center text-xs text-[#5a5f68] space-y-1">
         <p className="font-display font-bold uppercase tracking-wider text-[#1a1c20]">
-          Nordic &amp; Form Atelier · Copenhagen &amp; London
+          Stone &amp; Timber Atelier · London
         </p>
-        <p>© 2026 Nordic &amp; Form. Sustainable furniture design.</p>
+        <p>© 2026 Stone &amp; Timber Atelier. Sustainable furniture design.</p>
       </footer>
     </div>
   );

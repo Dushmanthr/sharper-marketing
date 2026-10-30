@@ -103,10 +103,10 @@ export default function FurnitureNav({
           className="flex flex-col items-center text-center transition-opacity hover:opacity-85"
         >
           <span className="font-serif tracking-[0.25em] text-base sm:text-lg font-normal uppercase text-[#171513] leading-tight">
-            Nordic &amp; Form
+            Stone &amp; Timber
           </span>
           <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.3em] text-[#8e7861] font-sans leading-tight mt-0.5">
-            Copenhagen Atelier · Est. 2026
+            London Atelier · Est. 2026
           </span>
         </Link>
 
@@ -262,7 +262,7 @@ export default function FurnitureNav({
                       Acquisition Confirmed
                     </h4>
                     <p className="text-xs text-[#615a52] leading-relaxed max-w-xs mx-auto">
-                      Thank you for acquiring from Nordic &amp; Form. Your dedicated white-glove transport team will contact you within 24 hours to schedule private room delivery.
+                      Thank you for acquiring from Stone &amp; Timber Atelier. Your dedicated white-glove transport team will contact you within 24 hours to schedule private room delivery.
                     </p>
                   </div>
                 ) : (

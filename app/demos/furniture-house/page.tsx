@@ -36,17 +36,17 @@ const finishes = [
   },
   {
     id: "amber-oak",
-    name: "Smoked Jutland Oak",
+    name: "Smoked English Oak",
     hex: 0x704d30,
     colorClass: "bg-[#704d30]",
-    materialDesc: "FSC® certified Danish oak seasoned 90 days in open air",
+    materialDesc: "FSC® certified English oak seasoned 90 days in open air",
   },
   {
     id: "boucle-white",
-    name: "Nordic Bouclé Cream",
+    name: "Heritage Bouclé Cream",
     hex: 0xe8e4dc,
     colorClass: "bg-[#e8e4dc]",
-    materialDesc: "Heavyweight Danish wool bouclé with tactile loop weave",
+    materialDesc: "Heavyweight woven bouclé wool with tactile loop texture",
   },
   {
     id: "carrara-nero",
@@ -154,7 +154,7 @@ const provenanceSteps = [
     id: "shaping",
     step: "03",
     title: "Multi-Axis CNC Milling & Hand Chiseling",
-    location: "Copenhagen Atelier, Denmark",
+    location: "Mayfair Atelier, London",
     desc: "Architectural components are dimensioned with sub-millimeter precision before master stonemasons hand-soften every radius and chiseled fluting detail.",
     duration: "2:35 min",
   },
@@ -162,7 +162,7 @@ const provenanceSteps = [
     id: "finishing",
     step: "04",
     title: "Organic Linseed & Beeswax Finishing",
-    location: "Finishing Hall, Copenhagen",
+    location: "Artisan Finishing Hall, London",
     desc: "Surfaces are hand-buffed with non-toxic botanical oils and breathable natural waxes that nourish the stone while preserving its velvety matte tactile sensation.",
     duration: "1:55 min",
   },
@@ -410,7 +410,7 @@ export default function FurnitureHouseDemo() {
     <div className="w-full min-h-screen bg-[#fcfbfa] text-[#191716] font-sans selection:bg-[#c9a87d] selection:text-black">
       {/* 1. Atelier Luxury Navbar */}
       <FurnitureNav cartCount={cartCount} />
-      <DemoBadge studySlug="furniture-house" studyName="Nordic & Form" />
+      <DemoBadge studySlug="furniture-house" studyName="Stone & Timber" />
 
       {/* 2. Full-Bleed Editorial Hero: TRAVERTINE COLLECTION */}
       <section className="relative min-h-[85vh] sm:min-h-[92vh] flex flex-col items-center justify-between overflow-hidden bg-[#735843] text-white px-4 sm:px-8 py-12 select-none">
@@ -472,7 +472,7 @@ export default function FurnitureHouseDemo() {
         {/* Central Hero Titles matching the sample image */}
         <div className="relative z-20 text-center space-y-4 max-w-4xl mx-auto mt-12 sm:mt-24">
           <span className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.35em] text-[#e8ded3] font-medium block">
-            Copenhagen Atelier · Autumn 2026 Archive
+            London Atelier · Autumn 2026 Archive
           </span>
 
           <h1 className="font-serif text-3xl sm:text-5xl md:text-7xl font-normal tracking-[0.22em] uppercase text-white leading-tight drop-shadow-md">
@@ -480,7 +480,7 @@ export default function FurnitureHouseDemo() {
           </h1>
 
           <p className="text-xs sm:text-sm tracking-[0.15em] uppercase text-[#e6ded5] font-light max-w-lg mx-auto">
-            Honed Italian Stone &amp; Generational Danish Joinery
+            Honed Italian Stone &amp; English Architectural Joinery
           </p>
 
           <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
@@ -632,7 +632,7 @@ export default function FurnitureHouseDemo() {
       {/* 4. Architect & Studio Endorsement Ticker */}
       <div className="border-y border-[#e2dcd0] bg-[#f5f1ea] py-6 px-4 text-center select-none">
         <p className="text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.3em] text-[#6d6357] font-medium">
-          Trusted by leading interior designers and architectural practices across London, Copenhagen &amp; New York
+          Trusted by leading interior designers and architectural practices across London, Paris &amp; New York
         </p>
       </div>
 
@@ -681,10 +681,10 @@ export default function FurnitureHouseDemo() {
 
               <div>
                 <h3 className="font-serif text-2xl sm:text-3xl font-normal tracking-wide text-white">
-                  København Sculptural Lounge Chair
+                  The Kensington Sculptural Lounge Chair
                 </h3>
                 <p className="text-xs text-white/60 leading-relaxed mt-2">
-                  Engineered with an ergonomic steam-bent curved backrest, interlocking solid oak dowels, and monolithic side plinths. Hand-rubbed in Copenhagen.
+                  Engineered with an ergonomic steam-bent curved backrest, interlocking solid oak dowels, and monolithic side plinths. Hand-rubbed in our London atelier.
                 </p>
               </div>
 
@@ -734,7 +734,7 @@ export default function FurnitureHouseDemo() {
                 <div className="flex items-center gap-3">
                   <button
                     type="button"
-                    onClick={() => handleAddToCart(`København Chair (${selectedFinish.name})`)}
+                    onClick={() => handleAddToCart(`The Kensington Chair (${selectedFinish.name})`)}
                     className="flex-1 rounded-full bg-gradient-to-r from-[#c9a87d] to-[#e4cbab] py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-[#141210] shadow-xl hover:scale-102 transition-transform"
                   >
                     Acquire Configured Piece (£1,480)
@@ -1029,7 +1029,7 @@ export default function FurnitureHouseDemo() {
               Architectural Concierge
             </h4>
             <p className="text-[11px] text-[#6e6861] leading-relaxed">
-              Direct consultation with our Copenhagen design studio for bespoke dimensions.
+              Direct consultation with our London design studio for bespoke dimensions.
             </p>
           </div>
         </div>
@@ -1041,13 +1041,13 @@ export default function FurnitureHouseDemo() {
           {/* Brand Col */}
           <div className="col-span-2 space-y-3">
             <span className="font-serif tracking-[0.25em] text-base uppercase text-[#171513] block">
-              Nordic &amp; Form
+              Stone &amp; Timber
             </span>
             <p className="text-[11px] leading-relaxed text-[#6e6861] max-w-xs">
-              Architectural stone and generational Danish timber furniture crafted for enduring high-ceiling living spaces. Copenhagen, Denmark.
+              Architectural stone and generational English timber furniture crafted for enduring high-ceiling living spaces. London, United Kingdom.
             </p>
             <p className="text-[10px] font-mono text-[#8e7861]">
-              Atelier: Bredgade 42, 1260 København K
+              Atelier: 42 New Bond Street, Mayfair, London W1S 2LY
             </p>
           </div>
 
@@ -1133,7 +1133,7 @@ export default function FurnitureHouseDemo() {
 
         {/* Bottom Bar: Copyright & Payment Badges */}
         <div className="border-t border-[#e2dcd0] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-[#8e7861]">
-          <p>© 2026 Nordic &amp; Form Atelier ApS. All rights reserved.</p>
+          <p>© 2026 Stone &amp; Timber Atelier Ltd. All rights reserved.</p>
           <div className="flex items-center gap-3 tracking-widest uppercase">
             <span>Apple Pay</span>
             <span>·</span>
@@ -1183,7 +1183,7 @@ export default function FurnitureHouseDemo() {
                     {activeVideoModal}
                   </p>
                   <p className="text-xs text-white/60 max-w-md mx-auto">
-                    4K Cinematic Master Recording from the Tuscan extraction quarries &amp; Copenhagen finishing hall.
+                    4K Cinematic Master Recording from the Tuscan extraction quarries &amp; London finishing hall.
                   </p>
                 </div>
               </div>
