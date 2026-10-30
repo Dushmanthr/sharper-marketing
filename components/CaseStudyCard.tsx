@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Lock, ExternalLink, TrendingUp, Play, Eye } from "lucide-react";
+import { ArrowRight, ExternalLink, TrendingUp, Play, Eye } from "lucide-react";
 import type { CaseStudy } from "@/lib/site";
 
 export default function CaseStudyCard({
@@ -61,8 +61,6 @@ export default function CaseStudyCard({
     }
   };
 
-  const domain = study.clientDomain || `${study.slug}.co.uk`;
-
   return (
     <motion.article
       initial={variant === "grid" ? { opacity: 0, y: 18 } : undefined}
@@ -87,23 +85,9 @@ export default function CaseStudyCard({
           <span className="h-2.5 w-2.5 rounded-full bg-navy-200/90 transition-colors duration-200 group-hover:bg-navy-300" />
         </div>
 
-        {/* Minimal Simulated Browser Address Bar */}
-        <div className="flex max-w-[55%] sm:max-w-[65%] items-center gap-1.5 rounded-full border border-navy-100 bg-white px-2.5 py-0.5 text-[10px] sm:text-[11px] font-mono text-navy-700 shadow-2xs">
-          <Lock className="h-2.5 w-2.5 text-navy-400 shrink-0" />
-          <span className="truncate">{domain}</span>
-        </div>
-
-        {/* Dribbble-Style Interactive Status Badge */}
+        {/* Status Indicator */}
         <div className="flex items-center gap-1.5">
-          {study.demoUrl ? (
-            <span className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-orange-600">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
-              </span>
-              <span className="hidden xs:inline">Live 3D Web</span>
-            </span>
-          ) : hasVideo ? (
+          {hasVideo ? (
             isHovered && isVideoPlaying ? (
               <span className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-orange-600">
                 <span className="relative flex h-2 w-2">
@@ -130,16 +114,14 @@ export default function CaseStudyCard({
                 <span className="hidden xs:inline">Preview</span>
               </span>
             )
-          ) : (
-            <span className="text-[9px] font-medium text-navy-400">Mockup</span>
-          )}
+          ) : null}
         </div>
       </div>
 
-      {/* 2. Media Viewport: Live 3D Web Demo (Before Click), Video, Pan, or Static */}
+      {/* 2. Media Viewport: Live Web Demo (Before Click), Video, Pan, or Static */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-navy-950">
         {study.demoUrl ? (
-          /* Live 3D Web Demo Sandbox Embedded at 50% Scale (moving Three.js animation before click) */
+          /* Live Web Demo Sandbox Embedded at 50% Scale */
           <div className="relative h-full w-full overflow-hidden bg-navy-950">
             {/* Base Image Poster fallback */}
             <Image
@@ -150,7 +132,7 @@ export default function CaseStudyCard({
               className="object-cover opacity-50"
             />
 
-            {/* Live Three.js Web Page scaled to fill card frame */}
+            {/* Live Web Page scaled to fill card frame */}
             <iframe
               src={study.demoUrl}
               title={study.title}
@@ -162,15 +144,6 @@ export default function CaseStudyCard({
 
             {/* Subtle Gradient Shadow at Bottom */}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-navy-950/80 via-navy-950/30 to-transparent" />
-
-            {/* Floating Live 3D Badge on Card */}
-            <div className="pointer-events-none absolute bottom-2.5 right-2.5 flex items-center gap-1.5 rounded-full border border-white/20 bg-navy-900/85 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur-xs shadow-md transition-all duration-300 group-hover:bg-orange-500 group-hover:border-orange-400 group-hover:scale-105">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
-              </span>
-              <span>3D Interactive Demo</span>
-            </div>
           </div>
         ) : hasVideo ? (
           /* Mode A: Screen Recording Video (Only plays while hovered, resets on leave) */

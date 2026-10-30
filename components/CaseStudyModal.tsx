@@ -268,7 +268,7 @@ export default function CaseStudyModal({
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
                     </span>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 hidden xs:inline">
-                      Live 3D Sandbox
+                      Live Sandbox
                     </span>
                   </div>
                 </div>
@@ -287,7 +287,7 @@ export default function CaseStudyModal({
                     {iframeLoading && (
                       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-navy-950/80 text-white backdrop-blur-xs">
                         <Loader2 className="h-8 w-8 animate-spin text-orange-500 mb-2" />
-                        <p className="text-xs font-semibold">Loading Live 3D Experience...</p>
+                        <p className="text-xs font-semibold">Loading Live Experience...</p>
                       </div>
                     )}
 
