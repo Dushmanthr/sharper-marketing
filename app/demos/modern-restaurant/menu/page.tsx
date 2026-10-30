@@ -6,62 +6,61 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   UtensilsCrossed,
   Wine,
-  Sparkles,
   Check,
   ChevronRight,
-  Flame,
-  Star,
   Clock,
   ArrowRight,
   GlassWater,
+  TreePine,
+  Coffee,
 } from "lucide-react";
 import RestaurantNav from "@/components/demos/RestaurantNav";
 import DemoBadge from "@/components/demos/DemoBadge";
 
 const tastingTiers = [
   {
-    id: "7course",
-    title: "The Sensory Journey",
-    courses: "7 Courses",
-    duration: "2 Hours",
-    price: 145,
-    tag: "Most Popular",
-    desc: "A progressive traversal through wild British terroir and modern Japanese precision.",
+    id: "3course",
+    title: "The Courtyard 3-Course Dinner",
+    courses: "3 Courses",
+    duration: "1.5 Hours",
+    price: 48,
+    tag: "Estate Signature",
+    desc: "A relaxed farm-to-table progression celebrating outdoor-bred Suffolk meats, fresh catches, and seasonal orchard desserts.",
     highlights: [
-      "Smoked Périgord Truffle Brioche",
-      "Glacier Salmon Tataki with Sea Fennel",
-      "Cornish Turbot with Razor Clams",
-      "Kagoshima Wagyu A5 Ribeye",
-      "Yuzu & White Chocolate Blossom",
+      "Crisp Outdoor-Bred Suffolk Pork Belly",
+      "28-Day Dry-Aged British Ribeye Steak",
+      "Pan-Roasted Line-Caught Sea Trout",
+      "Warm Bramley Apple & Cinnamon Crumble",
+      "Handcrafted Artisan Farmhouse Cheese Slate",
     ],
   },
   {
-    id: "10course",
-    title: "Mayfair Grand Odyssey",
-    courses: "10 Courses",
-    duration: "3 Hours",
-    price: 215,
-    tag: "Michelin Selection",
-    desc: "Our complete culinary symphony featuring rare coastal catches and private cellar reserves.",
+    id: "banquet",
+    title: "The Grand Tithe Feast & Sunday Banquet",
+    courses: "5 Courses",
+    duration: "2.5 Hours",
+    price: 68,
+    tag: "Feast Tradition",
+    desc: "Our premier countryside celebration menu, featuring carvery roasts, homemade Yorkshire puddings, and tiered British sweets.",
     highlights: [
-      "Oscietra Caviar on Crispy Nori",
-      "Charred Hokkaido Scallop with Dashi",
-      "Wild Scottish Venison Loin",
-      "Heritage Duck with Blood Orange Gastrique",
-      "Gold Leaf Smoked Dark Chocolate Ganache",
+      "Norfolk Sirloin Roast Beef with Yorkshire Pudding",
+      "Heritage Free-Range Duck Breast with Redcurrant Jus",
+      "Traditional Tiered Scones & Clotted Cream Course",
+      "Smoked Salmon & Capers on Sourdough Croute",
+      "Belgian Dark Chocolate Torte with Clotted Cream",
     ],
   },
 ];
 
 const winePairings = [
-  { id: "none", name: "No Wine Pairing", price: 0, desc: "A la carte drinks or non-alcoholic pairings available" },
-  { id: "classic", name: "Sommelier Classic Pairing", price: 85, desc: "Hand-picked European crus harmonized to each course" },
-  { id: "grand", name: "Grand Cru & Icon Pairing", price: 155, desc: "Rare vintages from Bordeaux, Burgundy & grower Champagne" },
+  { id: "none", name: "No Drinks Flight", price: 0, desc: "A la carte drinks, fresh tea, and soft refreshments available" },
+  { id: "suffolk", name: "Suffolk Ale & Orchard Cider Flight", price: 18, desc: "Hand-pulled Adnams Southwold bitters and crisp Aspall cider" },
+  { id: "estate", name: "Curated European & English Wine Flight", price: 34, desc: "Award-winning Chapel Down English sparkling, French crus, and Rioja" },
 ];
 
 export default function RestaurantMenuPage() {
-  const [selectedTier, setSelectedTier] = useState<"7course" | "10course">("7course");
-  const [selectedWine, setSelectedWine] = useState("classic");
+  const [selectedTier, setSelectedTier] = useState<"3course" | "banquet">("3course");
+  const [selectedWine, setSelectedWine] = useState("suffolk");
   const [guestsCount, setGuestsCount] = useState(2);
   const [activeTab, setActiveTab] = useState<"tasting" | "cellar">("tasting");
   const [builderBooked, setBuilderBooked] = useState(false);
@@ -72,24 +71,24 @@ export default function RestaurantMenuPage() {
   const grandTotal = totalPerPerson * guestsCount;
 
   return (
-    <div className="w-full min-h-screen bg-[#0b0d13] text-[#f4efe6] font-sans selection:bg-[#d4af37] selection:text-black">
+    <div className="w-full min-h-screen bg-[#112017] text-[#f4efe6] font-sans selection:bg-[#c59d5f] selection:text-black">
       <RestaurantNav />
-      <DemoBadge studySlug="modern-restaurant" studyName="AURA Mayfair" />
+      <DemoBadge studySlug="modern-restaurant" studyName="Green Haven" />
 
       {/* Page Header */}
-      <section className="relative overflow-hidden px-4 sm:px-8 lg:px-16 pt-12 pb-8 border-b border-white/10 bg-radial from-[#181a24] to-[#0b0d13]">
+      <section className="relative overflow-hidden px-4 sm:px-8 lg:px-16 pt-12 pb-8 border-b border-[#25392d] bg-radial from-[#192f22] to-[#0d1a12]">
         <div className="container mx-auto max-w-5xl text-center space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#d4af37]">
-            <Sparkles className="h-3 w-3" />
-            <span>Seasonal Autumn / Winter 2026 Collection</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#c59d5f]/40 bg-[#c59d5f]/15 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#deb574]">
+            <TreePine className="h-3.5 w-3.5 text-[#deb574]" />
+            <span>Farm-To-Table Dining · Norfolk &amp; Suffolk Border</span>
           </div>
 
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
-            Curated Menus &amp; Cellar
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-white">
+            Green Haven Menus &amp; Cellar
           </h1>
 
-          <p className="mx-auto max-w-2xl text-xs sm:text-sm text-white/70 leading-relaxed">
-            Every dish is conceptualized as an ephemeral sensory composition. We partner directly with artisanal foragers in the Scottish Highlands and certified Kagoshima wagyu estates.
+          <p className="mx-auto max-w-2xl text-xs sm:text-sm text-white/80 leading-relaxed font-light">
+            Every dish at Green Haven is created using fresh ingredients sourced from local farms and regional fisheries, honoring British culinary heritage with welcoming warmth.
           </p>
 
           {/* Tab Selector */}
@@ -99,22 +98,22 @@ export default function RestaurantMenuPage() {
               onClick={() => setActiveTab("tasting")}
               className={`rounded-full px-5 py-2 text-xs font-semibold tracking-wider uppercase transition-all ${
                 activeTab === "tasting"
-                  ? "bg-[#d4af37] text-black shadow-lg"
-                  : "border border-white/15 bg-white/5 text-white/70 hover:border-white/30"
+                  ? "bg-[#c59d5f] text-[#112017] shadow-lg font-bold"
+                  : "border border-[#25392d] bg-[#14231a] text-white/80 hover:border-[#c59d5f]/50"
               }`}
             >
-              Tasting Journeys
+              Estate Dining Menus
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("cellar")}
               className={`rounded-full px-5 py-2 text-xs font-semibold tracking-wider uppercase transition-all ${
                 activeTab === "cellar"
-                  ? "bg-[#d4af37] text-black shadow-lg"
-                  : "border border-white/15 bg-white/5 text-white/70 hover:border-white/30"
+                  ? "bg-[#c59d5f] text-[#112017] shadow-lg font-bold"
+                  : "border border-[#25392d] bg-[#14231a] text-white/80 hover:border-[#c59d5f]/50"
               }`}
             >
-              The Sommelier Cellar
+              Kings Bar &amp; Suffolk Ales
             </button>
           </div>
         </div>
@@ -125,26 +124,26 @@ export default function RestaurantMenuPage() {
         {activeTab === "tasting" ? (
           <>
             {/* Interactive Experience Builder */}
-            <div className="rounded-2xl sm:rounded-3xl border border-[#d4af37]/30 bg-[#121520] p-5 sm:p-8 lg:p-10 shadow-2xl space-y-8">
+            <div className="rounded-2xl sm:rounded-3xl border border-[#25392d] bg-[#14231a] p-5 sm:p-8 lg:p-10 shadow-2xl space-y-8">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
                 <div>
-                  <span className="text-xs uppercase tracking-widest text-[#d4af37] font-mono">
-                    Interactive Customizer
+                  <span className="text-xs uppercase tracking-widest text-[#deb574] font-mono">
+                    Dining Customizer
                   </span>
-                  <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white mt-1">
-                    Build Your Tasting Experience
+                  <h2 className="font-serif text-2xl sm:text-3xl font-normal text-white mt-1">
+                    Plan Your Courtyard Dining
                   </h2>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-white/60">
-                  <Clock className="h-4 w-4 text-[#d4af37]" />
-                  <span>Estimated Seating: {currentTier.duration}</span>
+                <div className="flex items-center gap-2 text-xs text-white/70">
+                  <Clock className="h-4 w-4 text-[#deb574]" />
+                  <span>Estimated Time: {currentTier.duration}</span>
                 </div>
               </div>
 
               {/* Step 1: Select Tier */}
               <div className="space-y-3">
                 <label className="text-xs uppercase tracking-wider text-white/60 font-semibold">
-                  1. Choose Tasting Menu
+                  1. Choose Dining Experience
                 </label>
                 <div className="grid md:grid-cols-2 gap-4">
                   {tastingTiers.map((tier) => {
@@ -152,22 +151,22 @@ export default function RestaurantMenuPage() {
                     return (
                       <div
                         key={tier.id}
-                        onClick={() => setSelectedTier(tier.id as "7course" | "10course")}
+                        onClick={() => setSelectedTier(tier.id as "3course" | "banquet")}
                         className={`cursor-pointer rounded-2xl border p-5 sm:p-6 transition-all ${
                           isSelected
-                            ? "border-[#d4af37] bg-[#1a1e2e] shadow-[0_0_25px_rgba(212,175,55,0.15)]"
-                            : "border-white/10 bg-white/5 hover:border-white/25"
+                            ? "border-[#c59d5f] bg-[#192d21] shadow-xl"
+                            : "border-[#25392d] bg-[#112017] hover:border-[#c59d5f]/40"
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="rounded-full bg-[#d4af37]/20 px-2.5 py-0.5 text-[10px] font-bold text-[#d4af37] uppercase tracking-wider">
+                          <span className="rounded-full bg-[#c59d5f]/20 border border-[#c59d5f]/40 px-2.5 py-0.5 text-[10px] font-bold text-[#deb574] uppercase tracking-wider">
                             {tier.tag}
                           </span>
                           <span className="font-serif text-xl sm:text-2xl font-bold text-white">
-                            £{tier.price} <span className="text-xs font-sans text-white/50">/ person</span>
+                            £{tier.price} <span className="text-xs font-sans text-white/60">/ person</span>
                           </span>
                         </div>
-                        <h3 className="font-serif text-lg sm:text-xl font-bold text-white mt-2">
+                        <h3 className="font-serif text-lg sm:text-xl font-normal text-white mt-2">
                           {tier.title}
                         </h3>
                         <p className="text-xs text-white/70 mt-1 leading-relaxed">
@@ -177,7 +176,7 @@ export default function RestaurantMenuPage() {
                         <div className="mt-4 space-y-1.5 pt-3 border-t border-white/10">
                           {tier.highlights.map((dish, i) => (
                             <div key={i} className="flex items-center gap-2 text-xs text-white/80">
-                              <Check className="h-3 w-3 text-[#d4af37] shrink-0" />
+                              <Check className="h-3 w-3 text-[#deb574] shrink-0" />
                               <span>{dish}</span>
                             </div>
                           ))}
@@ -188,10 +187,10 @@ export default function RestaurantMenuPage() {
                 </div>
               </div>
 
-              {/* Step 2: Wine Pairing */}
+              {/* Step 2: Drink / Wine Pairing */}
               <div className="space-y-3">
                 <label className="text-xs uppercase tracking-wider text-white/60 font-semibold">
-                  2. Sommelier Wine Pairing
+                  2. Cask Ale &amp; Wine Pairings
                 </label>
                 <div className="grid sm:grid-cols-3 gap-3">
                   {winePairings.map((wp) => {
@@ -202,12 +201,12 @@ export default function RestaurantMenuPage() {
                         onClick={() => setSelectedWine(wp.id)}
                         className={`cursor-pointer rounded-xl border p-4 transition-all ${
                           isSelected
-                            ? "border-[#d4af37] bg-[#1a1e2e]"
-                            : "border-white/10 bg-white/5 hover:border-white/20"
+                            ? "border-[#c59d5f] bg-[#192d21]"
+                            : "border-[#25392d] bg-[#112017] hover:border-white/20"
                         }`}
                       >
                         <div className="flex justify-between items-center">
-                          <Wine className="h-4 w-4 text-[#d4af37]" />
+                          <Wine className="h-4 w-4 text-[#deb574]" />
                           <span className="text-xs font-bold text-white">
                             {wp.price > 0 ? `+£${wp.price}` : "Included"}
                           </span>
@@ -221,10 +220,10 @@ export default function RestaurantMenuPage() {
               </div>
 
               {/* Step 3: Guests & Live Summary */}
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="rounded-2xl border border-[#25392d] bg-[#112017] p-5 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-4 w-full md:w-auto">
                   <span className="text-xs text-white/70">Party Size:</span>
-                  <div className="flex items-center rounded-lg border border-white/15 bg-black/40 p-1">
+                  <div className="flex items-center rounded-lg border border-[#25392d] bg-[#14231a] p-1">
                     {[1, 2, 4, 6].map((num) => (
                       <button
                         key={num}
@@ -232,7 +231,7 @@ export default function RestaurantMenuPage() {
                         onClick={() => setGuestsCount(num)}
                         className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${
                           guestsCount === num
-                            ? "bg-[#d4af37] text-black"
+                            ? "bg-[#c59d5f] text-[#112017] font-bold"
                             : "text-white/70 hover:text-white"
                         }`}
                       >
@@ -244,10 +243,10 @@ export default function RestaurantMenuPage() {
 
                 <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto justify-end">
                   <div className="text-right">
-                    <span className="text-[10px] uppercase tracking-wider text-white/50 block">
-                      Estimated Bill ({guestsCount} Guests)
+                    <span className="text-[10px] uppercase tracking-wider text-white/60 block">
+                      Estimated Cost ({guestsCount} Guests)
                     </span>
-                    <span className="font-serif text-2xl font-bold text-[#d4af37]">
+                    <span className="font-serif text-2xl font-bold text-[#deb574]">
                       £{grandTotal}
                     </span>
                   </div>
@@ -255,9 +254,9 @@ export default function RestaurantMenuPage() {
                   <button
                     type="button"
                     onClick={() => setBuilderBooked(true)}
-                    className="w-full sm:w-auto rounded-full bg-gradient-to-r from-[#d4af37] to-[#e5c158] px-6 py-3 text-xs font-bold uppercase tracking-wider text-black shadow-lg hover:scale-105 transition-transform"
+                    className="w-full sm:w-auto rounded-full bg-gradient-to-r from-[#c59d5f] to-[#deb574] px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#112017] shadow-lg hover:scale-105 transition-transform"
                   >
-                    Lock In This Experience
+                    Select This Dining Experience
                   </button>
                 </div>
               </div>
@@ -267,85 +266,85 @@ export default function RestaurantMenuPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl border border-emerald-500/30 bg-emerald-950/60 p-4 text-emerald-200 text-xs flex items-center justify-between"
+                  className="rounded-xl border border-emerald-500/30 bg-emerald-950/70 p-4 text-emerald-200 text-xs flex items-center justify-between"
                 >
                   <div className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-emerald-400 shrink-0" />
                     <span>
-                      Menu preferences saved for {guestsCount} guests (£{grandTotal}). Please proceed to table reservation to finalize date.
+                      Menu preferences saved for {guestsCount} guests (£{grandTotal}). Table reservation is ready to be locked.
                     </span>
                   </div>
                   <Link
                     href="/demos/modern-restaurant"
-                    className="font-bold underline text-white hover:text-[#d4af37]"
+                    className="font-bold underline text-white hover:text-[#deb574]"
                   >
-                    Select Seating Date →
+                    Confirm Seating Date →
                   </Link>
                 </motion.div>
               )}
             </div>
           </>
         ) : (
-          /* Sommelier Cellar Vault Display */
+          /* Kings Bar & Cellar Display */
           <div className="space-y-6">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
-                The Curated Underground Cellar
+              <h2 className="font-serif text-2xl sm:text-3xl font-normal text-white">
+                Kings Bar &amp; Local Cask Selection
               </h2>
-              <p className="text-xs text-white/70">
-                Over 1,200 references curated by Head Sommelier Émilie Renault, focusing on biodynamic estates and legendary centenary vintages.
+              <p className="text-xs text-white/70 font-light">
+                Serving local Adnams copper ales, traditional Aspall cyder, artisan Suffolk gins, and hand-selected wines from English vineyards and historic European regions.
               </p>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 {
-                  region: "Champagne, France",
-                  name: "Dom Pérignon P2 Plénitude 2004",
-                  notes: "Smoked hazelnut, iodized brioche, vibrant preserved lime",
-                  price: "£420 / bottle",
+                  region: "Southwold, Suffolk",
+                  name: "Adnams Southwold Bitter (Cask)",
+                  notes: "English Fuggles and Goldings hops, biscuity malt, clean dry finish",
+                  price: "£5.80 / pint",
                 },
                 {
-                  region: "Burgundy, France",
-                  name: "Domaine de la Romanée-Conti 2017",
-                  notes: "Wild violets, damson plum, oriental spice box",
-                  price: "£1,450 / bottle",
+                  region: "Debenham, Suffolk",
+                  name: "Aspall Draught Cyder",
+                  notes: "Crisp bittersweet culinary apples, fresh acidity, refreshing clean effervescence",
+                  price: "£6.20 / pint",
                 },
                 {
-                  region: "Bordeaux, France",
-                  name: "Château Margaux Premier Grand Cru 2010",
-                  notes: "Cedarwood, dark cassis, velvety cashmere tannins",
-                  price: "£890 / bottle",
+                  region: "Tenterden, Kent",
+                  name: "Chapel Down Brut Sparkling",
+                  notes: "Red apple, lemongrass, toasted brioche, fine creamy bubbles",
+                  price: "£46 / bottle",
                 },
                 {
-                  region: "Piedmont, Italy",
-                  name: "Gaja Barbaresco Sorì San Lorenzo 2016",
-                  notes: "Tar, rose petals, black cherry, savory mineral depth",
-                  price: "£360 / bottle",
+                  region: "St. Peter, Suffolk",
+                  name: "St. Peter’s Organic English Ale",
+                  notes: "Delicate malt sweetness, floral hop aroma, certified organic barley",
+                  price: "£6.40 / bottle",
                 },
                 {
-                  region: "Napa Valley, USA",
-                  name: "Opus One Proprietary Red 2018",
-                  notes: "Blackberry preserves, vanilla bean, cocoa espresso finish",
-                  price: "£480 / bottle",
+                  region: "Rioja, Spain",
+                  name: "Marqués de Riscal Reserva 2018",
+                  notes: "Ripe black fruits, toasted oak, hints of cinnamon and soft vanilla",
+                  price: "£38 / bottle",
                 },
                 {
-                  region: "Niigata, Japan",
-                  name: "Kubota Manju Junmai Daiginjo Saké",
-                  notes: "Refined honeydew melon, clean spring water clarity",
-                  price: "£165 / bottle",
+                  region: "Marlborough, NZ",
+                  name: "Cloudy Bay Sauvignon Blanc 2023",
+                  notes: "Vibrant passionfruit, kaffir lime leaf, flinty mineral finish",
+                  price: "£48 / bottle",
                 },
               ].map((wine, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-white/10 bg-[#121520] p-5 space-y-2 hover:border-[#d4af37]/40 transition-colors"
+                  className="rounded-2xl border border-[#25392d] bg-[#14231a] p-5 space-y-2 hover:border-[#c59d5f]/50 transition-colors"
                 >
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#d4af37]">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#deb574]">
                     {wine.region}
                   </span>
-                  <h3 className="font-serif text-base font-bold text-white">{wine.name}</h3>
-                  <p className="text-xs text-white/60 leading-relaxed">{wine.notes}</p>
-                  <p className="text-sm font-serif font-bold text-[#d4af37] pt-2 border-t border-white/10">
+                  <h3 className="font-serif text-base font-normal text-white">{wine.name}</h3>
+                  <p className="text-xs text-white/70 leading-relaxed font-light">{wine.notes}</p>
+                  <p className="text-sm font-serif font-bold text-[#deb574] pt-2 border-t border-white/10">
                     {wine.price}
                   </p>
                 </div>
@@ -356,11 +355,11 @@ export default function RestaurantMenuPage() {
       </div>
 
       {/* Footer Navigation Bar */}
-      <footer className="border-t border-white/10 bg-[#090a0f] px-4 sm:px-8 py-8 text-center text-xs text-white/50 space-y-2">
-        <p className="font-serif tracking-widest text-[#d4af37] uppercase text-sm">
-          AURA Mayfair · 14 Berkeley Square, London W1J 6BL
+      <footer className="border-t border-[#25392d] bg-[#0d1a12] px-4 sm:px-8 py-8 text-center text-xs text-white/60 space-y-2">
+        <p className="font-serif tracking-widest text-[#deb574] uppercase text-sm">
+          Green Haven Hotel &amp; Restaurant · Norwich Road, Brome, Eye, Suffolk IP23 8AP
         </p>
-        <p>© 2026 AURA Mayfair. All culinary rights reserved.</p>
+        <p>© 2026 Green Haven Hotel. All hospitality rights reserved.</p>
       </footer>
     </div>
   );

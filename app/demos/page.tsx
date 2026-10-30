@@ -20,15 +20,15 @@ const demos = [
     icon: Box,
   },
   {
-    title: "AURA Mayfair",
-    subtitle: "Immersive 3D Gastronomy & Salons",
-    category: "Luxury Hospitality & Dining",
+    title: "Green Haven Estate",
+    subtitle: "16th-C. Hotel, Dining & Tithe Barn",
+    category: "Heritage Hospitality & Dining",
     slug: "modern-restaurant",
     href: "/demos/modern-restaurant",
     description:
-      "Sensory fine dining digital experience with interactive 3D golden sculpture, dynamic cellar curation, and instant VIP table reservation flow.",
-    accent: "from-[#d4af37] to-[#e5c158]",
-    badge: "Michelin Guide 2026",
+      "Historic countryside estate experience featuring farm-to-table Courtyard dining, traditional afternoon tea, and 16th-century Tithe Barn weddings.",
+    accent: "from-[#1a2e22] to-[#c59d5f]",
+    badge: "16th-C. Coaching Inn",
     icon: UtensilsCrossed,
   },
   {

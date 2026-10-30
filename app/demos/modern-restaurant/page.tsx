@@ -1,219 +1,147 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   UtensilsCrossed,
-  Sparkles,
   Calendar,
   Clock,
   Users,
   CheckCircle2,
   Wine,
-  Flame,
   ChevronRight,
-  ArrowUpRight,
-  Compass,
+  ArrowRight,
   Star,
   MapPin,
   X,
+  Compass,
+  TreePine,
+  Coffee,
+  Heart,
+  ShieldCheck,
 } from "lucide-react";
-import { loadThreeJs } from "@/lib/threeLoader";
 import RestaurantNav from "@/components/demos/RestaurantNav";
 import DemoBadge from "@/components/demos/DemoBadge";
+import GreenHavenLogo from "@/components/demos/GreenHavenLogo";
 
-const menuCategories = ["Tasting Menu", "Main Courses", "Cocktails & Cellar"];
+const menuCategories = ["Courtyard Dinner", "Afternoon Tea & Roasts", "Kings Bar & Cellar"];
 
 const menuItems = {
-  "Tasting Menu": [
+  "Courtyard Dinner": [
     {
-      name: "Wild Truffle & Smoked Brioche",
-      desc: "Foraged Périgord black winter truffles, cultured churned butter, 48hr fermented brioche crumb.",
-      price: "£28",
-      tag: "Signature",
+      name: "Crisp Suffolk Pork Belly",
+      desc: "Slow-braised outdoor-bred pork belly, Bramley apple puree, fondant potato, Norfolk cider reduction.",
+      price: "£24.50",
+      tag: "Estate Favorite",
+      image: "/images/restaurant/farm-dish.jpg",
     },
     {
-      name: "Glacier King Salmon Tataki",
-      desc: "Yuzu kosho glaze, smoked dashi emulsion, pickled daikon radish blossoms, sea fennel oil.",
-      price: "£36",
+      name: "28-Day Dry-Aged British Ribeye",
+      desc: "Pan-seared grass-fed British beef, roasted bone marrow jus, triple-cooked chunky chips, vine cherry tomatoes.",
+      price: "£32.00",
+      tag: "Charcoal Grill",
+      image: "/images/restaurant/sunday-roast.jpg",
+    },
+    {
+      name: "Pan-Roasted Sea Trout",
+      desc: "Crushed new potatoes, samphire, brown butter and caper emulsion, charred tenderstem broccoli.",
+      price: "£23.00",
       tag: "Fresh Catch",
-    },
-    {
-      name: "Dry-Aged Wagyu A5 Ribeye",
-      desc: "Kagoshima prefecture beef, fermented black garlic jus, charred maitake mushroom puree.",
-      price: "£68",
-      tag: "Chef Selection",
+      image: "/images/restaurant/courtyard-dining.jpg",
     },
   ],
-  "Main Courses": [
+  "Afternoon Tea & Roasts": [
     {
-      name: "Heritage Duck Breast Royale",
-      desc: "Roasted over binchotan charcoal, spiced blood orange gastrique, heritage baby carrots.",
-      price: "£42",
-      tag: "Charcoal Wood",
+      name: "Traditional Green Haven Afternoon Tea",
+      desc: "Freshly baked warm sultana scones, Cornish clotted cream, Tiptree strawberry preserve, artisan finger sandwiches.",
+      price: "£26.50",
+      tag: "Daily 12-5pm",
+      image: "/images/restaurant/afternoon-tea.jpg",
     },
     {
-      name: "Roasted Turbot on the Bone",
-      desc: "Cornish turbot, razor clam chowder, brown butter verbena foam, crispy sea buckthorn.",
-      price: "£46",
-      tag: "Sustainable",
+      name: "Norfolk Sirloin Sunday Roast",
+      desc: "Yorkshire pudding, goose-fat roast potatoes, braised red cabbage, honey-glazed parsnips, rich pan gravy.",
+      price: "£22.50",
+      tag: "Sunday Tradition",
+      image: "/images/restaurant/sunday-roast.jpg",
     },
     {
-      name: "Charred Morel & Sunchoke Risotto",
-      desc: "Acquerello aged carnaroli rice, slow-roasted Jerusalem artichoke, 36-month Reggiano.",
-      price: "£32",
-      tag: "Plant Based",
+      name: "Champagne Sparkling High Tea",
+      desc: "Our classic tiered afternoon tea accompanied by a chilled glass of premier reserve English sparkling wine.",
+      price: "£36.00",
+      tag: "Celebration",
+      image: "/images/restaurant/afternoon-tea.jpg",
     },
   ],
-  "Cocktails & Cellar": [
+  "Kings Bar & Cellar": [
     {
-      name: "Smoked Saffron Old Fashioned",
-      desc: "Small-batch Japanese bourbon, Persian saffron syrup, Andean smoke mist, aromatic bitters.",
-      price: "£19",
-      tag: "Craft Bar",
+      name: "Adnams Southwold Cask Bitter",
+      desc: "Local heritage Suffolk copper ale, biscuity malt profile, traditional English Golding hops on tap.",
+      price: "£5.80 / pint",
+      tag: "Local Suffolk Tap",
+      image: "/images/restaurant/kings-bar.jpg",
     },
     {
-      name: "Champagne Velvet Reserve 2014",
-      desc: "Blanc de Blancs Grand Cru, chalk minerality, toasted brioche and white peach finish.",
-      price: "£24 / glass",
-      tag: "Sommelier Pick",
+      name: "St. Peter's Elderflower Bramble",
+      desc: "Artisan botanic Suffolk gin, fresh blackberries, hand-pressed lemon, elderflower liqueur, crushed ice.",
+      price: "£11.50",
+      tag: "Craft Cocktail",
+      image: "/images/restaurant/kings-bar.jpg",
     },
     {
-      name: "Nordic Botanical Cloud",
-      desc: "Distilled lingonberry spirit, birch sap mist, wild thyme infused dry vermouth.",
-      price: "£18",
-      tag: "Botanical",
+      name: "Chapel Down Brut Reserve",
+      desc: "English sparkling wine, delicate apple blossom aromas, crisp brioche minerality, fine persistent perlage.",
+      price: "£14.00 / glass",
+      tag: "English Vineyard",
+      image: "/images/restaurant/courtyard-dining.jpg",
     },
   ],
 };
 
+const estateHighlights = [
+  {
+    title: "The Courtyard Restaurant",
+    subtitle: "Farm-to-Table Suffolk Dining",
+    desc: "A warm and memorable dining experience curated by our head chef, blending fresh local produce with seasonal British flair and al fresco patio seating.",
+    image: "/images/restaurant/courtyard-dining.jpg",
+    linkText: "Explore Dining Menus",
+    href: "/demos/modern-restaurant/menu",
+  },
+  {
+    title: "16th-Century Tithe Barn",
+    subtitle: "Romantic Weddings & Events",
+    desc: "Authentic historic timber-framed barn with soaring vaulted ceilings and fairy-lit rafters. Set against rolling grounds for weddings up to 150 guests.",
+    image: "/images/restaurant/tithe-barn.jpg",
+    linkText: "Weddings & Barn Hire",
+    href: "/demos/modern-restaurant/private-dining",
+  },
+  {
+    title: "Traditional Afternoon Tea",
+    subtitle: "Served Daily in the Courtyard",
+    desc: "Delicate finger sandwiches, warm homemade fruit scones, Cornish clotted cream, preserves, and choice of loose-leaf English teas or sparkling wine.",
+    image: "/images/restaurant/afternoon-tea.jpg",
+    linkText: "Reserve Tea Table",
+    href: "/demos/modern-restaurant/menu",
+  },
+  {
+    title: "Kings Bar & Coaching Lounge",
+    subtitle: "Cask Ales & Fireside Relaxation",
+    desc: "A historic, dog-friendly coaching inn lounge with open wood-burning fireplaces, local Adnams cask ales, small-batch spirits, and light tavern dining.",
+    image: "/images/restaurant/kings-bar.jpg",
+    linkText: "View Bar Menu",
+    href: "/demos/modern-restaurant/menu",
+  },
+];
+
 export default function ModernRestaurantDemo() {
-  const [activeTab, setActiveTab] = useState<keyof typeof menuItems>("Tasting Menu");
+  const [activeTab, setActiveTab] = useState<keyof typeof menuItems>("Courtyard Dinner");
   const [reservationModal, setReservationModal] = useState(false);
   const [reservationSuccess, setReservationSuccess] = useState(false);
   const [partySize, setPartySize] = useState("2 Guests");
   const [selectedTime, setSelectedTime] = useState("19:30");
-  const threeCanvasRef = useRef<HTMLDivElement>(null);
-
-  // Initialize Three.js interactive 3D culinary torus & orbiting golden particles
-  useEffect(() => {
-    let animId: number;
-    let cleanup: (() => void) | null = null;
-
-    loadThreeJs().then((THREE) => {
-      const container = threeCanvasRef.current;
-      if (!container) return;
-
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-      camera.position.z = 6;
-
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      container.appendChild(renderer.domElement);
-
-      // Central sculptural 3D Torus knot (abstract culinary presentation dish)
-      const geometry = new THREE.TorusKnotGeometry(1.2, 0.35, 120, 16);
-      const material = new THREE.MeshPhysicalMaterial({
-        color: 0xd4af37,
-        emissive: 0x221500,
-        roughness: 0.2,
-        metalness: 0.9,
-        clearcoat: 0.8,
-        clearcoatRoughness: 0.1,
-        wireframe: false,
-      });
-      const torusKnot = new THREE.Mesh(geometry, material);
-      scene.add(torusKnot);
-
-      // Orbiting Golden Culinary Particles
-      const particleCount = 180;
-      const particleGeo = new THREE.BufferGeometry();
-      const positions = new Float32Array(particleCount * 3);
-      for (let i = 0; i < particleCount * 3; i += 3) {
-        positions[i] = (Math.random() - 0.5) * 8;
-        positions[i + 1] = (Math.random() - 0.5) * 8;
-        positions[i + 2] = (Math.random() - 0.5) * 8;
-      }
-      particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      const particleMat = new THREE.PointsMaterial({
-        color: 0xf59e0b,
-        size: 0.05,
-        transparent: true,
-        opacity: 0.7,
-      });
-      const particleSystem = new THREE.Points(particleGeo, particleMat);
-      scene.add(particleSystem);
-
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-      scene.add(ambientLight);
-
-      const pointLight1 = new THREE.PointLight(0xf59e0b, 2, 50);
-      pointLight1.position.set(5, 5, 5);
-      scene.add(pointLight1);
-
-      const pointLight2 = new THREE.PointLight(0xd97706, 1.5, 50);
-      pointLight2.position.set(-5, -5, 2);
-      scene.add(pointLight2);
-
-      let mouseX = 0;
-      let mouseY = 0;
-      const onMouseMove = (e: MouseEvent) => {
-        const rect = container.getBoundingClientRect();
-        mouseX = ((e.clientX - rect.left) / width - 0.5) * 2;
-        mouseY = -((e.clientY - rect.top) / height - 0.5) * 2;
-      };
-      window.addEventListener("mousemove", onMouseMove);
-
-      const animate = () => {
-        animId = requestAnimationFrame(animate);
-        torusKnot.rotation.x += 0.005;
-        torusKnot.rotation.y += 0.008;
-
-        // Subtle mouse parallax response
-        torusKnot.rotation.y += (mouseX * 0.5 - torusKnot.rotation.y) * 0.05;
-        torusKnot.rotation.x += (-mouseY * 0.5 - torusKnot.rotation.x) * 0.05;
-
-        particleSystem.rotation.y -= 0.002;
-        renderer.render(scene, camera);
-      };
-      animate();
-
-      const onResize = () => {
-        if (!container) return;
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
-      };
-      window.addEventListener("resize", onResize);
-
-      cleanup = () => {
-        window.removeEventListener("mousemove", onMouseMove);
-        window.removeEventListener("resize", onResize);
-        cancelAnimationFrame(animId);
-        renderer.dispose();
-        geometry.dispose();
-        material.dispose();
-        particleGeo.dispose();
-        particleMat.dispose();
-        if (container.contains(renderer.domElement)) {
-          container.removeChild(renderer.domElement);
-        }
-      };
-    }).catch(() => {});
-
-    return () => {
-      if (cleanup) cleanup();
-    };
-  }, []);
+  const [diningOccasion, setDiningOccasion] = useState("Courtyard Dinner");
 
   const handleBookTable = (e: React.FormEvent) => {
     e.preventDefault();
@@ -225,99 +153,313 @@ export default function ModernRestaurantDemo() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#0b0d13] text-[#f4efe6] font-sans selection:bg-[#d4af37] selection:text-black">
-      {/* 1. Modern Restaurant Navbar */}
+    <div className="w-full min-h-screen bg-[#112017] text-[#f4efe6] font-sans selection:bg-[#c59d5f] selection:text-black">
+      {/* 1. Country Estate Navbar */}
       <RestaurantNav />
-      <DemoBadge studySlug="modern-restaurant" studyName="AURA Mayfair" />
+      <DemoBadge studySlug="modern-restaurant" studyName="Green Haven" />
 
-      {/* 2. Hero Section with Three.js 3D Interactive Sculpture */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden px-4 sm:px-8 lg:px-16 py-12">
-        <div className="container mx-auto grid lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 z-10 space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#d4af37]">
-              <Sparkles className="h-3 w-3" />
-              <span>Michelin 2026 Guide Selection</span>
+      {/* 2. Full-Bleed Editorial Country Hero */}
+      <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center overflow-hidden px-4 sm:px-8 lg:px-16 py-16">
+        {/* Real Estate Photography Background */}
+        <motion.div
+          initial={{ scale: 1.08, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.6, ease: "easeOut" }}
+          className="absolute inset-0 z-0"
+        >
+          <Image
+            src="/images/restaurant/hero-estate.jpg"
+            alt="Green Haven Hotel 16th-century estate grounds"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+          {/* Deep Racing Green & Charcoal Atmosphere Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0d1a12]/95 via-[#112017]/85 to-[#0d1a12]/75" />
+          <div className="absolute inset-0 bg-[#0d1a12]/40" />
+        </motion.div>
+
+        <div className="container mx-auto grid lg:grid-cols-12 gap-8 items-center relative z-10">
+          {/* Left Column: Editorial Headline & Actions */}
+          <div className="lg:col-span-7 space-y-6 text-left">
+            {/* Heritage Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#c59d5f]/40 bg-[#c59d5f]/15 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#deb574] backdrop-blur-xs">
+              <TreePine className="h-3.5 w-3.5 text-[#deb574]" />
+              <span>16th-Century Coaching Inn · Norfolk &amp; Suffolk Border</span>
             </div>
 
-            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-light leading-tight tracking-tight text-white">
-              An Elevated <br />
-              <span className="italic font-normal text-[#d4af37]">Gastronomic Symphony</span> <br />
-              In London Mayfair
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal leading-[1.15] tracking-tight text-white">
+              For Moments <br />
+              <span className="italic font-normal text-[#deb574]">That Matter Most</span> <br />
+              At Green Haven
             </h1>
 
-            <p className="max-w-xl text-sm sm:text-base leading-relaxed text-white/70 font-light">
-              Experience modern culinary artistry crafted from wild British produce, rare Japanese coastal delicacies, and a cellar curated across three centuries.
+            <p className="max-w-xl text-sm sm:text-base leading-relaxed text-white/80 font-light">
+              Wrapped in four acres of peaceful Suffolk grounds near Diss &amp; Eye. Experience our farm-to-table Courtyard Restaurant, traditional afternoon tea, 44 country bedrooms, and romantic celebrations in our 16th-century Tithe Barn.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Link
-                href="/demos/modern-restaurant/menu"
-                className="rounded-full bg-[#d4af37] px-6 py-3 text-xs sm:text-sm font-semibold uppercase tracking-wider text-black transition-transform hover:scale-105 shadow-lg"
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setReservationModal(true)}
+                className="rounded-full bg-gradient-to-r from-[#c59d5f] to-[#deb574] px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#112017] transition-all hover:scale-105 shadow-xl hover:shadow-[#c59d5f]/20 active:scale-95"
               >
-                Curated Menu Experience
-              </Link>
+                Reserve Courtyard Table
+              </button>
+
               <Link
                 href="/demos/modern-restaurant/private-dining"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-xs sm:text-sm font-medium tracking-wider text-white hover:border-[#d4af37] hover:text-[#d4af37] transition-colors"
+                className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/30 backdrop-blur-xs px-6 py-3.5 text-xs sm:text-sm font-semibold tracking-wider text-white hover:border-[#deb574] hover:text-[#deb574] transition-all"
               >
-                <span>Private Dining Salons</span>
+                <span>Tithe Barn Weddings</span>
                 <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
 
-            <div className="pt-6 grid grid-cols-3 gap-4 border-t border-white/10 max-w-lg">
+            {/* Quick Heritage Stat Chips */}
+            <div className="pt-6 grid grid-cols-3 gap-4 border-t border-white/15 max-w-lg">
               <div>
-                <span className="font-serif text-2xl font-normal text-[#d4af37]">3 Stars</span>
-                <p className="text-[11px] text-white/60">Gastronomy Award</p>
+                <span className="font-serif text-2xl sm:text-3xl font-semibold text-[#deb574]">16th C.</span>
+                <p className="text-[11px] uppercase tracking-wider text-white/70">Coaching Inn Heritage</p>
               </div>
               <div>
-                <span className="font-serif text-2xl font-normal text-[#d4af37]">1,400+</span>
-                <p className="text-[11px] text-white/60">Cellar Labels</p>
+                <span className="font-serif text-2xl sm:text-3xl font-semibold text-[#deb574]">4 Acres</span>
+                <p className="text-[11px] uppercase tracking-wider text-white/70">Private Rural Grounds</p>
               </div>
               <div>
-                <span className="font-serif text-2xl font-normal text-[#d4af37]">100%</span>
-                <p className="text-[11px] text-white/60">Wild &amp; Organic</p>
+                <span className="font-serif text-2xl sm:text-3xl font-semibold text-[#deb574]">44 Rooms</span>
+                <p className="text-[11px] uppercase tracking-wider text-white/70">Courtyard Bedrooms</p>
               </div>
             </div>
           </div>
 
-          {/* Three.js Interactive 3D Canvas */}
-          <div className="lg:col-span-5 relative h-[380px] sm:h-[450px] w-full flex items-center justify-center">
-            <div
-              ref={threeCanvasRef}
-              className="w-full h-full cursor-grab active:cursor-grabbing"
-              title="Move your cursor to interact with the 3D sculpture"
-            />
-            <div className="pointer-events-none absolute bottom-4 text-center">
-              <span className="text-[10px] tracking-widest uppercase text-white/40">
-                ⚡ Interactive 3D Culinary Sculpture · Move cursor to tilt
+          {/* Right Column: Interactive Quick Reservation & Estate Card (Replaces former 3D element) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:col-span-5 relative rounded-3xl border border-[#c59d5f]/40 bg-[#14231a]/95 backdrop-blur-md p-6 sm:p-7 shadow-2xl text-left space-y-4"
+          >
+            {/* Card Header with GreenHavenLogo and live estate status */}
+            <div className="flex items-center justify-between border-b border-[#25392d] pb-3.5">
+              <div className="flex items-center gap-2.5">
+                <GreenHavenLogo className="h-8 w-8 shrink-0 shadow-sm" />
+                <div>
+                  <h3 className="font-serif text-sm sm:text-base font-bold text-white tracking-wide leading-tight">
+                    Green Haven Estate
+                  </h3>
+                  <p className="text-[9px] font-mono text-[#deb574] uppercase tracking-wider">
+                    Direct Table Concierge
+                  </p>
+                </div>
+              </div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-1 text-[10px] font-semibold text-emerald-300">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Open Today
               </span>
             </div>
+
+            {/* Feature Photo Snippet */}
+            <div className="relative aspect-16/9 w-full rounded-2xl overflow-hidden border border-white/10 shadow-inner group/cardImg">
+              <Image
+                src="/images/restaurant/courtyard-dining.jpg"
+                alt="Green Haven Courtyard Dining"
+                fill
+                sizes="(max-width: 1024px) 100vw, 450px"
+                className="object-cover object-center group-hover/cardImg:scale-106 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white text-[11px]">
+                <span className="font-serif font-medium text-white/95">Courtyard Al Fresco &amp; Hearth</span>
+                <span className="text-[#deb574] font-mono text-[10px]">Head Chef Daily Menus</span>
+              </div>
+            </div>
+
+            {/* Quick Interactive Reservation Form Box */}
+            <div className="space-y-3 bg-[#0f1b13] p-3.5 rounded-2xl border border-[#25392d]">
+              <div className="flex items-center justify-between text-xs text-white/80">
+                <span className="font-semibold text-white">Instant Table Reservation</span>
+                <span className="text-[#deb574] text-[10px] font-mono">No Booking Fees</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <label className="text-[10px] uppercase tracking-wider text-white/60 block mb-1">
+                    Occasion
+                  </label>
+                  <select
+                    value={diningOccasion}
+                    onChange={(e) => setDiningOccasion(e.target.value)}
+                    className="w-full rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs text-white focus:outline-hidden focus:border-[#deb574]"
+                  >
+                    <option value="Courtyard Dinner" className="bg-[#14231a]">Courtyard Dinner</option>
+                    <option value="Traditional Afternoon Tea" className="bg-[#14231a]">Afternoon Tea (12-5pm)</option>
+                    <option value="Sunday Roast" className="bg-[#14231a]">Sunday Roast Feast</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-[10px] uppercase tracking-wider text-white/60 block mb-1">
+                    Party Size
+                  </label>
+                  <select
+                    value={partySize}
+                    onChange={(e) => setPartySize(e.target.value)}
+                    className="w-full rounded-lg border border-white/15 bg-white/5 px-2.5 py-1.5 text-xs text-white focus:outline-hidden focus:border-[#deb574]"
+                  >
+                    <option value="2 Guests" className="bg-[#14231a]">2 Guests</option>
+                    <option value="4 Guests" className="bg-[#14231a]">4 Guests</option>
+                    <option value="6 Guests" className="bg-[#14231a]">6 Guests</option>
+                    <option value="8+ Group Celebration" className="bg-[#14231a]">8+ Guests</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase tracking-wider text-white/60 block mb-1">
+                  Seating Slot
+                </label>
+                <div className="grid grid-cols-4 gap-1.5">
+                  {["12:30", "14:00", "18:00", "19:30"].map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setSelectedTime(t)}
+                      className={`rounded-lg py-1 text-xs font-semibold transition-all ${
+                        selectedTime === t
+                          ? "bg-[#c59d5f] text-[#112017]"
+                          : "border border-white/10 bg-white/5 text-white/70 hover:border-white/20"
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setReservationModal(true)}
+                className="w-full rounded-full bg-gradient-to-r from-[#c59d5f] to-[#deb574] py-2.5 text-xs font-bold uppercase tracking-wider text-[#112017] shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                Proceed With Booking ({selectedTime} · {partySize})
+              </button>
+            </div>
+
+            {/* Quick Estate Link */}
+            <div className="pt-1 flex items-center justify-between text-xs text-white/60">
+              <span className="text-[11px]">Planning a wedding or event?</span>
+              <Link
+                href="/demos/modern-restaurant/private-dining"
+                className="text-[#deb574] hover:text-white font-semibold transition-colors flex items-center gap-1"
+              >
+                <span>Tithe Barn Weddings</span>
+                <ChevronRight className="h-3 w-3" />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 3. Four Estate Offerings Grid */}
+      <section className="py-20 px-4 sm:px-8 lg:px-16 border-t border-[#25392d] bg-[#0d1a12]">
+        <div className="container mx-auto max-w-6xl space-y-12">
+          <div className="text-center space-y-3 max-w-2xl mx-auto">
+            <span className="text-xs uppercase tracking-widest text-[#deb574] font-semibold">
+              The Green Haven Experience
+            </span>
+            <h2 className="font-serif text-2xl sm:text-4xl font-normal text-white">
+              Where Country Tradition Meets Comfort
+            </h2>
+            <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light">
+              Whether dining with family, joining us for traditional afternoon tea, or planning a dream barn wedding, we believe in creating memories that endure.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {estateHighlights.map((pillar, idx) => (
+              <motion.div
+                key={pillar.title}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                whileHover={{ y: -6 }}
+                className="group flex flex-col justify-between rounded-2xl border border-[#25392d] bg-[#14231a] overflow-hidden shadow-lg transition-all hover:border-[#c59d5f]/60 hover:shadow-2xl"
+              >
+                <div>
+                  <div className="relative aspect-4/3 w-full overflow-hidden bg-black/40">
+                    <motion.div
+                      className="relative w-full h-full"
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                    >
+                      <Image
+                        src={pillar.image}
+                        alt={pillar.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover object-center"
+                      />
+                    </motion.div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                    <span className="absolute bottom-3 left-3 text-[10px] font-mono uppercase tracking-wider text-[#deb574] font-semibold bg-black/60 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                      {pillar.subtitle}
+                    </span>
+                  </div>
+
+                  <div className="p-5 space-y-2 text-left">
+                    <h3 className="font-serif text-lg font-normal text-white group-hover:text-[#deb574] transition-colors">
+                      {pillar.title}
+                    </h3>
+                    <p className="text-xs text-white/70 leading-relaxed">
+                      {pillar.desc}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-5 pt-0">
+                  <Link
+                    href={pillar.href}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#deb574] hover:text-white transition-colors"
+                  >
+                    <span>{pillar.linkText}</span>
+                    <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 3. Interactive Seasonal Menu Section */}
-      <section id="menu" className="py-16 px-4 sm:px-8 lg:px-16 border-t border-white/10 bg-[#0e111a]">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center space-y-3 mb-10">
-            <span className="text-xs uppercase tracking-widest text-[#d4af37]">Culinary Creations</span>
-            <h2 className="font-serif text-2xl sm:text-4xl font-light text-white">Autumn Degustation Menu</h2>
-            <p className="text-xs sm:text-sm text-white/60 max-w-lg mx-auto">
-              Prepared fresh daily under the guidance of Executive Chef Julian Thorne.
+      {/* 4. Interactive Courtyard Menu & Afternoon Tea Section */}
+      <section id="menu" className="py-20 px-4 sm:px-8 lg:px-16 border-t border-[#25392d] bg-[#112017]">
+        <div className="container mx-auto max-w-5xl space-y-12">
+          <div className="text-center space-y-3">
+            <span className="text-xs uppercase tracking-widest text-[#deb574] font-semibold">
+              The Courtyard Restaurant
+            </span>
+            <h2 className="font-serif text-2xl sm:text-4xl font-normal text-white">
+              Seasonal Suffolk Country Menus
+            </h2>
+            <p className="text-xs sm:text-sm text-white/70 max-w-lg mx-auto font-light leading-relaxed">
+              Prepared fresh daily using regional ingredients, from Suffolk pork and British beef to handcrafted warm scones and local Adnams cask ales.
             </p>
           </div>
 
           {/* Category Switcher Pills */}
-          <div className="flex items-center justify-center gap-2 mb-10">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             {menuCategories.map((cat) => (
               <button
                 key={cat}
+                type="button"
                 onClick={() => setActiveTab(cat as any)}
-                className={`rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-all ${
+                className={`rounded-full px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-all ${
                   activeTab === cat
-                    ? "bg-[#d4af37] text-black shadow-md"
-                    : "border border-white/10 bg-white/5 text-white/70 hover:text-white hover:border-white/30"
+                    ? "bg-[#c59d5f] text-[#112017] shadow-lg font-bold"
+                    : "border border-[#25392d] bg-[#172b1f] text-white/80 hover:text-white hover:border-[#c59d5f]/50"
                 }`}
               >
                 {cat}
@@ -333,61 +475,184 @@ export default function ModernRestaurantDemo() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.08 }}
-                className="group relative rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6 transition-all hover:border-[#d4af37]/50 hover:bg-white/[0.06] hover:-translate-y-1"
+                whileHover={{ y: -4 }}
+                className="group relative rounded-2xl border border-[#25392d] bg-[#14231a] overflow-hidden p-5 transition-all hover:border-[#c59d5f]/60 hover:shadow-xl flex flex-col justify-between"
               >
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="rounded-full bg-[#d4af37]/20 border border-[#d4af37]/30 px-2 py-0.5 text-[10px] font-medium text-[#d4af37]">
-                    {item.tag}
-                  </span>
-                  <span className="font-serif text-base font-semibold text-[#d4af37]">
-                    {item.price}
-                  </span>
+                <div>
+                  <div className="relative aspect-16/10 w-full rounded-xl overflow-hidden mb-4 bg-black/40">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                    <span className="absolute top-2.5 left-2.5 rounded-full bg-[#112017]/90 border border-[#c59d5f]/40 px-2.5 py-0.5 text-[9px] font-medium text-[#deb574] backdrop-blur-xs">
+                      {item.tag}
+                    </span>
+                  </div>
+
+                  <div className="flex items-baseline justify-between gap-2 mb-1.5">
+                    <h3 className="font-serif text-base font-normal text-white group-hover:text-[#deb574] transition-colors leading-snug">
+                      {item.name}
+                    </h3>
+                    <span className="font-serif text-base font-semibold text-[#deb574] shrink-0">
+                      {item.price}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-white/70 leading-relaxed">
+                    {item.desc}
+                  </p>
                 </div>
-                <h3 className="font-serif text-lg font-medium text-white group-hover:text-[#d4af37] transition-colors">
-                  {item.name}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-white/60">
-                  {item.desc}
-                </p>
+
+                <div className="pt-4 mt-4 border-t border-white/10 flex items-center justify-between">
+                  <span className="text-[10px] uppercase tracking-wider text-white/50">Courtyard Service</span>
+                  <button
+                    type="button"
+                    onClick={() => setReservationModal(true)}
+                    className="text-[11px] font-semibold text-[#deb574] hover:text-white uppercase tracking-wider inline-flex items-center gap-1"
+                  >
+                    <span>Reserve</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </button>
+                </div>
               </motion.div>
             ))}
+          </div>
+
+          <div className="text-center pt-4">
+            <Link
+              href="/demos/modern-restaurant/menu"
+              className="inline-flex items-center gap-2 rounded-full border border-[#c59d5f]/60 bg-[#c59d5f]/10 px-7 py-3 text-xs font-semibold uppercase tracking-wider text-[#deb574] hover:bg-[#c59d5f] hover:text-[#112017] transition-all"
+            >
+              <span>Explore Complete Breakfast, Lunch &amp; Drinks Menus</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* 4. Interactive Reservation Modal */}
+      {/* 5. Tithe Barn Weddings Feature Banner */}
+      <section className="py-20 px-4 sm:px-8 lg:px-16 border-t border-[#25392d] bg-[#0d1a12]">
+        <div className="container mx-auto max-w-6xl">
+          <div className="relative rounded-3xl border border-[#25392d] bg-[#14231a] overflow-hidden shadow-2xl">
+            <div className="grid lg:grid-cols-12 gap-8 items-center p-6 sm:p-12">
+              <div className="lg:col-span-7 space-y-4 text-left">
+                <span className="text-xs font-mono uppercase tracking-widest text-[#deb574] font-semibold">
+                  Historic Celebration Venue
+                </span>
+                <h2 className="font-serif text-2xl sm:text-4xl font-normal text-white">
+                  The Historic Tithe Barn Weddings &amp; Events
+                </h2>
+                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light">
+                  Nestled against open skies and our private 4-acre estate grounds, our 16th-century Tithe Barn combines dramatic timber-framed rafters, fairy lights, and private garden patio for truly unforgettable celebrations.
+                </p>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs">
+                  <div className="p-3 rounded-xl bg-[#112017] border border-[#25392d]">
+                    <span className="text-[#deb574] font-semibold block">Up to 150</span>
+                    <span className="text-white/60 text-[11px]">Seated Guests</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-[#112017] border border-[#25392d]">
+                    <span className="text-[#deb574] font-semibold block">Licensed</span>
+                    <span className="text-white/60 text-[11px]">Civil Ceremonies</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-[#112017] border border-[#25392d] col-span-2 sm:col-span-1">
+                    <span className="text-[#deb574] font-semibold block">Bridal Suite</span>
+                    <span className="text-white/60 text-[11px]">Included</span>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex flex-wrap gap-3">
+                  <Link
+                    href="/demos/modern-restaurant/private-dining"
+                    className="rounded-full bg-gradient-to-r from-[#c59d5f] to-[#deb574] px-7 py-3 text-xs font-bold uppercase tracking-wider text-[#112017] shadow-lg hover:scale-105 transition-transform"
+                  >
+                    View Wedding Packages &amp; Pricing
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setReservationModal(true)}
+                    className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white hover:border-[#deb574] hover:text-[#deb574] transition-colors"
+                  >
+                    Enquire for Wedding Tour
+                  </button>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5 relative aspect-4/3 w-full rounded-2xl overflow-hidden shadow-xl border border-white/10">
+                <Image
+                  src="/images/restaurant/tithe-barn.jpg"
+                  alt="16th Century Tithe Barn Wedding Green Haven"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 500px"
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Interactive Reservation Modal */}
       <AnimatePresence>
         {reservationModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-md rounded-2xl border border-[#d4af37]/40 bg-[#121520] p-6 text-white shadow-2xl"
+              className="relative w-full max-w-md rounded-2xl border border-[#c59d5f]/40 bg-[#132219] p-6 text-white shadow-2xl space-y-4"
             >
               <button
+                type="button"
                 onClick={() => setReservationModal(false)}
-                className="absolute top-4 right-4 text-white/60 hover:text-white"
+                className="absolute top-4 right-4 text-white/50 hover:text-white"
               >
                 <X className="h-5 w-5" />
               </button>
 
-              <div className="flex items-center gap-2 mb-2 text-[#d4af37]">
+              <div className="flex items-center gap-2 text-[#deb574]">
                 <UtensilsCrossed className="h-4 w-4" />
                 <span className="text-xs uppercase tracking-widest font-semibold">Table Reservation</span>
               </div>
-              <h3 className="font-serif text-xl font-light text-white mb-4">Book Your Table at Aura</h3>
+              <h3 className="font-serif text-xl font-normal text-white">
+                Courtyard Dining at Green Haven
+              </h3>
 
               {reservationSuccess ? (
                 <div className="py-8 text-center space-y-3">
-                  <CheckCircle2 className="h-12 w-12 text-[#d4af37] mx-auto animate-bounce" />
-                  <h4 className="font-serif text-lg font-medium text-white">Table Confirmed!</h4>
+                  <CheckCircle2 className="h-12 w-12 text-[#deb574] mx-auto animate-bounce" />
+                  <h4 className="font-serif text-lg font-medium text-white">Reservation Confirmed!</h4>
                   <p className="text-xs text-white/70">
-                    We have reserved your table for {partySize} at {selectedTime}. Confirmation sent to your concierge.
+                    We have reserved your table for {partySize} ({diningOccasion}) at {selectedTime}. Confirmation details dispatched via SMS.
                   </p>
                 </div>
               ) : (
                 <form onSubmit={handleBookTable} className="space-y-4">
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">
+                      Dining Occasion
+                    </label>
+                    <select
+                      value={diningOccasion}
+                      onChange={(e) => setDiningOccasion(e.target.value)}
+                      className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:outline-hidden focus:border-[#deb574]"
+                    >
+                      <option value="Courtyard Dinner" className="bg-[#132219]">Courtyard Dinner (Evening)</option>
+                      <option value="Traditional Afternoon Tea" className="bg-[#132219]">Traditional Afternoon Tea (12:00 - 17:00)</option>
+                      <option value="Sunday Roast" className="bg-[#132219]">Traditional Sunday Roast Feast</option>
+                      <option value="Kings Bar Casual" className="bg-[#132219]">Kings Bar Casual Dining</option>
+                    </select>
+                  </div>
+
                   <div>
                     <label className="block text-xs uppercase tracking-wider text-white/60 mb-1">
                       Party Size
@@ -395,12 +660,13 @@ export default function ModernRestaurantDemo() {
                     <select
                       value={partySize}
                       onChange={(e) => setPartySize(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white focus:outline-hidden focus:border-[#d4af37]"
+                      className="w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs text-white focus:outline-hidden focus:border-[#deb574]"
                     >
-                      <option value="2 Guests" className="bg-[#121520]">2 Guests (Intimate)</option>
-                      <option value="4 Guests" className="bg-[#121520]">4 Guests (Standard)</option>
-                      <option value="6 Guests" className="bg-[#121520]">6 Guests (Chef&apos;s Table)</option>
-                      <option value="8+ Private Salon" className="bg-[#121520]">8+ Guests (Private Salon)</option>
+                      <option value="1 Guest" className="bg-[#132219]">1 Guest</option>
+                      <option value="2 Guests" className="bg-[#132219]">2 Guests (Intimate Table)</option>
+                      <option value="4 Guests" className="bg-[#132219]">4 Guests (Standard Table)</option>
+                      <option value="6 Guests" className="bg-[#132219]">6 Guests (Family Table)</option>
+                      <option value="8+ Group Celebration" className="bg-[#132219]">8+ Guests (Celebration Table)</option>
                     </select>
                   </div>
 
@@ -409,14 +675,14 @@ export default function ModernRestaurantDemo() {
                       Preferred Seating Time
                     </label>
                     <div className="grid grid-cols-4 gap-2">
-                      {["18:00", "19:30", "20:45", "21:30"].map((t) => (
+                      {["12:30", "14:00", "18:00", "19:30"].map((t) => (
                         <button
                           key={t}
                           type="button"
                           onClick={() => setSelectedTime(t)}
                           className={`rounded-lg py-1.5 text-xs font-semibold ${
                             selectedTime === t
-                              ? "bg-[#d4af37] text-black"
+                              ? "bg-[#c59d5f] text-[#112017]"
                               : "border border-white/10 bg-white/5 text-white/70 hover:border-white/30"
                           }`}
                         >
@@ -428,9 +694,9 @@ export default function ModernRestaurantDemo() {
 
                   <button
                     type="submit"
-                    className="w-full mt-4 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#e5c158] py-2.5 text-xs font-semibold uppercase tracking-wider text-black transition-all hover:scale-[1.02]"
+                    className="w-full mt-4 rounded-xl bg-gradient-to-r from-[#c59d5f] to-[#deb574] py-2.5 text-xs font-bold uppercase tracking-wider text-[#112017] transition-all hover:scale-[1.02]"
                   >
-                    Confirm Reservation
+                    Confirm Table Reservation
                   </button>
                 </form>
               )}
