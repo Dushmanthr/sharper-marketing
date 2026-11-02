@@ -93,7 +93,7 @@ export const mainNav: NavItem[] = [
 ];
 
 /* ----------------------------------------------------------------------- */
-/* Services Taxonomy (Standardized 4-Part Structure)                       */
+/* Services Taxonomy (Standardised 4-Part Structure)                       */
 /* ----------------------------------------------------------------------- */
 
 export type ServiceCapability = {
