@@ -68,7 +68,7 @@ export const blogPosts: BlogPost[] = [
       "Customer behaviour analysis",
     ],
     metaDescription:
-      "Discover how to calculate and measure digital marketing ROI with verified formulas, attribution modeling, and data reporting techniques for UK and global companies.",
+      "Discover how to calculate and measure digital marketing ROI with verified formulas, attribution modelling, and data reporting techniques for UK and global companies.",
     tableOfContents: [
       { id: "why-vanity-metrics-fail", title: "Why Vanity Metrics Mislead Commercial Decision-Making" },
       { id: "core-formula", title: "The Core Marketing ROI Formula Demystified" },
@@ -131,7 +131,7 @@ export const blogPosts: BlogPost[] = [
         id: "actionable-takeaways",
         heading: "Key Steps to Prove Marketing Value to the Board",
         paragraphs: [
-          "Transparent reporting builds organizational trust. Provide your executive leadership with concise, monthly executive briefings that link marketing activity directly to strategic commercial objectives.",
+          "Transparent reporting builds organisational trust. Provide your executive leadership with concise, monthly executive briefings that link marketing activity directly to strategic commercial objectives.",
           "By implementing a disciplined measurement framework, marketing shifts from being an unpredictable cost centre into your most reliable, scalable driver of business growth.",
         ],
       },
@@ -169,7 +169,7 @@ export const blogPosts: BlogPost[] = [
       "Explore how UK SMEs can structure digital marketing services for sustainable growth. Practical advice on budget allocation, SEO, web design, and paid advertising.",
     tableOfContents: [
       { id: "sme-landscape", title: "The Shifting Landscape for UK Small and Medium Enterprises" },
-      { id: "core-disciplines", title: "Prioritizing the Core Marketing Disciplines" },
+      { id: "core-disciplines", title: "Prioritising the Core Marketing Disciplines" },
       { id: "budget-allocation", title: "Realistic Budget Allocation Strategies" },
       { id: "avoiding-pitfalls", title: "Common Pitfalls UK SMEs Must Avoid" },
       { id: "next-steps", title: "Building a Coordinated Growth Roadmap" },
@@ -185,13 +185,13 @@ export const blogPosts: BlogPost[] = [
       },
       {
         id: "core-disciplines",
-        heading: "Prioritizing the Core Marketing Disciplines",
+        heading: "Prioritising the Core Marketing Disciplines",
         paragraphs: [
           "Rather than attempting to be active on every emerging platform simultaneously, growing businesses see the strongest return by mastering six interdependent disciplines under one coordinated strategy:",
         ],
         bulletPoints: [
           "Brand Positioning: Defining a crisp, memorable identity that sets your company apart from legacy competitors.",
-          "High-Conversion Website: Ensuring your site is lightning fast, mobile-optimized, and engineered to guide visitors to take action.",
+          "High-Conversion Website: Ensuring your site is lightning fast, mobile-optimised, and engineered to guide visitors to take action.",
           "Organic SEO: Capturing high-intent commercial searches from buyers who are actively seeking your services.",
           "Targeted PPC: Running tightly controlled Google and LinkedIn ads to generate immediate qualified enquiries.",
           "Purposeful Social Media: Nurturing professional credibility and engagement where your target decision-makers spend time.",
@@ -202,7 +202,7 @@ export const blogPosts: BlogPost[] = [
         id: "budget-allocation",
         heading: "Realistic Budget Allocation Strategies",
         paragraphs: [
-          "A balanced allocation model for growing UK firms typically divides resources into a 60/40 ratio: 60% dedicated to long-term brand equity and organic search authority (SEO and content), and 40% allocated toward immediate demand generation (paid search and targeted performance campaigns).",
+          "A balanced allocation model for growing UK firms typically divides resources into a 60/40 ratio: 60% dedicated to long-term brand equity and organic search authority (SEO and content), and 40% allocated towards immediate demand generation (paid search and targeted performance campaigns).",
           "This dual approach ensures you capture immediate revenue opportunities today while insulating your business against rising ad costs tomorrow.",
         ],
         keyTakeaways: [
@@ -248,7 +248,7 @@ export const blogPosts: BlogPost[] = [
       avatar: "/images/hero-marketing-team.jpg",
     },
     image: "/images/brand-marketing-03.png",
-    imageAlt: "User experience wireframes and conversion rate optimization layout",
+    imageAlt: "User experience wireframes and conversion rate optimisation layout",
     tags: [
       "How to improve website conversion rates",
       "Conversion-focused web design",
@@ -270,7 +270,7 @@ export const blogPosts: BlogPost[] = [
         id: "conversion-disconnect",
         heading: "The Traffic vs Conversion Disconnect",
         paragraphs: [
-          "Many businesses invest substantial budgets into search engine optimization and paid media, only to see disappointing enquiry numbers. Doubling your traffic can cost thousands, but doubling your conversion rate delivers twice the leads from your existing visitors at virtually no extra ad cost.",
+          "Many businesses invest substantial budgets into search engine optimisation and paid media, only to see disappointing enquiry numbers. Doubling your traffic can cost thousands, but doubling your conversion rate delivers twice the leads from your existing visitors at virtually no extra ad cost.",
           "Conversion Rate Optimisation (CRO) is the systematic process of identifying why visitors hesitate, and structuring your website journey to make taking the next step effortless.",
         ],
       },
@@ -336,7 +336,7 @@ export const blogPosts: BlogPost[] = [
       avatar: "/images/hero-marketing-team.jpg",
     },
     image: "/images/marketing-landing-1.jpeg",
-    imageAlt: "World map and international digital marketing strategy visualization",
+    imageAlt: "World map and international digital marketing strategy visualisation",
     tags: [
       "Digital marketing strategy for international businesses",
       "Digital marketing consultancy UK",
@@ -348,7 +348,7 @@ export const blogPosts: BlogPost[] = [
       "How UK and multinational businesses can build international digital marketing strategies: cross-border positioning, multi-region SEO, and global client conversion.",
     tableOfContents: [
       { id: "local-expertise-global", title: "Local Expertise, Global Perspective" },
-      { id: "avoiding-localization-traps", title: "Avoiding Common International Localization Traps" },
+      { id: "avoiding-localization-traps", title: "Avoiding Common International Localisation Traps" },
       { id: "international-seo", title: "Structuring Multi-Regional SEO Architecture" },
       { id: "cross-border-trust", title: "Building Cross-Border Trust and Credibility" },
       { id: "enquiry-readiness", title: "Making Your Sales Funnel Overseas-Ready" },
@@ -364,7 +364,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         id: "avoiding-localization-traps",
-        heading: "Avoiding Common International Localization Traps",
+        heading: "Avoiding Common International Localisation Traps",
         paragraphs: [
           "International marketing is far more than simply translating copy or spinning up automated subdomains. Different markets exhibit distinct purchasing motivations, regulatory expectations, and search habits.",
           "For instance, commercial decision-makers in North America often expect direct pricing transparency and rapid self-serve booking, whereas European enterprise buyers frequently place greater emphasis on governance, compliance, and bespoke consultation.",
@@ -374,7 +374,7 @@ export const blogPosts: BlogPost[] = [
         id: "international-seo",
         heading: "Structuring Multi-Regional SEO Architecture",
         paragraphs: [
-          "To capture search intent across multiple countries without incurring keyword cannibalization, companies must implement structured international SEO best practices.",
+          "To capture search intent across multiple countries without incurring keyword cannibalisation, companies must implement structured international SEO best practices.",
           "This includes proper hreflang tag configuration, clear regional sitemap submissions, geo-targeted search console properties, and content tailored to search variations across different English-speaking markets.",
         ],
       },
@@ -464,7 +464,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Understanding Pricing Models: Retainers vs Performance",
         paragraphs: [
           "Transparent agencies explain their cost models openly. Whether operating on strategic monthly retainers, project deliverables, or blended consultancy fees, costs should correlate directly with senior talent access and measurable business value.",
-          "Beware of rock-bottom monthly packages that offer 'guaranteed #1 Google rankings' for trivial keywords—sustainable SEO and strategic paid media require real intellectual rigor and technical execution.",
+          "Beware of rock-bottom monthly packages that offer 'guaranteed #1 Google rankings' for trivial keywords—sustainable SEO and strategic paid media require real intellectual rigour and technical execution.",
         ],
       },
       {
@@ -517,7 +517,7 @@ export const blogPosts: BlogPost[] = [
       "Brand identity design services",
     ],
     metaDescription:
-      "Master brand positioning for growing businesses. Learn how to clarify your value proposition, define your tone of voice, and outmaneuver competitors in UK and global markets.",
+      "Master brand positioning for growing businesses. Learn how to clarify your value proposition, define your tone of voice, and outmanoeuvre competitors in UK and global markets.",
     tableOfContents: [
       { id: "more-than-a-logo", title: "Why Your Brand Is More Than a Logo" },
       { id: "defining-positioning", title: "Defining Where Your Business Wins" },
@@ -551,7 +551,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Tone of Voice and Distinctive Personality",
         paragraphs: [
           "B2B and corporate communications are frequently plagued by hollow corporate jargon—terms like 'synergy', 'innovative solutions', and 'paradigm shifts' that say nothing.",
-          "Developing a distinctive, confident tone of voice humanizes your brand and commands attention. Whether communicating through your website, LinkedIn content, or executive proposals, clarity always outperforms complexity.",
+          "Developing a distinctive, confident tone of voice humanises your brand and commands attention. Whether communicating through your website, LinkedIn content, or executive proposals, clarity always outperforms complexity.",
         ],
       },
       {

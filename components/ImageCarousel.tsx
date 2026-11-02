@@ -12,7 +12,7 @@ const slides = [
   },
   {
     src: "/images/hero2.jpeg",
-    alt: "Senior digital marketing strategist analyzing website traffic analytics and performance metrics",
+    alt: "Senior digital marketing strategist analysing website traffic analytics and performance metrics",
     pos: "object-center",
   },
   {
