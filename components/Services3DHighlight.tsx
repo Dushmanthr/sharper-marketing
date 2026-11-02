@@ -51,6 +51,9 @@ export default function Services3DHighlight({
     const container = containerRef.current;
     if (!container) return;
 
+    // Skip heavy Three.js on mobile screens to preserve high Lighthouse mobile score
+    if (window.innerWidth < 1024) return;
+
     let isDisposed = false;
     let animId: number | null = null;
     let isVisible = true;
@@ -78,17 +81,12 @@ export default function Services3DHighlight({
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     container.addEventListener("mouseleave", handleMouseLeave, { passive: true });
 
-    // Performance: Pause animation when off-screen
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
-      },
-      { threshold: 0.05 }
-    );
-    observer.observe(container);
+    let hasLoaded = false;
+    const startThree = () => {
+      if (hasLoaded || isDisposed) return;
+      hasLoaded = true;
 
-    // Load Three.js and initialize the 3D scene cleanly
-    loadThreeJs()
+      loadThreeJs()
       .then((THREE) => {
         if (isDisposed || !container) return;
 
@@ -344,6 +342,19 @@ export default function Services3DHighlight({
         }
       })
       .catch(() => {});
+    };
+
+    // Performance: Pause animation when off-screen & load when visible
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          startThree();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
 
     return () => {
       isDisposed = true;

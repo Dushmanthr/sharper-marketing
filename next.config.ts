@@ -33,12 +33,26 @@ const nextConfig: NextConfig = {
   // hangs when the site actually lives in a subfolder.
   ...(basePath ? { basePath, assetPrefix: basePath } : {}),
 
-  // Static export can't use the default image optimiser (needs a server). A
-  // custom loader keeps next/image static AND prefixes the subdirectory so
-  // local images resolve correctly (see image-loader.ts).
+  // Enable Gzip/Brotli compression for all text assets
+  compress: true,
+
+  // Optimise bundle imports for icon and animation libraries
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
+
+  // High-performance image optimization (AVIF + WebP with mobile breakpoints).
+  // Custom loader is reserved for static export or subfolder basePath.
   images: {
-    loader: "custom",
-    loaderFile: "./image-loader.ts",
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [360, 480, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    ...(process.env.NEXT_STATIC_EXPORT === "true" || basePath
+      ? {
+          loader: "custom",
+          loaderFile: "./image-loader.ts",
+        }
+      : {}),
   },
 
   // Security & Crawler Headers

@@ -9,8 +9,9 @@ import { motion } from "framer-motion";
 import { ChevronDown, Menu, X, Phone, Globe, Calendar, Clock } from "lucide-react";
 import { services, site, socials } from "@/lib/site";
 import Button from "./Button";
+import dynamic from "next/dynamic";
 import SocialIcon from "./SocialIcon";
-import ConsultationModal from "./ConsultationModal";
+const ConsultationModal = dynamic(() => import("./ConsultationModal"), { ssr: false });
 import { trackEvent } from "@/lib/analytics";
 
 // "Please press me, please press me" enticing micro-motions for navbar CTA buttons

@@ -118,8 +118,8 @@ export default function ImageCarousel({ fill = false }: { fill?: boolean }) {
                   alt={slide.alt}
                   fill
                   priority={index === 0}
-                  loading={index === 0 ? undefined : "eager"}
-                  fetchPriority={index === 0 ? "high" : "auto"}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "low"}
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className={`object-cover ${slide.pos}`}
                   draggable={false}

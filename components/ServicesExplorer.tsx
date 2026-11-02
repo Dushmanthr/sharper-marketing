@@ -42,8 +42,9 @@ import {
   Link2,
   LineChart,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { services, type Service } from "@/lib/site";
-import ConsultationModal from "./ConsultationModal";
+const ConsultationModal = dynamic(() => import("./ConsultationModal"), { ssr: false });
 import Services3DHighlight from "./Services3DHighlight";
 import Stage3DHologram from "./Stage3DHologram";
 

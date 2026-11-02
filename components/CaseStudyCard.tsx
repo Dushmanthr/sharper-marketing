@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink, Play, Eye } from "lucide-react";
+import { ArrowRight, Play, Eye } from "lucide-react";
 import type { CaseStudy } from "@/lib/site";
 
 export default function CaseStudyCard({
@@ -98,7 +98,7 @@ export default function CaseStudyCard({
             ) : (
               <span className="flex items-center gap-1 text-[9px] font-semibold text-navy-500">
                 <Play className="h-2.5 w-2.5 text-orange-500 fill-orange-500" />
-                <span className="hidden xs:inline">Hover Preview</span>
+                <span className="hidden xs:inline">{study.demoUrl ? "Interactive Demo" : "Hover Preview"}</span>
               </span>
             )
           ) : hasScreenshotPan ? (
@@ -117,34 +117,9 @@ export default function CaseStudyCard({
         </div>
       </div>
 
-      {/* 2. Media Viewport: Live Web Demo (Before Click), Video, Pan, or Static */}
+      {/* 2. Media Viewport: Crisp Poster with Demo Badge, Video Hover, or Pan */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-navy-950">
-        {study.demoUrl ? (
-          /* Live Web Demo Sandbox Embedded at 50% Scale */
-          <div className="relative h-full w-full overflow-hidden bg-navy-950">
-            {/* Base Image Poster fallback */}
-            <Image
-              src={study.image}
-              alt={study.title}
-              fill
-              sizes="(max-width: 640px) 280px, (max-width: 1024px) 370px, 420px"
-              className="object-cover opacity-50"
-            />
-
-            {/* Live Web Page scaled to fill card frame */}
-            <iframe
-              src={study.demoUrl}
-              title={study.title}
-              loading="lazy"
-              tabIndex={-1}
-              aria-hidden="true"
-              className="absolute top-0 left-0 w-[200%] h-[200%] origin-top-left scale-50 border-0 pointer-events-none select-none transition-transform duration-500 group-hover:scale-[0.52]"
-            />
-
-            {/* Subtle Gradient Shadow at Bottom */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-navy-950/80 via-navy-950/30 to-transparent" />
-          </div>
-        ) : hasVideo ? (
+        {hasVideo ? (
           /* Mode A: Screen Recording Video (Only plays while hovered, resets on leave) */
           <>
             {/* Base Poster Screenshot */}
@@ -153,7 +128,7 @@ export default function CaseStudyCard({
               alt={study.title}
               fill
               sizes="(max-width: 640px) 280px, (max-width: 1024px) 370px, 420px"
-              className="object-cover"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
 
             {/* Video overlay, crossfades smoothly on hover */}
@@ -163,21 +138,20 @@ export default function CaseStudyCard({
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="none"
               onError={() => setVideoError(true)}
               className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
                 isHovered && isVideoPlaying ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
             />
 
-            {/* Subtle Idle Hover Cue */}
-            {!isHovered && (
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-navy-950/20 transition-opacity duration-300 group-hover:opacity-0">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-navy-900/70 text-white backdrop-blur-xs shadow-md">
-                  <Play className="h-4 w-4 ml-0.5 fill-white" />
-                </div>
+            {/* Subtle Idle Hover Cue / Interactive Badge */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-navy-950/20 transition-opacity duration-300 group-hover:opacity-0">
+              <div className="flex items-center gap-1.5 rounded-full border border-white/30 bg-navy-900/80 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-xs shadow-md">
+                <Play className="h-3 w-3 fill-orange-400 text-orange-400" />
+                <span>{study.demoUrl ? "Launch Demo" : "Hover Preview"}</span>
               </div>
-            )}
+            </div>
           </>
         ) : hasScreenshotPan ? (
           /* Mode B: Full-Page Web Screenshot Vertical Pan */
@@ -205,13 +179,20 @@ export default function CaseStudyCard({
           </div>
         ) : (
           /* Mode C: Standard High-Resolution Still Image Mockup */
-          <Image
-            src={study.image}
-            alt={study.title}
-            fill
-            sizes="(max-width: 640px) 280px, (max-width: 1024px) 370px, 420px"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <div className="relative h-full w-full">
+            <Image
+              src={study.image}
+              alt={study.title}
+              fill
+              sizes="(max-width: 640px) 280px, (max-width: 1024px) 370px, 420px"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            {study.demoUrl && (
+              <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded-full bg-navy-900/80 border border-white/20 px-2.5 py-1 text-[10px] font-semibold text-orange-400 backdrop-blur-xs">
+                Interactive Demo →
+              </div>
+            )}
+          </div>
         )}
       </div>
 
@@ -272,23 +253,9 @@ export default function CaseStudyCard({
             </Link>
           )}
 
-          {study.websiteUrl ? (
-            <a
-              href={study.websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-orange-600 hover:text-orange-700 hover:underline"
-              aria-label={`Visit live site for ${study.title}`}
-            >
-              <span>Live Site</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
-          ) : (
-            <span className="text-[10px] font-medium text-navy-400">
-              {study.clientOverview.timeframe}
-            </span>
-          )}
+          <span className="text-[10px] font-medium text-navy-400">
+            {study.clientOverview.timeframe}
+          </span>
         </div>
       </div>
     </motion.article>

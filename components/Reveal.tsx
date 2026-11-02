@@ -11,6 +11,8 @@ type RevealProps = {
   y?: number;
   className?: string;
   as?: "div" | "li" | "section" | "article" | "span" | "p";
+  /** Above the fold / critical content that must not be hidden on initial render */
+  priority?: boolean;
 };
 
 /**
@@ -25,11 +27,12 @@ export default function Reveal({
   y = 24,
   className,
   as = "div",
+  priority = false,
 }: RevealProps) {
   const reduce = useReducedMotion();
   const MotionTag = motion[as];
 
-  if (reduce) {
+  if (reduce || priority) {
     const Tag = as;
     return <Tag className={className}>{children}</Tag>;
   }
@@ -39,10 +42,10 @@ export default function Reveal({
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, margin: "0px 0px -40px 0px" }}
       transition={{
-        duration: 0.55,
-        delay: delay + index * 0.08,
+        duration: 0.45,
+        delay: delay + index * 0.06,
         ease: [0.22, 1, 0.36, 1],
       }}
     >

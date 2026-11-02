@@ -930,7 +930,7 @@ export const caseStudies: CaseStudy[] = [
       industry: "Historic Hospitality, Dining & Weddings",
       businessModel: "Country Hotel, Courtyard Restaurant & Barn Events",
       targetMarket: "Suffolk, Norfolk, London Getaways & Countryside Weddings",
-      timeframe: "4 Months",
+      timeframe: "1 Month",
     },
     challenge:
       "AURA Mayfair possessed world-class Michelin-calibre culinary mastery, but their static booking site suffered from a 78% bounce rate and failed to convey the sensory drama of their multi-course tasting experience. High-net-worth guests and international travellers were abandoning the reservation journey before selecting a date.",
@@ -989,7 +989,7 @@ export const caseStudies: CaseStudy[] = [
       industry: "Designer Furniture & Sustainable Living",
       businessModel: "Direct-to-Consumer (D2C) & Architectural Contracts",
       targetMarket: "UK, Scandinavia, Germany & North America",
-      timeframe: "6 Months",
+      timeframe: "1 Month",
     },
     challenge:
       "Selling bespoke £1,400+ designer lounge chairs online was hampered by customer hesitation around fabric textures and spatial proportions. Static flat photography resulted in high cart abandonment and costly return rates from customers surprised by colour finishes.",
@@ -1048,7 +1048,7 @@ export const caseStudies: CaseStudy[] = [
       industry: "Fitness & Athletic Performance",
       businessModel: "Premium Performance Gym, Personal Coaching & Digital Memberships",
       targetMarket: "Urban Professionals, Powerlifters & Conditioning Athletes",
-      timeframe: "6 Months",
+      timeframe: "1.5 Months",
     },
     challenge:
       "IRONPULSE built a world-class training facility with competition-spec Eleiko gear and recovery plunges, but their digital presence looked like a generic fitness brochure. Prospective members couldn't visualise gym floor congestion, understand training splits, or calculate prospective transformation timelines.",
