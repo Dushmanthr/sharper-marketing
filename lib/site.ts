@@ -96,6 +96,9 @@ export type PlatformGrowthDetail = {
   deliverables: string[];
   metricLabel: string;
   metricValue: string;
+  tacticsLabel?: string;
+  footerLabel?: string;
+  ctaText?: string;
 };
 
 export type SubService = {
@@ -398,33 +401,32 @@ export const services: Service[] = [
         icon: "Users",
         highlighted: true,
         badge: "New Service",
-       // platforms: ["LinkedIn", "Facebook", "Instagram", "TikTok"],
         subServiceId: "followers-increasing",
       },
       {
         title: "Social Media Strategy",
-        description: "Identify suitable platforms, audience priorities, content themes, and commercial objectives.",
-        icon: "Target",
+        description:
+          "Identify suitable platforms, audience priorities, content themes, and commercial objectives.",
       },
       {
         title: "Content Planning and Creation",
-        description: "Develop content calendars, compelling captions, creative briefs, and platform-appropriate graphics and copy.",
-        icon: "PenTool",
+        description:
+          "Develop content calendars, compelling captions, creative briefs, and platform-appropriate graphics and copy.",
       },
       {
         title: "Social Media Management",
-        description: "Support publishing, scheduling, profile consistency, and agreed community management activities.",
-        icon: "MessageCircle",
+        description:
+          "Support publishing, scheduling, profile consistency, and agreed community management activities.",
       },
       {
         title: "Campaigns and Promotions",
-        description: "Plan social content around product launches, services, seasonal campaigns, and key business announcements.",
-        icon: "Rocket",
+        description:
+          "Plan social content around product launches, services, seasonal campaigns, and key business announcements.",
       },
       {
         title: "Performance Analysis",
-        description: "Review available metrics such as reach, engagement, clicks, and conversions to identify what resonates.",
-        icon: "Activity",
+        description:
+          "Review available metrics such as reach, engagement, clicks, and conversions to identify what resonates.",
       },
     ],
     subServices: [
@@ -441,69 +443,81 @@ export const services: Service[] = [
             name: "LinkedIn",
             slug: "linkedin",
             shortName: "LI",
-            badge: "B2B & Executive Authority",
-            focus: "Decision-Maker Reach & Professional Follower Scale",
+            badge: "Professional Branding & B2B Growth",
+            focus: "Build Professional Authority and Meaningful Business Connections",
             strategy:
-              "Deploy executive thought leadership, data-driven industry insights, and targeted B2B growth frameworks to attract founders, C-suite executives, and enterprise decision-makers who follow and do business with your brand.",
+              "Position your business as a credible voice in its industry through valuable insights, expert-led content, and a professional presence that helps build relationships with potential clients, partners, and decision-makers.",
             deliverables: [
-              "Company page and executive profile follower growth architecture",
-              "Thought-leadership carousel and long-form post frameworks",
-              "High-intent B2B audience targeting and industry hashtag strategy",
-              "InMail and executive network connection amplification loops",
+              "Optimise company pages and professional profiles to communicate value clearly",
+              "Create thought-leadership posts, industry insights, and case-study content",
+              "Develop content that encourages professional discussions and relevant connections",
+              "Track audience engagement, company-page visits, and business enquiries",
             ],
-            metricLabel: "B2B Intent",
-            metricValue: "Decision-Maker Scale",
+            metricLabel: "Core Focus",
+            metricValue: "Business Credibility",
+            tacticsLabel: "How We Help",
+            footerLabel: "Professional Authority & B2B Leads",
+            ctaText: "Grow on LinkedIn",
           },
           {
             name: "Facebook",
             slug: "facebook",
             shortName: "FB",
-            badge: "Community & Trust",
-            focus: "Page Follower Scale & Community Building",
+            badge: "Community & Customer Relationships",
+            focus: "Build a Community That Grows with Your Business",
             strategy:
-              "Leverage Facebook's granular demographic graph and group ecosystems to attract high-intent followers who actively engage with your posts and business announcements.",
+              "Create a stronger Facebook presence through engaging content, relevant audience targeting, and meaningful conversations that help your business build trust and stay connected with potential customers.",
             deliverables: [
-              "Targeted Meta Ads follower campaigns with cost-per-follower optimization",
-              "Local and international audience interest mapping",
-              "Community group leadership and cross-post amplification",
-              "Zero bot policy: 100% genuine user profiles",
+              "Create engaging posts, graphics, videos, and business updates",
+              "Reach relevant audiences through targeted Facebook and Meta advertising",
+              "Strengthen community engagement through comments, conversations, and group participation",
+              "Monitor page performance and refine content based on audience response",
             ],
-            metricLabel: "Follower Quality",
-            metricValue: "High-Intent & Real",
+            metricLabel: "Core Focus",
+            metricValue: "Community Growth",
+            tacticsLabel: "How We Help",
+            footerLabel: "Community & Brand Awareness",
+            ctaText: "Grow on Facebook",
           },
           {
             name: "Instagram",
             slug: "instagram",
             shortName: "IG",
-            badge: "Visual Reach & Reels",
-            focus: "Reels Viral Velocity & High-Aesthetic Grid Authority",
+            badge: "Visual Storytelling & Engagement",
+            focus: "Turn Your Content into a Brand People Remember",
             strategy:
-              "Harness Instagram's recommendation algorithm with trending Reels audio, aesthetic grid curation, and strategic hashtag clusters to attract daily profile visitors and convert them into followers.",
+              "Showcase your brand through compelling visuals, engaging Reels, and consistent storytelling that attracts the right audience and encourages people to explore your products or services.",
             deliverables: [
-              "Trending Reels content pacing and hook optimization",
-              "Curated bio and highlight funnels engineered for follow conversion",
-              "Strategic influencer co-collaborations and audio trend riding",
-              "Consistent follower retention through engaging Stories and Carousels",
+              "Design cohesive posts, carousels, Stories, and branded graphics",
+              "Create Reels with strong opening hooks and clear messages",
+              "Improve profile presentation, bio messaging, and calls to action",
+              "Plan collaborations and track reach, engagement, profile visits, and enquiries",
             ],
-            metricLabel: "Engagement Rate",
-            metricValue: "3.2x Average",
+            metricLabel: "Core Focus",
+            metricValue: "Brand Discovery",
+            tacticsLabel: "How We Help",
+            footerLabel: "Visual Identity & Audience Growth",
+            ctaText: "Grow on Instagram",
           },
           {
             name: "TikTok",
             slug: "tiktok",
             shortName: "TikTok",
-            badge: "Viral Discovery",
-            focus: "FYP Algorithm Acceleration & Trend Capitalization",
+            badge: "Short-Form Video & Discovery",
+            focus: "Get Your Brand Noticed Through Short-Form Video",
             strategy:
-              "Engineer short-form video hooks designed to trigger TikTok's For You Page (FYP) algorithm, driving rapid organic discoverability and explosive follower increases among Gen Z and Millennial demographics.",
+              "Turn ideas, expertise, products, and everyday business moments into engaging short videos designed to capture attention, communicate value, and introduce your brand to new audiences.",
             deliverables: [
-              "Hook-first 7-to-15 second video storytelling frameworks",
-              "Real-time trending sound, meme, and challenge adaptation",
-              "Comment section engagement loops that boost algorithmic distribution",
-              "Audience transition funnels from viral viewers to active followers",
+              "Develop video concepts, scripts, hooks, and storyboards",
+              "Create relatable videos, product showcases, and behind-the-scenes content",
+              "Adapt relevant trends to your brand and target audience",
+              "Review watch time, completion rates, engagement, and profile activity to improve future content",
             ],
-            metricLabel: "Discovery Velocity",
-            metricValue: "Rapid FYP Scale",
+            metricLabel: "Core Focus",
+            metricValue: "Content Reach",
+            tacticsLabel: "How We Help",
+            footerLabel: "Video Discovery & Brand Awareness",
+            ctaText: "Grow on TikTok",
           },
         ],
         growthPillars: [

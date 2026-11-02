@@ -38,7 +38,7 @@ export default function FollowersGrowthSubService({
 
   return (
     <section
-      id="followers-growth"
+      id={subService.id || "followers-growth"}
       className="relative scroll-mt-24 overflow-hidden rounded-3xl sm:rounded-4xl border-2 border-orange-200/90 bg-linear-to-b from-orange-50/40 via-white to-amber-50/20 p-5 xs:p-6 sm:p-8 lg:p-10 2xl:p-12 shadow-xl shadow-orange-500/5 transition-all"
     >
       {/* Background glow orb accents */}
@@ -87,8 +87,8 @@ export default function FollowersGrowthSubService({
               <SocialIcon name="instagram" className="h-3.5 w-3.5 text-rose-500" />
               <span>Instagram</span>
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-slate-900 px-3 py-1 text-xs font-semibold text-white whitespace-nowrap">
-              <SocialIcon name="tiktok" className="h-3.5 w-3.5 text-cyan-400" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-black px-3 py-1 text-xs font-semibold text-white whitespace-nowrap">
+              <SocialIcon name="tiktok" className="h-3.5 w-3.5" />
               <span>TikTok</span>
             </span>
           </div>
@@ -150,11 +150,11 @@ export default function FollowersGrowthSubService({
             onClick={() => setActiveTab("tiktok")}
             className={`inline-flex items-center gap-1.5 rounded-xl px-3 sm:px-3.5 py-2 text-xs font-bold transition-all ${
               activeTab === "tiktok"
-                ? "bg-slate-900 text-white shadow-xs"
-                : "text-navy-700 hover:text-slate-900 hover:bg-white/80"
+                ? "bg-black text-white shadow-xs"
+                : "text-navy-700 hover:text-black hover:bg-white/80"
             }`}
           >
-            <SocialIcon name="tiktok" className="h-3.5 w-3.5 text-cyan-400" />
+            <SocialIcon name="tiktok" className="h-3.5 w-3.5" />
             <span>TikTok</span>
           </button>
         </div>
@@ -184,7 +184,7 @@ export default function FollowersGrowthSubService({
                 ? "bg-linear-to-r from-purple-600 via-rose-500 to-amber-500 text-white"
                 : isLI
                   ? "bg-[#0077b5] text-white"
-                  : "bg-slate-900 text-white";
+                  : "bg-black text-white";
 
             const accentBorder = isFB
               ? "border-blue-200 hover:border-blue-400"
@@ -192,7 +192,7 @@ export default function FollowersGrowthSubService({
                 ? "border-rose-200 hover:border-rose-400"
                 : isLI
                   ? "border-sky-200 hover:border-sky-400"
-                  : "border-slate-200 hover:border-slate-500";
+                  : "border-slate-200 hover:border-black";
 
             return (
               <motion.div
@@ -213,7 +213,7 @@ export default function FollowersGrowthSubService({
                       >
                         <SocialIcon
                           name={platform.slug}
-                          className={`h-5 w-5 ${isTikTok ? "text-cyan-300" : "text-white"}`}
+                          className="h-6 w-6"
                         />
                       </span>
                       <div>
@@ -249,7 +249,7 @@ export default function FollowersGrowthSubService({
                   {/* Growth Deliverables Checklist - 2-column grid on cards with room */}
                   <div className="mt-5 space-y-2.5">
                     <p className="text-[11px] font-bold uppercase tracking-wider text-navy-500">
-                      Platform Execution Tactics:
+                      {platform.tacticsLabel || "Platform Execution Tactics:"}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {platform.deliverables.map((item, i) => (
@@ -265,7 +265,7 @@ export default function FollowersGrowthSubService({
                                   ? "text-rose-500"
                                   : isLI
                                     ? "text-[#0077b5]"
-                                    : "text-slate-900"
+                                    : "text-[#fe2c55]"
                             }`}
                           />
                           <span className="leading-snug font-medium">{item}</span>
@@ -276,16 +276,16 @@ export default function FollowersGrowthSubService({
                 </div>
 
                 {/* Platform Card Footer */}
-                <div className="mt-6 pt-4 border-t border-navy-50 flex items-center justify-between gap-3">
+                <div className="mt-6 pt-4 border-t border-navy-50 flex flex-wrap xs:flex-nowrap items-center justify-between gap-3">
                   <span className="text-xs font-semibold text-navy-600">
-                    Targeted {platform.name} Scaling
+                    {platform.footerLabel || `Targeted ${platform.name} Scaling`}
                   </span>
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 hover:bg-orange-500 text-orange-700 hover:text-white border border-orange-200 px-3.5 py-1.5 text-xs font-bold transition-all shadow-2xs"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 hover:bg-orange-500 text-orange-700 hover:text-white border border-orange-200 px-3.5 py-1.5 text-xs font-bold transition-all shadow-2xs shrink-0"
                   >
-                    <span>Grow {platform.shortName}</span>
+                    <span>{platform.ctaText || `Grow ${platform.shortName}`}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
