@@ -54,11 +54,16 @@ export default function CaseStudyModal({
     }
   }, [isOpen]);
 
-  // Re-lock body scroll if consultation modal closes while case study modal is still open
+  // Manage body scroll locking: lock when open, guarantee unlock when closed or unmounted
   useEffect(() => {
-    if (isOpen && !isConsultationOpen) {
+    if (isOpen) {
       document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen, isConsultationOpen]);
 
   const activeStudy = caseStudies[currentIndex] || caseStudies[0];
@@ -88,7 +93,7 @@ export default function CaseStudyModal({
     if (onSelectStudy) onSelectStudy(caseStudies[nextIdx]);
   };
 
-  // Close on Escape & Arrow keys navigation & Lock body scroll
+  // Close on Escape & Arrow keys navigation
   useEffect(() => {
     if (!isOpen) return;
 
@@ -106,12 +111,8 @@ export default function CaseStudyModal({
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = originalOverflow;
     };
   }, [isOpen, currentIndex, onClose, isConsultationOpen]);
 
