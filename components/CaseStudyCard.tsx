@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink, Play, Eye } from "lucide-react";
+import { ArrowRight, Play, Eye } from "lucide-react";
 import type { CaseStudy } from "@/lib/site";
 
 export default function CaseStudyCard({
@@ -253,23 +253,9 @@ export default function CaseStudyCard({
             </Link>
           )}
 
-          {study.websiteUrl ? (
-            <a
-              href={study.websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 text-[11px] font-medium text-orange-600 hover:text-orange-700 hover:underline"
-              aria-label={`Visit live site for ${study.title}`}
-            >
-              <span>Live Site</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
-          ) : (
-            <span className="text-[10px] font-medium text-navy-400">
-              {study.clientOverview.timeframe}
-            </span>
-          )}
+          <span className="text-[10px] font-medium text-navy-400">
+            {study.clientOverview.timeframe}
+          </span>
         </div>
       </div>
     </motion.article>
