@@ -87,6 +87,33 @@ export default function Header() {
     return () => clearInterval(interval);
   }, []);
 
+  // Auto-open consultation modal smoothly on very first visit with zero layout jank
+  useEffect(() => {
+    try {
+      const hasSeenModal = localStorage.getItem("has_seen_consultation_modal");
+      if (!hasSeenModal) {
+        // Mark immediately to prevent duplicate triggers across tabs or rapid reloads
+        localStorage.setItem("has_seen_consultation_modal", "true");
+
+        // Do not interrupt visitors who landed directly on the /contact page
+        if (pathname === "/contact") return;
+
+        // Preload the dynamic modal component chunk immediately
+        import("./ConsultationModal");
+
+        // Open promptly within 1s (~700ms) for a fast, responsive arrival
+        const timer = setTimeout(() => {
+          setModalTab("consultation");
+          setIsModalOpen(true);
+        }, 700);
+
+        return () => clearTimeout(timer);
+      }
+    } catch {
+      // Gracefully handle restricted browser environments (e.g. private browsing storage limits)
+    }
+  }, []);
+
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
