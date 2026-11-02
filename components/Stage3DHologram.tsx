@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Stage3DHologramProps {
   activeIndex: number;
   className?: string;
 }
 
-// Global script loader for Three.js
+// Global script loader for Three.js (lazy loaded on desktop only when visible)
 function loadThreeJs(): Promise<any> {
   if (typeof window === "undefined") return Promise.reject();
   if ((window as any).THREE) return Promise.resolve((window as any).THREE);
@@ -33,8 +33,8 @@ function loadThreeJs(): Promise<any> {
 /**
  * Stage3DHologram
  * - Elegant 3D rotating geometric emblem in theme colors (Orange #f97316 & Amber #f59e0b)
- * - Self-manages its WebGL canvas and safely handles WebGL initialization
- * - Subtle, performant, and 100% compliant with theme colors.
+ * - Lightweight SVG vector fallback for mobile devices (0KB external JS download)
+ * - Dynamic Three.js initialization on desktop only when scrolled into view.
  */
 export default function Stage3DHologram({
   activeIndex,
@@ -48,170 +48,163 @@ export default function Stage3DHologram({
     const container = containerRef.current;
     if (!container) return;
 
+    // On mobile screens (< 1024px), skip external 600KB Three.js download entirely to keep mobile performance 90+
+    if (window.innerWidth < 1024) return;
+
     let isDisposed = false;
     let animId: number | null = null;
-    let isVisible = true;
+    let isVisible = false;
     let cleanupThree: (() => void) | null = null;
+    let hasLoaded = false;
+
+    const startThree = () => {
+      if (hasLoaded || isDisposed) return;
+      hasLoaded = true;
+
+      loadThreeJs()
+        .then((THREE) => {
+          if (isDisposed || !container) return;
+
+          try {
+            let width = container.clientWidth || 240;
+            let height = container.clientHeight || 240;
+
+            const renderer = new THREE.WebGLRenderer({
+              alpha: true,
+              antialias: true,
+              powerPreference: "high-performance",
+            });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.setClearColor(0x000000, 0);
+
+            const domElement = renderer.domElement;
+            domElement.className = "h-full w-full pointer-events-none relative z-10";
+            container.appendChild(domElement);
+
+            const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+            camera.position.set(0, 0, 8.5);
+
+            const scene = new THREE.Scene();
+            const emblemGroup = new THREE.Group();
+            scene.add(emblemGroup);
+
+            const COLOR_ORANGE = 0xf97316;
+            const COLOR_AMBER = 0xf59e0b;
+
+            // Outer wireframe Icosahedron
+            const icoGeo = new THREE.IcosahedronGeometry(2.3, 1);
+            const icoMat = new THREE.MeshBasicMaterial({
+              color: COLOR_ORANGE,
+              wireframe: true,
+              transparent: true,
+              opacity: 0.55,
+            });
+            const icoMesh = new THREE.Mesh(icoGeo, icoMat);
+            emblemGroup.add(icoMesh);
+
+            // Inner wireframe Octahedron
+            const octGeo = new THREE.OctahedronGeometry(1.4, 0);
+            const octMat = new THREE.MeshBasicMaterial({
+              color: COLOR_AMBER,
+              wireframe: true,
+              transparent: true,
+              opacity: 0.85,
+            });
+            const octMesh = new THREE.Mesh(octGeo, octMat);
+            emblemGroup.add(octMesh);
+
+            // Orbit Ring
+            const ringGeo = new THREE.TorusGeometry(3.1, 0.02, 16, 64);
+            const ringMat = new THREE.MeshBasicMaterial({
+              color: COLOR_ORANGE,
+              transparent: true,
+              opacity: 0.35,
+            });
+            const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+            ringMesh.rotation.x = Math.PI / 3;
+            emblemGroup.add(ringMesh);
+
+            // Second orthogonal tilted ring
+            const orbitGeo = new THREE.TorusGeometry(3.1, 0.02, 16, 64);
+            const orbitMat = new THREE.MeshBasicMaterial({
+              color: COLOR_AMBER,
+              transparent: true,
+              opacity: 0.35,
+            });
+            const orbitMesh = new THREE.Mesh(orbitGeo, orbitMat);
+            orbitMesh.rotation.y = Math.PI / 3;
+            emblemGroup.add(orbitMesh);
+
+            const handleResize = () => {
+              if (!container) return;
+              const w = container.clientWidth || 240;
+              const h = container.clientHeight || 240;
+              camera.aspect = w / h;
+              camera.updateProjectionMatrix();
+              renderer.setSize(w, h);
+            };
+
+            const resizeObs = new ResizeObserver(handleResize);
+            resizeObs.observe(container);
+
+            let clock = 0;
+            const animate = () => {
+              if (isDisposed) return;
+
+              if (isVisible) {
+                clock += 0.015;
+
+                // Rotations
+                icoMesh.rotation.x += 0.005;
+                icoMesh.rotation.y += 0.007;
+
+                octMesh.rotation.x -= 0.008;
+                octMesh.rotation.y -= 0.009;
+
+                ringMesh.rotation.z += 0.006;
+                orbitMesh.rotation.z -= 0.006;
+
+                // Subtle floating breathing pulsation
+                const pulse = 1 + Math.sin(clock) * 0.05;
+                emblemGroup.scale.set(pulse, pulse, pulse);
+
+                renderer.render(scene, camera);
+              }
+
+              animId = requestAnimationFrame(animate);
+            };
+
+            animate();
+
+            cleanupThree = () => {
+              resizeObs.disconnect();
+              if (domElement.parentNode === container) {
+                container.removeChild(domElement);
+              }
+              renderer.dispose();
+              icoGeo.dispose();
+              octGeo.dispose();
+              ringGeo.dispose();
+              orbitGeo.dispose();
+            };
+          } catch (e) {
+            console.warn("Stage 3D hologram WebGL skipped:", e);
+          }
+        })
+        .catch(() => {});
+    };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
+        if (entry.isIntersecting) {
+          startThree();
+        }
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 }
     );
     observer.observe(container);
-
-    loadThreeJs()
-      .then((THREE) => {
-        if (isDisposed || !container) return;
-
-        try {
-          let width = container.clientWidth || 240;
-          let height = container.clientHeight || 240;
-
-          const renderer = new THREE.WebGLRenderer({
-            alpha: true,
-            antialias: true,
-            powerPreference: "high-performance",
-          });
-          renderer.setSize(width, height);
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-          renderer.setClearColor(0x000000, 0);
-
-          const domElement = renderer.domElement;
-          domElement.className = "h-full w-full pointer-events-none";
-          container.appendChild(domElement);
-
-          const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-          camera.position.set(0, 0, 8.5);
-
-          const scene = new THREE.Scene();
-          const emblemGroup = new THREE.Group();
-          scene.add(emblemGroup);
-
-          const COLOR_ORANGE = 0xf97316;
-          const COLOR_AMBER = 0xf59e0b;
-
-          // Outer wireframe Icosahedron
-          const icoGeo = new THREE.IcosahedronGeometry(2.3, 1);
-          const icoMat = new THREE.MeshBasicMaterial({
-            color: COLOR_ORANGE,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.35,
-          });
-          const outerIco = new THREE.Mesh(icoGeo, icoMat);
-          emblemGroup.add(outerIco);
-
-          // Inner wireframe Octahedron
-          const octGeo = new THREE.OctahedronGeometry(1.2, 0);
-          const octMat = new THREE.MeshBasicMaterial({
-            color: COLOR_AMBER,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.55,
-          });
-          const innerOct = new THREE.Mesh(octGeo, octMat);
-          emblemGroup.add(innerOct);
-
-          // Concentric orbit ring
-          const ringGeo = new THREE.TorusGeometry(3.1, 0.03, 16, 48);
-          const ringMat = new THREE.MeshBasicMaterial({
-            color: COLOR_ORANGE,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.25,
-          });
-          const orbitRing = new THREE.Mesh(ringGeo, ringMat);
-          orbitRing.rotation.x = Math.PI / 3;
-          emblemGroup.add(orbitRing);
-
-          // Floating orbiting vertices
-          const orbitVerticesCount = 18;
-          const orbitGeo = new THREE.BufferGeometry();
-          const orbitPos = new Float32Array(orbitVerticesCount * 3);
-          for (let i = 0; i < orbitVerticesCount; i++) {
-            const angle = (i / orbitVerticesCount) * Math.PI * 2;
-            orbitPos[i * 3] = Math.cos(angle) * 3.1;
-            orbitPos[i * 3 + 1] = Math.sin(angle) * 3.1 * Math.cos(Math.PI / 3);
-            orbitPos[i * 3 + 2] = Math.sin(angle) * 3.1 * Math.sin(Math.PI / 3);
-          }
-          orbitGeo.setAttribute("position", new THREE.BufferAttribute(orbitPos, 3));
-          const orbitMat = new THREE.PointsMaterial({
-            size: 0.18,
-            color: COLOR_AMBER,
-            transparent: true,
-            opacity: 0.75,
-          });
-          const orbitPoints = new THREE.Points(orbitGeo, orbitMat);
-          emblemGroup.add(orbitPoints);
-
-          // Resize
-          const handleResize = () => {
-            if (!container || !renderer || !camera) return;
-            width = container.clientWidth || 240;
-            height = container.clientHeight || 240;
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-            renderer.setSize(width, height);
-          };
-          const resizeObs = new ResizeObserver(handleResize);
-          resizeObs.observe(container);
-
-          // Track active index change for dynamic spin acceleration
-          let lastActive = activeIndexRef.current;
-          let spinBoost = 0;
-
-          const clock = new THREE.Clock();
-          const animate = () => {
-            if (isDisposed) return;
-
-            if (isVisible) {
-              const time = clock.getElapsedTime();
-
-              if (activeIndexRef.current !== lastActive) {
-                lastActive = activeIndexRef.current;
-                spinBoost = 0.08; // smooth energy kick on service switch
-              }
-
-              spinBoost *= 0.94; // damp spin boost
-              const currentSpin = 0.006 + spinBoost;
-
-              outerIco.rotation.y += currentSpin;
-              outerIco.rotation.x += currentSpin * 0.6;
-
-              innerOct.rotation.y -= currentSpin * 1.4;
-              innerOct.rotation.z += currentSpin * 0.8;
-
-              orbitRing.rotation.z += currentSpin * 0.8;
-              orbitPoints.rotation.z += currentSpin * 0.8;
-
-              emblemGroup.position.y = Math.sin(time * 0.8) * 0.15;
-
-              renderer.render(scene, camera);
-            }
-
-            animId = requestAnimationFrame(animate);
-          };
-
-          animate();
-
-          cleanupThree = () => {
-            resizeObs.disconnect();
-            if (domElement.parentNode === container) {
-              container.removeChild(domElement);
-            }
-            renderer.dispose();
-            icoGeo.dispose();
-            octGeo.dispose();
-            ringGeo.dispose();
-            orbitGeo.dispose();
-          };
-        } catch (e) {
-          console.warn("Stage 3D hologram WebGL skipped:", e);
-        }
-      })
-      .catch(() => {});
 
     return () => {
       isDisposed = true;
@@ -226,6 +219,47 @@ export default function Stage3DHologram({
       ref={containerRef}
       className={`pointer-events-none absolute overflow-hidden ${className}`}
       aria-hidden="true"
-    />
+    >
+      {/* Lightweight hardware-accelerated CSS/SVG vector geometric hologram (active on mobile & before Three.js loads) */}
+      <svg
+        viewBox="0 0 200 200"
+        className="absolute inset-0 h-full w-full opacity-60 animate-[spin_40s_linear_infinite]"
+      >
+        <circle
+          cx="100"
+          cy="100"
+          r="80"
+          fill="none"
+          stroke="#f97316"
+          strokeWidth="1"
+          strokeDasharray="4 6"
+          opacity="0.4"
+        />
+        <circle
+          cx="100"
+          cy="100"
+          r="60"
+          fill="none"
+          stroke="#f59e0b"
+          strokeWidth="1"
+          opacity="0.5"
+        />
+        <polygon
+          points="100,30 160,140 40,140"
+          fill="none"
+          stroke="#f97316"
+          strokeWidth="1.5"
+          opacity="0.6"
+        />
+        <polygon
+          points="100,170 40,60 160,60"
+          fill="none"
+          stroke="#f59e0b"
+          strokeWidth="1.5"
+          opacity="0.6"
+        />
+        <circle cx="100" cy="100" r="8" fill="#f97316" opacity="0.8" />
+      </svg>
+    </div>
   );
 }

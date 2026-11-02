@@ -175,20 +175,20 @@ export default function Home() {
 
       {/* 01. Hero Section — Recommended Headline & Positioning from Management Doc */}
       <CurvedHero media={<ImageCarousel fill />}>
-        <Reveal>
+        <Reveal priority>
           <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold text-orange-300 backdrop-blur-xs">
             <Globe2 className="h-3.5 w-3.5" /> UK-Based Consultancy · Serving UK & International Clients
           </div>
         </Reveal>
 
-        <Reveal delay={0.05}>
+        <Reveal priority>
           <h1 className="mt-4 sm:mt-5 text-3xl xs:text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-bold leading-[1.12] tracking-tight">
             Digital Marketing That{" "}
             <span className="text-orange-400">Moves Your Business Forward</span>
           </h1>
         </Reveal>
 
-        <Reveal delay={0.1}>
+        <Reveal priority>
           <p className="mt-4 sm:mt-5 text-sm xs:text-base sm:text-lg leading-relaxed text-navy-100">
             Sharper Labs Marketing is a UK-based digital marketing consultancy helping
             businesses build stronger brands, reach the right audiences, and achieve sustainable
@@ -199,7 +199,7 @@ export default function Home() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.15}>
+        <Reveal priority>
           <div className="mt-6 sm:mt-8 flex flex-wrap gap-2.5 sm:gap-3">
             <Button href="/services" variant="primary" size="lg">
               Explore Our Services <ArrowRight className="h-4 w-4" />
@@ -217,7 +217,7 @@ export default function Home() {
         </Reveal>
 
         {/* Live Trust Metrics */}
-        <Reveal delay={0.2}>
+        <Reveal priority>
           <div className="mt-8 sm:mt-10 grid grid-cols-3 gap-2 sm:gap-4 border-t border-white/10 pt-5 sm:pt-6">
             <div>
               <span className="font-display text-lg xs:text-2xl lg:text-3xl font-bold text-white">6 Core</span>

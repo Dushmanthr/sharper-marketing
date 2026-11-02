@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutGrid, MoveHorizontal } from "lucide-react";
+import dynamic from "next/dynamic";
 import { caseStudies, type CaseStudy } from "@/lib/site";
 import CaseStudyCard from "./CaseStudyCard";
-import CaseStudyModal from "./CaseStudyModal";
+
+const CaseStudyModal = dynamic(() => import("./CaseStudyModal"), { ssr: false });
 
 const categories = [
   { id: "all", label: "All Sectors" },
