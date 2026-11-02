@@ -40,6 +40,33 @@ const nextConfig: NextConfig = {
     loader: "custom",
     loaderFile: "./image-loader.ts",
   },
+
+  // Security & Crawler Headers
+  async headers() {
+    if (process.env.NEXT_STATIC_EXPORT === "true") return [];
+    return [
+      {
+        source: "/admin/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+        ],
+      },
+      {
+        source: "/api/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+        ],
+      },
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

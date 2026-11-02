@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -22,8 +22,20 @@ const sora = Sora({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#0B1528",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
+  alternates: {
+    canonical: site.url,
+  },
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   title: {
     default: "Sharper Labs Marketing | UK & International Digital Marketing Consultancy",
     template: "%s | Sharper Labs Marketing",
