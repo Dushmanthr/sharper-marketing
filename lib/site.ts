@@ -4,13 +4,33 @@
  * Imported by components, pages, SEO helpers and JSON-LD builders.
  */
 
+function resolveSiteUrl(): string {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  // 1. If explicit valid production/staging URL is set (not localhost), use it
+  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
+    return envUrl;
+  }
+  // 2. In production builds/deployments, guard against localhost leaking into public sitemap & metadata
+  if (process.env.NODE_ENV === "production") {
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+      return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    }
+    if (process.env.VERCEL_URL) {
+      return `https://${process.env.VERCEL_URL}`;
+    }
+    return "https://sharper-marketing-tau.vercel.app";
+  }
+  // 3. In local development, respect whatever env is configured (or fallback to localhost)
+  return envUrl || "http://localhost:3000";
+}
+
 export const site = {
   name: "Sharper Labs Marketing",
   legalName: "Sharper Labs Marketing Consultancy",
   tagline: "Digital Marketing That Moves Your Business Forward",
   shortDescription:
     "Sharper Labs Marketing is a UK-based digital marketing consultancy serving UK and international clients. We build stronger brands, reach the right audiences, and achieve sustainable growth through brand strategy, web development, paid advertising, social media, data analysis, and SEO.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://dev.sharper-labs.com/marketing",
+  url: resolveSiteUrl(),
   email: "marketing@sharper-labs.com",
   phone: "0203 8193999",
   phoneIntl: "+44 (0)203 8193999",
