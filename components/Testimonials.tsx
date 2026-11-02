@@ -12,76 +12,125 @@ import { motion } from "framer-motion";
 
 export type Testimonial = {
   quote: string;
+  body?: string;
   role: string;
   company: string;
   location: string;
   metric?: string;
   service?: string;
+  avatarLabel?: string;
+  focus?: string;
 };
 
 export const testimonials: Testimonial[] = [
   {
-    quote:
-      "Sharper Labs Marketing has been immensely supportive in integrating the latest digital marketing techniques with traditional methods to enhance our operations. They produced refined campaigns and strategies to improve our customer experience, and helped drive real growth and a high return on investment. Thank you.",
-    role: "Head of Marketing",
-    company: "UK Retail Brand",
-    location: "London, UK",
-    metric: "+184% Online Enquiries",
-    service: "Brand Strategy & PPC",
+    quote: "Our website finally communicates the true value of our business.",
+    body: "Sharper Labs helped us bring our expertise, services, and brand message together in a way that reflects who we are as a business. Our digital presence now has a clearer direction and a more professional feel.",
+    role: "Customer 01",
+    company: "Brand Value",
+    location: "Verified Client",
+    avatarLabel: "C01",
+    service: "Website positioning & credibility",
+    focus: "Website positioning and brand credibility",
   },
   {
-    quote:
-      "Their team rebuilt our website and took over our social media, and the difference has been remarkable. Traffic and enquiries are both up, and the reporting is clear enough that we finally understand what's working and why.",
-    role: "Managing Director",
-    company: "Professional Services Practice",
-    location: "St Albans & International",
-    metric: "+214% Inbound Leads",
-    service: "Web Design & Social Media",
+    quote: "Sharper Labs helped us turn our digital presence into a growth opportunity.",
+    body: "Their strategic approach helped us align our website, content, and marketing activities with our business goals. We now have a clearer plan for reaching the right audience and developing new opportunities.",
+    role: "Customer 02",
+    company: "Business Growth",
+    location: "Verified Client",
+    avatarLabel: "C02",
+    service: "Business development & strategy",
+    focus: "Business development and digital strategy",
   },
   {
-    quote:
-      "The social media follower growth Sharper Labs delivered across Instagram, TikTok and Facebook paid for itself within months. They researched everything properly, consistently expanded our reach, and were always transparent about performance.",
-    role: "Founder & CEO",
-    company: "Consumer E-commerce Brand",
-    location: "UK & European Markets",
-    metric: "+150K New Followers",
-    service: "Social Media Followers Growth",
+    quote: "Our digital journey is now built around attracting the right customers.",
+    body: "Sharper Labs helped us think more strategically about how potential customers discover our services and move towards making an enquiry. Their recommendations gave us a more focused approach to lead generation.",
+    role: "Customer 03",
+    company: "Lead Generation",
+    location: "Verified Client",
+    avatarLabel: "C03",
+    service: "Qualified leads & journeys",
+    focus: "Qualified leads and customer journeys",
   },
   {
-    quote:
-      "For a high-value advisory practice, finding an agency that understands E-E-A-T and technical SEO was rare. Sharper Labs delivered top-3 rankings across our key commercial terms and attracted genuine enterprise inquiries.",
-    role: "Partner",
-    company: "Clinical Advisory Practice",
-    location: "UK & Middle East",
-    metric: "+310% Consultation Requests",
-    service: "Organic SEO & Content Strategy",
+    quote: "Sharper Labs gave our business a clearer path to online visibility.",
+    body: "From website content to organic search opportunities, their team helped us understand where to focus our efforts. We now have a more structured approach to strengthening our search presence over time.",
+    role: "Customer 04",
+    company: "Search Visibility",
+    location: "Verified Client",
+    avatarLabel: "C04",
+    service: "SEO & discoverability",
+    focus: "SEO and discoverability",
   },
   {
-    quote:
-      "Sharper Labs transformed our digital positioning completely. We went from being viewed as a local firm to competing and winning cross-border contracts across Europe. Their technical execution and international SEO were exceptional.",
-    role: "Managing Director",
-    company: "Supply Chain & Tech Advisory",
-    location: "London & Frankfurt",
-    metric: "+214% Enterprise RFPs",
-    service: "International SEO & Web Dev",
+    quote: "Every part of our website now has a clearer purpose.",
+    body: "Sharper Labs helped us look at our website from the visitor’s perspective. The recommendations focused on clearer messaging, easier navigation, and a more intuitive journey towards our key business goals.",
+    role: "Customer 05",
+    company: "Website Experience",
+    location: "Verified Client",
+    avatarLabel: "C05",
+    service: "UX/UI & conversion experience",
+    focus: "UX/UI and conversion experience",
   },
   {
-    quote:
-      "Restructuring our paid campaigns and conversion funnels gave us immediate clarity on acquisition costs. They eliminated wasteful ad spend and delivered a 3.8x ROAS across UK and overseas markets.",
-    role: "E-Commerce Director",
-    company: "Sustainable Consumer Goods",
-    location: "UK & GCC Markets",
-    metric: "3.8x Return on Ad Spend",
-    service: "PPC & Data Analysis",
+    quote: "Our content now reflects our brand, our expertise, and our ambitions.",
+    body: "Sharper Labs helped us bring more consistency and purpose to our content planning. Our marketing communication now follows a clearer direction and supports the wider objectives of our business.",
+    role: "Customer 06",
+    company: "Content Strategy",
+    location: "Verified Client",
+    avatarLabel: "C06",
+    service: "Content planning & consistency",
+    focus: "Content planning and brand consistency",
+  },
+  {
+    quote: "Our marketing activities now work together towards a shared vision.",
+    body: "Sharper Labs helped us connect our website, SEO, social media, and digital campaigns within a coordinated strategy. This gave us a clearer view of how each channel contributes to our wider goals.",
+    role: "Customer 07",
+    company: "Integrated Marketing",
+    location: "Verified Client",
+    avatarLabel: "C07",
+    service: "Integrated digital marketing",
+    focus: "Integrated digital marketing",
+  },
+  {
+    quote: "Sharper Labs helped us prepare our digital presence for bigger markets.",
+    body: "Their recommendations helped us consider how our website, messaging, and search strategy could better communicate our value to audiences beyond our existing market.",
+    role: "Customer 08",
+    company: "International Reach",
+    location: "Verified Client",
+    avatarLabel: "C08",
+    service: "International SEO & expansion",
+    focus: "International SEO and market expansion",
+  },
+  {
+    quote: "We now have a clearer picture of what drives our marketing performance.",
+    body: "Sharper Labs helped us focus on meaningful performance indicators and use available data to guide our marketing decisions. We have a more structured way to assess progress and identify opportunities for improvement.",
+    role: "Customer 09",
+    company: "Data-Driven Decisions",
+    location: "Verified Client",
+    avatarLabel: "C09",
+    service: "Analytics & reporting",
+    focus: "Analytics and reporting",
+  },
+  {
+    quote: "Sharper Labs brings our business goals and digital strategy closer together.",
+    body: "Their team took the time to understand our priorities and recommend an approach suited to our business. The combination of strategic thinking, clear communication, and practical recommendations made the collaboration valuable.",
+    role: "Customer 10",
+    company: "Trusted Partnership",
+    location: "Verified Client",
+    avatarLabel: "C10",
+    service: "Partnership & tailored support",
+    focus: "Partnership and tailored support",
   },
 ];
 
-function getInitials(company: string): string {
-  const words = company.trim().split(/\s+/);
+function getInitials(text: string): string {
+  const words = text.trim().split(/\s+/);
   if (words.length >= 2) {
     return (words[0][0] + words[1][0]).toUpperCase();
   }
-  return company.slice(0, 2).toUpperCase();
+  return text.slice(0, 2).toUpperCase();
 }
 
 function getDiff(index: number, active: number, total: number): number {
@@ -151,7 +200,7 @@ export default function Testimonials({
   items?: Testimonial[];
   intervalMs?: number;
 }) {
-  const [active, setActive] = useState(3); // Start with item 3 (Clinical Advisory Practice)
+  const [active, setActive] = useState(0);
 
   const total = items.length;
 
@@ -192,7 +241,7 @@ export default function Testimonials({
 
   return (
     <div
-      className="relative overflow-hidden rounded-3xl sm:rounded-4xl border border-navy-100/90 bg-gradient-to-b from-slate-50/70 via-white to-slate-50/70 p-5 xs:p-7 sm:p-10 lg:p-12 shadow-sm transition-all"
+      className="relative overflow-hidden rounded-3xl sm:rounded-4xl border border-navy-100/90 bg-linear-to-b from-slate-50/70 via-white to-slate-50/70 p-5 xs:p-7 sm:p-10 lg:p-12 shadow-sm transition-all"
       role="region"
       aria-label="Client testimonials showcase"
     >
@@ -215,7 +264,7 @@ export default function Testimonials({
       </div>
 
       {/* Multi-Card 3D Coverflow Stage (Cards physically glide one by one) */}
-      <div className="relative z-10 mt-2 sm:mt-4 flex items-center justify-center min-h-[440px] xs:min-h-[420px] sm:min-h-[450px] lg:min-h-[470px]">
+      <div className="relative z-10 mt-2 sm:mt-4 flex items-center justify-center min-h-[460px] xs:min-h-[440px] sm:min-h-[460px] lg:min-h-[480px]">
         {/* Circular Floating Navigation Buttons (Left & Right) */}
         <button
           type="button"
@@ -236,7 +285,7 @@ export default function Testimonials({
         </button>
 
         {/* 5-Card Depth Motion Track */}
-        <div className="relative w-full h-[400px] xs:h-[410px] sm:h-[430px] lg:h-[450px] flex items-center justify-center">
+        <div className="relative w-full h-[420px] xs:h-[420px] sm:h-[440px] lg:h-[460px] flex items-center justify-center">
           {items.map((item, index) => {
             const diff = getDiff(index, active, total);
             const style = getCardTransform(diff);
@@ -278,9 +327,9 @@ export default function Testimonials({
         </div>
       </div>
 
-      {/* Bottom Pagination Dots (Matching Screenshot: Orange Pill for Active Dot) */}
-      <div className="relative z-10 mt-6 sm:mt-8 flex justify-center">
-        <div className="flex items-center gap-2">
+      {/* Bottom Pagination Dots */}
+      <div className="relative z-10 mt-6 sm:mt-8 flex justify-center overflow-x-auto py-1">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {items.map((_, i) => (
             <button
               key={i}
@@ -289,8 +338,8 @@ export default function Testimonials({
               aria-label={`Jump to testimonial ${i + 1}`}
               className={`rounded-full transition-all duration-500 cursor-pointer ${
                 i === active
-                  ? "w-8 h-2.5 bg-orange-500 shadow-sm shadow-orange-500/40"
-                  : "w-2.5 h-2.5 bg-navy-200/90 hover:bg-navy-400"
+                  ? "w-7 sm:w-8 h-2 sm:h-2.5 bg-orange-500 shadow-sm shadow-orange-500/40"
+                  : "w-2 sm:w-2.5 h-2 sm:h-2.5 bg-navy-200/90 hover:bg-navy-400"
               }`}
             />
           ))}
@@ -300,9 +349,9 @@ export default function Testimonials({
   );
 }
 
-/** Bespoke 3D Faceted Dimensional Rating Star (Elevated luxury medal finish, distinct from flat generic stars) */
+/** Bespoke 3D Faceted Dimensional Rating Star */
 function RatingStar({
-  className = "h-4.5 w-4.5 sm:h-5 sm:w-5",
+  className = "h-4 w-4 sm:h-4.5 sm:w-4.5",
   isActive = false,
 }: {
   className?: string;
@@ -314,17 +363,14 @@ function RatingStar({
 
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
-      {/* Light-facing facets */}
       <path
         d="M12 12L12 1.8L9.18 8.12ZM12 12L21.7 8.85L14.82 8.12ZM12 12L18 20.25L16.56 13.48ZM12 12L6 20.25L12 16.8ZM12 12L2.3 8.85L7.44 13.48Z"
         fill={lightColor}
       />
-      {/* Shadow-facing facets */}
       <path
         d="M12 12L12 1.8L14.82 8.12ZM12 12L21.7 8.85L16.56 13.48ZM12 12L18 20.25L12 16.8ZM12 12L6 20.25L7.44 13.48ZM12 12L2.3 8.85L9.18 8.12Z"
         fill={shadowColor}
       />
-      {/* Outer silhouette rim */}
       <polygon
         points="12,1.8 14.82,8.12 21.7,8.85 16.56,13.48 18,20.25 12,16.8 6,20.25 7.44,13.48 2.3,8.85 9.18,8.12"
         fill="none"
@@ -336,10 +382,7 @@ function RatingStar({
   );
 }
 
-/** Individual Card matching the reference screenshot design:
- * - Center card: Dark Navy with white circle avatar & gold stars
- * - Flanking cards: Crisp White with soft shadow & dark navy typography
- */
+/** Individual Card matching reference screenshot design */
 function TestimonialCard({
   item,
   isActive,
@@ -349,73 +392,92 @@ function TestimonialCard({
 }) {
   return (
     <div
-      className={`relative flex flex-col justify-between rounded-3xl sm:rounded-[28px] p-6 xs:p-7 sm:p-8 lg:p-9 transition-all duration-500 ${
+      className={`relative flex flex-col justify-between rounded-3xl sm:rounded-[28px] p-5 xs:p-6 sm:p-7 lg:p-8 transition-all duration-500 ${
         isActive
           ? "bg-[#0B132B] text-white border border-navy-700/80 shadow-[0_20px_50px_-10px_rgba(11,19,43,0.45)] ring-1 ring-white/10"
           : "bg-white text-navy-900 border border-navy-100 shadow-xl shadow-navy-900/6 hover:border-navy-200"
       }`}
     >
       <div>
-        {/* CARD TOP ROW: 5 Bespoke Dimensional Stars */}
-        <div className="flex items-center gap-1 sm:gap-1.5">
-          {Array.from({ length: 5 }).map((_, s) => (
-            <RatingStar
-              key={s}
-              isActive={isActive}
-              className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0"
-            />
-          ))}
+        {/* CARD TOP ROW: 5 Bespoke Dimensional Stars + Category Badge */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1 sm:gap-1.5">
+            {Array.from({ length: 5 }).map((_, s) => (
+              <RatingStar
+                key={s}
+                isActive={isActive}
+                className="h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0"
+              />
+            ))}
+          </div>
+          {item.company && (
+            <span
+              className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${
+                isActive
+                  ? "bg-white/10 text-orange-400 border border-white/15"
+                  : "bg-orange-50 text-orange-700 border border-orange-200"
+              }`}
+            >
+              {item.company}
+            </span>
+          )}
         </div>
 
-        {/* QUOTATION TEXT */}
+        {/* HEADLINE QUOTE */}
         <blockquote
-          className={`mt-4 sm:mt-5 font-display italic font-semibold leading-relaxed ${
+          className={`mt-3.5 sm:mt-4 font-display italic font-semibold leading-snug sm:leading-relaxed ${
             isActive
-              ? "text-base sm:text-lg lg:text-[18px] text-white"
-              : "text-sm sm:text-base text-navy-900/90 line-clamp-4"
+              ? "text-sm xs:text-base sm:text-lg text-white"
+              : "text-xs xs:text-sm sm:text-base text-navy-900/90 line-clamp-2"
           }`}
         >
           &ldquo;{item.quote}&rdquo;
         </blockquote>
+
+        {/* ELABORATION BODY */}
+        {item.body && (
+          <p
+            className={`mt-2 sm:mt-2.5 text-xs sm:text-sm leading-relaxed ${
+              isActive
+                ? "text-slate-300 font-normal line-clamp-4 sm:line-clamp-none"
+                : "text-ink-muted font-normal line-clamp-2 sm:line-clamp-3"
+            }`}
+          >
+            {item.body}
+          </p>
+        )}
       </div>
 
       <div>
         {/* CARD DIVIDER LINE */}
         <div
-          className={`my-4 sm:my-5 border-t ${
+          className={`my-3.5 sm:my-4 border-t ${
             isActive ? "border-white/15" : "border-navy-100"
           }`}
         />
 
-        {/* CARD FOOTER: Author Avatar + Details + Verified Badge */}
+        {/* CARD FOOTER: Anonymous Customer Identifier + Focus + Verified */}
         <div className="flex items-center justify-between gap-3">
-          {/* Left: Avatar & Info */}
-          <div className="flex items-center gap-3 min-w-0">
-            {/* Monogram circle avatar matching reference screenshot */}
+          {/* Left: Avatar & Customer info */}
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            {/* Monogram circle avatar */}
             <div
-              className={`flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full font-display text-xs sm:text-sm font-extrabold shadow-sm transition-all ${
+              className={`flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full font-display text-xs sm:text-sm font-extrabold shadow-sm transition-all ${
                 isActive
                   ? "bg-white text-navy-900 ring-2 ring-white/20"
                   : "bg-navy-100 text-navy-800 border border-navy-200/70"
               }`}
             >
-              {getInitials(item.company)}
+              {item.avatarLabel || getInitials(item.role)}
             </div>
 
             <div className="min-w-0 flex-1">
               <div
-                className={`truncate font-display text-sm sm:text-base font-bold ${
+                className={`truncate font-display text-xs sm:text-sm font-bold ${
                   isActive ? "text-white" : "text-navy-900"
                 }`}
               >
                 {item.role}
-              </div>
-              <div
-                className={`truncate font-display text-xs sm:text-sm font-semibold mt-0.5 ${
-                  isActive ? "text-orange-400" : "text-orange-600"
-                }`}
-              >
-                {item.company}
               </div>
               <div
                 className={`mt-0.5 flex items-center gap-1 text-[11px] truncate ${
@@ -428,22 +490,22 @@ function TestimonialCard({
             </div>
           </div>
 
-          {/* Right: Verified Badge + Service */}
+          {/* Right: Verified Badge + Focus */}
           <div className="flex flex-col items-end gap-1 shrink-0">
             <span
-              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold shadow-2xs ${
+              className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold shadow-2xs ${
                 isActive
                   ? "border border-emerald-500/50 bg-emerald-500/15 text-emerald-400"
                   : "border border-emerald-600/30 bg-emerald-50 text-emerald-700"
               }`}
             >
               <CheckCircle2 className="h-3 w-3 shrink-0" />
-              <span>Verified</span>
+              <span>Verified Client</span>
             </span>
 
             {item.service && (
               <span
-                className={`text-[10px] sm:text-[11px] font-medium text-right truncate max-w-[120px] xs:max-w-[140px] sm:max-w-[160px] ${
+                className={`text-[10px] sm:text-[11px] font-medium text-right truncate max-w-[120px] xs:max-w-[140px] sm:max-w-[170px] ${
                   isActive ? "text-navy-300" : "text-ink-muted"
                 }`}
               >
