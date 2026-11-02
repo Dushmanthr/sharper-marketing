@@ -177,7 +177,7 @@ export const services: Service[] = [
     short: "Brand Marketing",
     icon: "Crown",
     excerpt:
-      "Build a distinctive brand identity, messaging, and visual presence your customers recognize and remember across digital and offline channels.",
+      "Build a distinctive brand identity, messaging, and visual presence your customers recognise and remember across digital and offline channels.",
     image: "/images/brand-marketing-02.jpg",
     imageAlt: "Designer creating a brand logo and visual identity",
     contain: true,
@@ -298,7 +298,7 @@ export const services: Service[] = [
     body: [
       "Your website is often the first place potential customers go to understand your business. It should communicate your value clearly, work smoothly across devices, and make the next step easy.",
       "We design and develop websites that reflect your brand, support your business objectives, and provide a clear, user-friendly journey from first visit to enquiry.",
-      "From technical performance and accessibility to search engine optimization and analytics integration, our websites are engineered for real business growth.",
+      "From technical performance and accessibility to search engine optimisation and analytics integration, our websites are engineered for real business growth.",
     ],
     whatWeDo: [
       {
@@ -381,7 +381,7 @@ export const services: Service[] = [
       {
         question: "Will my website work across international markets?",
         answer:
-          "Yes. We build responsive, multi-region capable websites optimized for global CDNs, fast international page speeds, and multi-timezone lead capture.",
+          "Yes. We build responsive, multi-region capable websites optimised for global CDNs, fast international page speeds, and multi-timezone lead capture.",
       },
       {
         question: "Do you offer ongoing website maintenance?",
@@ -391,7 +391,7 @@ export const services: Service[] = [
       {
         question: "Is the website built to be search-engine friendly?",
         answer:
-          "Every website is built with clean semantic HTML, structured JSON-LD data, optimized meta tags, and high Core Web Vitals scores.",
+          "Every website is built with clean semantic HTML, structured JSON-LD data, optimised meta tags, and high Core Web Vitals scores.",
       },
     ],
   },
@@ -556,7 +556,7 @@ export const services: Service[] = [
           {
             title: "Cross-Platform Synergies",
             description:
-              "Synchronize your LinkedIn, Facebook, Instagram, and TikTok presence so momentum on one channel compounds the others.",
+              "Synchronise your LinkedIn, Facebook, Instagram, and TikTok presence so momentum on one channel compounds the others.",
             icon: "Layers",
           },
           {
@@ -568,7 +568,7 @@ export const services: Service[] = [
         ],
         deliverables: [
           "Platform-specific follower growth roadmap for LinkedIn, Facebook, Instagram, and TikTok",
-          "Comprehensive profile optimization (bio, call-to-action, highlights, link-in-bio)",
+          "Comprehensive profile optimisation (bio, call-to-action, highlights, link-in-bio)",
           "Viral content hooks, trending templates, and posting schedule calendar",
           "Audience retention tactics to ensure followers stay engaged over time",
           "Monthly follower quality audit and demographic breakdown reporting",
@@ -597,7 +597,7 @@ export const services: Service[] = [
       {
         question: "How does your Social Media Followers Increasing sub-service work?",
         answer:
-          "Our follower increasing service focuses on 100% authentic, algorithm-safe audience growth across Facebook, Instagram, and TikTok. We never use fake bots or engagement pods. Instead, we combine high-converting content formats (such as trending Reels and TikToks), targeted Meta growth campaigns, profile optimization, and community engagement to attract real followers who are genuinely interested in your brand.",
+          "Our follower increasing service focuses on 100% authentic, algorithm-safe audience growth across Facebook, Instagram, and TikTok. We never use fake bots or engagement pods. Instead, we combine high-converting content formats (such as trending Reels and TikToks), targeted Meta growth campaigns, profile optimisation, and community engagement to attract real followers who are genuinely interested in your brand.",
       },
       {
         question: "Can I choose specific platforms like only Instagram, Facebook, or TikTok?",
@@ -612,7 +612,7 @@ export const services: Service[] = [
       {
         question: "Do you handle B2B social media as well as B2C?",
         answer:
-          "Yes. We specialize in B2B thought-leadership and executive positioning on LinkedIn, as well as visually rich B2C campaigns on lifestyle platforms.",
+          "Yes. We specialise in B2B thought-leadership and executive positioning on LinkedIn, as well as visually rich B2C campaigns on lifestyle platforms.",
       },
       {
         question: "How do you measure social media return on investment?",
@@ -647,7 +647,7 @@ export const services: Service[] = [
       },
       {
         title: "Campaign Architecture & Build",
-        description: "Structure tightly organized search, display, and social ad campaigns for optimal Quality Score and cost control.",
+        description: "Structure tightly organised search, display, and social ad campaigns for optimal Quality Score and cost control.",
         icon: "Layers",
       },
       {
@@ -662,12 +662,12 @@ export const services: Service[] = [
       },
       {
         title: "Performance Analysis & Optimisation",
-        description: "Continuously test ad creative, landing page elements, and audience segments to maximize ROI.",
+        description: "Continuously test ad creative, landing page elements, and audience segments to maximise ROI.",
         icon: "BarChart3",
       },
     ],
     approach:
-      "We begin with thorough competitor and keyword research, structure campaigns for relevance and efficiency, pair ads with conversion-focused landing pages, and continuously optimize against your cost-per-acquisition goals.",
+      "We begin with thorough competitor and keyword research, structure campaigns for relevance and efficiency, pair ads with conversion-focused landing pages, and continuously optimise against your cost-per-acquisition goals.",
     whatYouCanExpect: [
       "Immediate visibility at the top of search engine results",
       "Highly targeted, qualified traffic from high-intent buyers",
@@ -690,7 +690,7 @@ export const services: Service[] = [
       {
         question: "How do you prevent wasted ad spend?",
         answer:
-          "We use strict match types, rigorous negative keyword lists, audience exclusions, and landing page conversion rate optimization to ensure every pound spent delivers value.",
+          "We use strict match types, rigorous negative keyword lists, audience exclusions, and landing page conversion rate optimisation to ensure every pound spent delivers value.",
       },
       {
         question: "Do you handle Google Ads and paid social?",
@@ -792,7 +792,7 @@ export const services: Service[] = [
     hook: "When potential customers search for products or services you provide, your website needs to be discoverable, useful, and relevant to their commercial needs.",
     body: [
       "When potential customers search for products or services you provide, your website needs to be discoverable, useful, and relevant to their needs.",
-      "Our organic SEO service helps businesses improve search visibility through technical improvements, keyword research, content optimization, and ongoing performance analysis.",
+      "Our organic SEO service helps businesses improve search visibility through technical improvements, keyword research, content optimisation, and ongoing performance analysis.",
       "We focus on sustainable, white-hat techniques that build lasting authority for commercial queries across the UK and international markets.",
     ],
     whatWeDo: [
@@ -838,7 +838,7 @@ export const services: Service[] = [
     ],
     benefits: [
       "Higher search rankings on Google and Bing for commercial queries",
-      "Continuous technical SEO fixes and on-page optimization",
+      "Continuous technical SEO fixes and on-page optimisation",
       "Competitor gap analysis to capture market share",
       "High-intent traffic that reduces reliance on paid media",
       "Long-term compounding return on investment",
@@ -855,7 +855,7 @@ export const services: Service[] = [
           "No ethical agency can guarantee specific #1 rankings, as search algorithms and competitors change constantly. What we guarantee is proven, white-hat methodology, technical excellence, and transparent monthly progress.",
       },
       {
-        question: "Do you optimize for UK local search or international search?",
+        question: "Do you optimise for UK local search or international search?",
         answer:
           "Both. We implement local schema and geo-targeting for UK regional visibility, as well as hreflang, international architecture, and search intent targeting for cross-border reach.",
       },
@@ -933,7 +933,7 @@ export const caseStudies: CaseStudy[] = [
       timeframe: "4 Months",
     },
     challenge:
-      "AURA Mayfair possessed world-class Michelin-calibre culinary mastery, but their static booking site suffered from a 78% bounce rate and failed to convey the sensory drama of their multi-course tasting experience. High-net-worth guests and international travelers were abandoning the reservation journey before selecting a date.",
+      "AURA Mayfair possessed world-class Michelin-calibre culinary mastery, but their static booking site suffered from a 78% bounce rate and failed to convey the sensory drama of their multi-course tasting experience. High-net-worth guests and international travellers were abandoning the reservation journey before selecting a date.",
     strategyAndWork: [
       "Architected an immersive digital experience featuring an interactive Three.js 3D golden culinary sculpture that reacts dynamically to guest cursor movements.",
       "Designed intuitive interactive menu curation with real-time pairing notes across Tasting, Mains, and Cellar collections.",
@@ -972,7 +972,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: "furniture-house",
     legacySlugs: ["sustainable-lifestyle-ecommerce-scale"],
-    title: "Stone & Timber Atelier: Real-Time 3D 360° E-Commerce Furniture Customizer",
+    title: "Stone & Timber Atelier: Real-Time 3D 360° E-Commerce Furniture Customiser",
     summary:
       "Scaling high-ticket architectural stone & timber furniture sales with real-time 360° WebGL customisation, tactile swatches, and a frictionless checkout flow.",
     image: "/images/furniture/hero.jpg",
@@ -992,9 +992,9 @@ export const caseStudies: CaseStudy[] = [
       timeframe: "6 Months",
     },
     challenge:
-      "Selling bespoke £1,400+ designer lounge chairs online was hampered by customer hesitation around fabric textures and spatial proportions. Static flat photography resulted in high cart abandonment and costly return rates from customers surprised by color finishes.",
+      "Selling bespoke £1,400+ designer lounge chairs online was hampered by customer hesitation around fabric textures and spatial proportions. Static flat photography resulted in high cart abandonment and costly return rates from customers surprised by colour finishes.",
     strategyAndWork: [
-      "Engineered a real-time Three.js 360-degree interactive 3D product customizer allowing visitors to inspect craftsmanship from every angle.",
+      "Engineered a real-time Three.js 360-degree interactive 3D product customiser allowing visitors to inspect craftsmanship from every angle.",
       "Integrated live WebGL material and textile swatch switching (Smoked Oak, Bouclé Cream, Matte Slate, Terracotta) with instant lighting reflection updates.",
       "Added interactive dimension schematics and ergonomic breakdown overlays directly inside the buying experience.",
       "Optimised checkout performance with Google Pay/Apple Pay integration, reducing purchase hesitation on high-ticket SKUs.",
@@ -1008,7 +1008,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         metric: "+142%",
-        label: "Customizer-to-Cart Conversion Rate",
+        label: "Customiser-to-Cart Conversion Rate",
         period: "Post-Launch",
         source: "Shopify Analytics",
       },
@@ -1023,7 +1023,7 @@ export const caseStudies: CaseStudy[] = [
       "Interactive 3D configurators bridge the physical-digital divide for luxury furniture, giving buyers tactile confidence and dramatically reducing returns.",
     testimonial: {
       quote:
-        "Allowing our clients to rotate our chairs in 3D and switch bouclé textures live on screen revolutionized our online conversions. Sharper Labs delivered beyond expectations.",
+        "Allowing our clients to rotate our chairs in 3D and switch bouclé textures live on screen revolutionised our online conversions. Sharper Labs delivered beyond expectations.",
       author: "Astrid Lindholm",
       role: "Head of Digital Brand & Design",
     },
@@ -1033,7 +1033,7 @@ export const caseStudies: CaseStudy[] = [
     legacySlugs: ["international-b2b-supply-chain"],
     title: "IRONPULSE: High-Conversion Performance Gym Platform & Live Zone Telemetry",
     summary:
-      "How an elite athletic club scaled membership acquisitions by +280% with real-time floor occupancy telemetry, 3D kinetic barbell visualizers, and an interactive body transformation ROI engine.",
+      "How an elite athletic club scaled membership acquisitions by +280% with real-time floor occupancy telemetry, 3D kinetic barbell visualisers, and an interactive body transformation ROI engine.",
     image: "/images/fitness/hero-gym.jpg",
     video: "/videos/video1.mp4",
     clientDomain: "ironpulse-fitness.com",
@@ -1051,10 +1051,10 @@ export const caseStudies: CaseStudy[] = [
       timeframe: "6 Months",
     },
     challenge:
-      "IRONPULSE built a world-class training facility with competition-spec Eleiko gear and recovery plunges, but their digital presence looked like a generic fitness brochure. Prospective members couldn't visualize gym floor congestion, understand training splits, or calculate prospective transformation timelines.",
+      "IRONPULSE built a world-class training facility with competition-spec Eleiko gear and recovery plunges, but their digital presence looked like a generic fitness brochure. Prospective members couldn't visualise gym floor congestion, understand training splits, or calculate prospective transformation timelines.",
     strategyAndWork: [
       "Designed a responsive high-energy web experience featuring real curated athlete photography, bold typography, and modern dark athletic styling.",
-      "Engineered an interactive 3D WebGL Kinetic Barbell Pulse visualizer that reacts to user cursor movement.",
+      "Engineered an interactive 3D WebGL Kinetic Barbell Pulse visualiser that reacts to user cursor movement.",
       "Developed a real-time Floor Telemetry & Zone Heart Rate monitor displaying live gym occupancy and on-duty master coaches.",
       "Constructed an interactive Body Composition & Transformation ROI Engine allowing prospective members to calculate caloric burn, fat loss, and strength progression.",
       "Deployed frictionless 1-Day VIP Pass booking modal that captured high-intent leads without sales friction.",
