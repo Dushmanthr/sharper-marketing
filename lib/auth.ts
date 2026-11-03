@@ -12,6 +12,7 @@ export interface AdminTokenPayload {
   email: string;
   name: string;
   role: AdminRoleType | string;
+  mustChangePassword?: boolean;
 }
 
 /**

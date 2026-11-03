@@ -81,6 +81,12 @@ export async function PATCH(req: Request, context: RouteContext) {
         );
       }
       updateData.passwordHash = await hashPassword(password);
+      // When Super Admin resets a user's password, enforce password change on their next login
+      try {
+        await prisma.$executeRaw`UPDATE admin_users SET mustChangePassword = 1 WHERE id = ${id}`;
+      } catch {
+        // safe fallback
+      }
     }
 
     const updated = await prisma.adminUser.update({

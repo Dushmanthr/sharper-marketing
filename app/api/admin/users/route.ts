@@ -38,7 +38,25 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ success: true, users });
+    // Attach mustChangePassword flag safely
+    let usersWithFlags = users.map((u) => ({ ...u, mustChangePassword: false }));
+    try {
+      const rawFlags: any = await prisma.$queryRaw`SELECT id, mustChangePassword FROM admin_users`;
+      if (Array.isArray(rawFlags)) {
+        const flagMap = new Map<string, boolean>();
+        rawFlags.forEach((r: any) => {
+          flagMap.set(r.id, Boolean(r.mustChangePassword));
+        });
+        usersWithFlags = users.map((u) => ({
+          ...u,
+          mustChangePassword: flagMap.get(u.id) ?? false,
+        }));
+      }
+    } catch {
+      // safe fallback
+    }
+
+    return NextResponse.json({ success: true, users: usersWithFlags });
   } catch (error) {
     console.error("[Get Users Error]:", error);
     return NextResponse.json(
@@ -120,7 +138,14 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ success: true, user: newUser }, { status: 201 });
+    // Enforce password change on first login for the newly provisioned account
+    try {
+      await prisma.$executeRaw`UPDATE admin_users SET mustChangePassword = 1 WHERE id = ${newUser.id}`;
+    } catch {
+      // safe fallback
+    }
+
+    return NextResponse.json({ success: true, user: { ...newUser, mustChangePassword: true } }, { status: 201 });
   } catch (error) {
     console.error("[Create User Error]:", error);
     return NextResponse.json(

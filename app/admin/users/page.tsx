@@ -31,6 +31,7 @@ interface AdminUserItem {
   email: string;
   role: "SUPER_ADMIN" | "MODERATOR";
   isActive: boolean;
+  mustChangePassword?: boolean;
   createdAt: string;
   updatedAt: string;
   _count?: {
@@ -148,7 +149,7 @@ export default function AdminUsersPage() {
         throw new Error(data.error || "Failed to create account.");
       }
 
-      setSuccessMsg(`Account for "${newName}" (${newRole}) created successfully!`);
+      setSuccessMsg(`Account for "${newName}" (${newRole}) created! User must set a permanent password on first login.`);
       setTimeout(() => setSuccessMsg(""), 5000);
 
       // Reset form & close modal
@@ -235,7 +236,7 @@ export default function AdminUsersPage() {
         throw new Error(data.error || "Failed to reset password.");
       }
 
-      setSuccessMsg(`Password for "${resetModalUser.name}" successfully updated!`);
+      setSuccessMsg(`Password for "${resetModalUser.name}" reset! User will be prompted to change password on next login.`);
       setTimeout(() => setSuccessMsg(""), 5000);
 
       setResetModalUser(null);
@@ -490,15 +491,25 @@ export default function AdminUsersPage() {
 
                       {/* Role Badge */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
-                        {user.role === "SUPER_ADMIN" ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-navy-950 px-2.5 py-0.5 text-[10px] font-bold text-orange-400 border border-navy-800">
-                            <Shield className="h-3 w-3" /> Super Admin
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
-                            <FileText className="h-3 w-3" /> Moderator
-                          </span>
-                        )}
+                        <div className="flex flex-col items-start gap-1">
+                          {user.role === "SUPER_ADMIN" ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-navy-950 px-2.5 py-0.5 text-[10px] font-bold text-orange-400 border border-navy-800">
+                              <Shield className="h-3 w-3" /> Super Admin
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+                              <FileText className="h-3 w-3" /> Moderator
+                            </span>
+                          )}
+                          {user.mustChangePassword && (
+                            <span
+                              className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[9px] font-bold text-amber-700 border border-amber-200"
+                              title="User must set permanent password on next login"
+                            >
+                              <KeyRound className="h-2.5 w-2.5" /> First Login Pending
+                            </span>
+                          )}
+                        </div>
                       </td>
 
                       {/* Status Toggle */}
@@ -748,8 +759,8 @@ export default function AdminUsersPage() {
                     {copiedPass ? "Copied!" : "Copy"}
                   </button>
                 </div>
-                <p className="mt-1 text-[10px] text-slate-400">
-                  Please securely share this password with the moderator.
+                <p className="mt-1 text-[10px] text-amber-700 font-medium">
+                  Please securely share this temporary password. The user will be required to set a permanent password upon first login.
                 </p>
               </div>
 
@@ -810,6 +821,9 @@ export default function AdminUsersPage() {
                   placeholder="Min 6 characters"
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-xs text-navy-900 font-mono focus:border-orange-500 focus:bg-white focus:outline-hidden"
                 />
+                <p className="mt-1 text-[10px] text-amber-700 font-medium">
+                  The user will be required to choose a new password upon their next login.
+                </p>
               </div>
 
               <div className="flex items-center justify-end gap-2 pt-3">
