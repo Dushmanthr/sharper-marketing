@@ -47,11 +47,11 @@ export async function GET(req: Request, context: RouteContext) {
         ...post,
         rejectionReason: rejectionInfo.rejectionReason ?? (post as any).rejectionReason ?? null,
         rejectedBy: rejectionInfo.rejectedBy ?? (post as any).rejectedBy ?? null,
-        rejectedAt: rejectionInfo.rejectedAt ? new Date(rejectionInfo.rejectedAt).toISOString() : ((post as any).rejectedAt ?? null),
+        rejectedAt: rejectionInfo.rejectedAt ? new Date(rejectionInfo.rejectedAt) : ((post as any).rejectedAt ? new Date((post as any).rejectedAt) : null),
         lastEditedById: rejectionInfo.lastEditedById ?? (post as any).lastEditedById ?? null,
         lastEditedByName: rejectionInfo.lastEditedByName ?? (post as any).lastEditedByName ?? null,
         lastEditedByRole: rejectionInfo.lastEditedByRole ?? (post as any).lastEditedByRole ?? null,
-        lastEditedAt: rejectionInfo.lastEditedAt ? new Date(rejectionInfo.lastEditedAt).toISOString() : ((post as any).lastEditedAt ? new Date((post as any).lastEditedAt).toISOString() : null),
+        lastEditedAt: rejectionInfo.lastEditedAt ? new Date(rejectionInfo.lastEditedAt) : ((post as any).lastEditedAt ? new Date((post as any).lastEditedAt) : null),
       },
     });
   } catch (error) {

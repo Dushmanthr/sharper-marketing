@@ -184,6 +184,17 @@ export default async function CaseStudyDetailPage({ params }: Params) {
                     {study.clientOverview.targetMarket}
                   </span>
                 </div>
+                {study.demoUrl && (
+                  <Link
+                    href={study.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-orange-500 hover:bg-orange-600 px-3.5 py-1.5 text-xs font-semibold text-white transition-colors shadow-xs"
+                  >
+                    <span>Launch Live Interactive Experience</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
+                )}
               </div>
             </div>
           </Reveal>
