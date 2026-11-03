@@ -11,7 +11,6 @@ import {
   Quote,
   ShieldCheck,
   ArrowRight,
-  ExternalLink,
 } from "lucide-react";
 import Section from "@/components/Section";
 import PageHero from "@/components/PageHero";
@@ -146,21 +145,9 @@ export default async function CaseStudyDetailPage({ params }: Params) {
                   <Globe2 className="h-3 w-3 text-navy-400 shrink-0" />
                   <span className="truncate">{study.clientDomain || `${study.slug}.co.uk`}</span>
                 </div>
-                {study.websiteUrl ? (
-                  <a
-                    href={study.websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 rounded-full bg-orange-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-orange-600 transition-colors hover:bg-orange-500 hover:text-white"
-                  >
-                    <span>Visit Live Site</span>
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                ) : (
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600">
-                    Live Showcase
-                  </span>
-                )}
+                <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600">
+                  Client Showcase
+                </span>
               </div>
               <div className="relative aspect-[16/9] w-full overflow-hidden bg-navy-950">
                 {study.video ? (
@@ -185,7 +172,7 @@ export default async function CaseStudyDetailPage({ params }: Params) {
                 )}
               </div>
 
-              {/* Showcase Footer Bar with Client & Live Production CTA */}
+              {/* Showcase Footer Bar with Client Overview */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-navy-50 bg-navy-50/40 p-4 sm:px-6 sm:py-3.5">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
@@ -197,18 +184,6 @@ export default async function CaseStudyDetailPage({ params }: Params) {
                     {study.clientOverview.targetMarket}
                   </span>
                 </div>
-
-                {study.websiteUrl && (
-                  <a
-                    href={study.websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-orange-500 px-4 py-1.5 text-xs font-semibold text-white transition-all hover:bg-orange-600 shadow-2xs"
-                  >
-                    <span>Visit Production Website</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                )}
               </div>
             </div>
           </Reveal>

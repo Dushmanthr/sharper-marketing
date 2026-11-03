@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureEditorColumnsExist } from "@/lib/prisma";
 import { getSessionAdmin, hasAdminPanelAccess, isSuperAdmin } from "@/lib/auth";
 import type { PostStatus } from "@prisma/client";
 
@@ -31,6 +31,9 @@ export async function GET(req: Request) {
   }
 
   try {
+    // Ensure database columns for editor tracking exist before query
+    await ensureEditorColumnsExist().catch(() => {});
+
     const [posts, statusGroups] = await Promise.all([
       prisma.blogPost.findMany({
         where,
@@ -64,7 +67,34 @@ export async function GET(req: Request) {
       else if (g.status === "ARCHIVED") counts.archived = count;
     });
 
-    return NextResponse.json({ posts, counts });
+    // Attach rejection info safely
+    let postsWithRejections = posts;
+    try {
+      const rawRejections: any = await prisma.$queryRaw`SELECT id, rejectionReason, rejectedBy, rejectedAt, lastEditedById, lastEditedByName, lastEditedByRole, lastEditedAt FROM blog_posts`;
+      if (Array.isArray(rawRejections)) {
+        const rejMap = new Map<string, any>();
+        rawRejections.forEach((r: any) => {
+          rejMap.set(r.id, r);
+        });
+        postsWithRejections = posts.map((p) => {
+          const raw = rejMap.get(p.id);
+          return {
+            ...p,
+            rejectionReason: raw?.rejectionReason ?? (p as any).rejectionReason ?? null,
+            rejectedBy: raw?.rejectedBy ?? (p as any).rejectedBy ?? null,
+            rejectedAt: raw?.rejectedAt ? new Date(raw.rejectedAt).toISOString() : ((p as any).rejectedAt ?? null),
+            lastEditedById: raw?.lastEditedById ?? (p as any).lastEditedById ?? null,
+            lastEditedByName: raw?.lastEditedByName ?? (p as any).lastEditedByName ?? null,
+            lastEditedByRole: raw?.lastEditedByRole ?? (p as any).lastEditedByRole ?? null,
+            lastEditedAt: raw?.lastEditedAt ? new Date(raw.lastEditedAt).toISOString() : ((p as any).lastEditedAt ? new Date((p as any).lastEditedAt).toISOString() : null),
+          };
+        });
+      }
+    } catch {
+      // safe fallback
+    }
+
+    return NextResponse.json({ posts: postsWithRejections, counts });
   } catch (error) {
     console.error("[Admin Blogs GET Error]:", error);
     return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });

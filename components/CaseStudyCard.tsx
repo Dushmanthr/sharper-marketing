@@ -236,7 +236,7 @@ export default function CaseStudyCard({
           )}
         </div>
 
-        {/* CTA Footer with Detail Link & External Production Link */}
+        {/* CTA Footer with Demonstration / Detail Link */}
         <div className="mt-4 pt-3 border-t border-navy-50 flex items-center justify-between">
           {onSelect ? (
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-navy-800 transition-colors duration-200 group-hover:text-orange-600">

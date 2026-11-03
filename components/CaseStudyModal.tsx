@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
-  ExternalLink,
   ArrowRight,
   Monitor,
   Tablet,
@@ -387,18 +386,6 @@ export default function CaseStudyModal({
                 </div>
 
                 <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-                  {activeStudy.websiteUrl && (
-                    <a
-                      href={activeStudy.websiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-xs font-semibold text-orange-700 transition-colors hover:bg-orange-100"
-                    >
-                      <span>Visit Live Website</span>
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  )}
-
                   <Link
                     href={`/case-studies/${activeStudy.slug}`}
                     onClick={onClose}
