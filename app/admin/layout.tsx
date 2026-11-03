@@ -20,12 +20,14 @@ import {
   PlusCircle,
   Users,
 } from "lucide-react";
+import ForceChangePasswordScreen from "@/components/admin/ForceChangePasswordScreen";
 
 interface AdminUser {
   id: string;
   email: string;
   name: string;
   role: string;
+  mustChangePassword?: boolean;
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -121,6 +123,27 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // If not authenticated and not on login page, wait for redirect
   if (!admin) {
     return null;
+  }
+
+  // Force first-time password change if required before granting dashboard access
+  if (admin.mustChangePassword) {
+    return (
+      <ForceChangePasswordScreen
+        adminName={admin.name}
+        adminEmail={admin.email}
+        adminRole={admin.role}
+        onSuccess={() => {
+          setAdmin((prev) => (prev ? { ...prev, mustChangePassword: false } : null));
+          if (admin.role === "MODERATOR") {
+            router.replace("/admin/blogs");
+          } else {
+            router.replace("/admin");
+          }
+          router.refresh();
+        }}
+        onLogout={handleLogout}
+      />
+    );
   }
 
   const allNavLinks = [

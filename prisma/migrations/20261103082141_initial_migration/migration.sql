@@ -6,6 +6,7 @@ CREATE TABLE `admin_users` (
     `name` VARCHAR(191) NOT NULL,
     `role` ENUM('SUPER_ADMIN', 'MODERATOR') NOT NULL DEFAULT 'MODERATOR',
     `isActive` BOOLEAN NOT NULL DEFAULT true,
+    `mustChangePassword` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 

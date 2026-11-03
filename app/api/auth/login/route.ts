@@ -47,20 +47,34 @@ export async function POST(req: Request) {
       );
     }
 
+    // Check if the user is required to change password on first login
+    let mustChangePassword = false;
+    try {
+      const dbRows: any = await prisma.$queryRaw`SELECT mustChangePassword FROM admin_users WHERE id = ${admin.id} LIMIT 1`;
+      if (Array.isArray(dbRows) && dbRows.length > 0 && Boolean(dbRows[0]?.mustChangePassword)) {
+        mustChangePassword = true;
+      }
+    } catch {
+      mustChangePassword = false;
+    }
+
     const token = signAdminToken({
       id: admin.id,
       email: admin.email,
       name: admin.name,
       role: admin.role,
+      mustChangePassword,
     });
 
     const response = NextResponse.json({
       success: true,
+      mustChangePassword,
       admin: {
         id: admin.id,
         email: admin.email,
         name: admin.name,
         role: admin.role,
+        mustChangePassword,
       },
     });
 
