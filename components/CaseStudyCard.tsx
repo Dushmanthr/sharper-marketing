@@ -113,6 +113,14 @@ export default function CaseStudyCard({
                 <span className="hidden xs:inline">Preview</span>
               </span>
             )
+          ) : study.demoUrl ? (
+            <span className="flex items-center gap-1 text-[9px] font-semibold text-orange-600">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
+              </span>
+              <span className="hidden xs:inline">Interactive Demo</span>
+            </span>
           ) : null}
         </div>
       </div>

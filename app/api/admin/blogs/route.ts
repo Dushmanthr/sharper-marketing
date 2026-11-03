@@ -68,7 +68,7 @@ export async function GET(req: Request) {
     });
 
     // Attach rejection info safely
-    let postsWithRejections = posts;
+    let postsWithRejections: any[] = posts;
     try {
       const rawRejections: any = await prisma.$queryRaw`SELECT id, rejectionReason, rejectedBy, rejectedAt, lastEditedById, lastEditedByName, lastEditedByRole, lastEditedAt FROM blog_posts`;
       if (Array.isArray(rawRejections)) {
@@ -82,11 +82,11 @@ export async function GET(req: Request) {
             ...p,
             rejectionReason: raw?.rejectionReason ?? (p as any).rejectionReason ?? null,
             rejectedBy: raw?.rejectedBy ?? (p as any).rejectedBy ?? null,
-            rejectedAt: raw?.rejectedAt ? new Date(raw.rejectedAt).toISOString() : ((p as any).rejectedAt ?? null),
+            rejectedAt: raw?.rejectedAt ? new Date(raw.rejectedAt) : ((p as any).rejectedAt ? new Date((p as any).rejectedAt) : null),
             lastEditedById: raw?.lastEditedById ?? (p as any).lastEditedById ?? null,
             lastEditedByName: raw?.lastEditedByName ?? (p as any).lastEditedByName ?? null,
             lastEditedByRole: raw?.lastEditedByRole ?? (p as any).lastEditedByRole ?? null,
-            lastEditedAt: raw?.lastEditedAt ? new Date(raw.lastEditedAt).toISOString() : ((p as any).lastEditedAt ? new Date((p as any).lastEditedAt).toISOString() : null),
+            lastEditedAt: raw?.lastEditedAt ? new Date(raw.lastEditedAt) : ((p as any).lastEditedAt ? new Date((p as any).lastEditedAt) : null),
           };
         });
       }

@@ -181,6 +181,11 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
     }
   };
 
+  const handleRejectToDraft = () => {
+    setIsRejectModalOpen(true);
+    setRejectError("");
+  };
+
   const handleImageFile = async (file: File) => {
     if (!file) return;
 
