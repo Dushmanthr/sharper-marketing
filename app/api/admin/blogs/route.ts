@@ -64,7 +64,30 @@ export async function GET(req: Request) {
       else if (g.status === "ARCHIVED") counts.archived = count;
     });
 
-    return NextResponse.json({ posts, counts });
+    // Attach rejection info safely
+    let postsWithRejections = posts;
+    try {
+      const rawRejections: any = await prisma.$queryRaw`SELECT id, rejectionReason, rejectedBy, rejectedAt FROM blog_posts`;
+      if (Array.isArray(rawRejections)) {
+        const rejMap = new Map<string, any>();
+        rawRejections.forEach((r: any) => {
+          rejMap.set(r.id, r);
+        });
+        postsWithRejections = posts.map((p) => {
+          const raw = rejMap.get(p.id);
+          return {
+            ...p,
+            rejectionReason: raw?.rejectionReason ?? (p as any).rejectionReason ?? null,
+            rejectedBy: raw?.rejectedBy ?? (p as any).rejectedBy ?? null,
+            rejectedAt: raw?.rejectedAt ? new Date(raw.rejectedAt).toISOString() : ((p as any).rejectedAt ?? null),
+          };
+        });
+      }
+    } catch {
+      // safe fallback
+    }
+
+    return NextResponse.json({ posts: postsWithRejections, counts });
   } catch (error) {
     console.error("[Admin Blogs GET Error]:", error);
     return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });

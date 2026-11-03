@@ -40,6 +40,17 @@ export async function POST(req: Request, context: RouteContext) {
       },
     });
 
+    // Clear any previous rejection notes upon successful approval
+    try {
+      await prisma.$executeRaw`
+        UPDATE blog_posts 
+        SET rejectionReason = NULL, rejectedBy = NULL, rejectedAt = NULL 
+        WHERE id = ${id}
+      `;
+    } catch {
+      // safe fallback
+    }
+
     revalidatePath("/blog");
     revalidatePath(`/blog/${updated.slug}`);
     revalidatePath("/sitemap.xml");
@@ -47,7 +58,12 @@ export async function POST(req: Request, context: RouteContext) {
     return NextResponse.json({
       success: true,
       message: "Article approved and published to the live site.",
-      post: updated,
+      post: {
+        ...updated,
+        rejectionReason: null,
+        rejectedBy: null,
+        rejectedAt: null,
+      },
     });
   } catch (error) {
     console.error("[Approve Blog Error]:", error);

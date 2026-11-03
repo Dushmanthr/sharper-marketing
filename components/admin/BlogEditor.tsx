@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import RejectModal from "@/components/admin/RejectModal";
 import {
   ArrowLeft,
   Save,
@@ -24,6 +25,7 @@ import {
   ShieldCheck,
   RotateCcw,
   Info,
+  XCircle,
 } from "lucide-react";
 
 export interface BlogSectionItem {
@@ -50,6 +52,9 @@ export interface BlogFormData {
   status: "DRAFT" | "PENDING_APPROVAL" | "PUBLISHED" | "ARCHIVED";
   featured: boolean;
   content: BlogSectionItem[];
+  rejectionReason?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
 }
 
 interface BlogEditorProps {
@@ -92,6 +97,11 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
   const [uploadError, setUploadError] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
+  // Rejection modal state
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [rejectLoading, setRejectLoading] = useState(false);
+  const [rejectError, setRejectError] = useState("");
+
   useEffect(() => {
     fetch("/api/auth/me")
       .then((res) => (res.ok ? res.json() : null))
@@ -128,24 +138,36 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
     }
   };
 
-  const handleRejectToDraft = async () => {
+  const handleExecuteReject = async (reason: string) => {
     if (!formData.id) return;
-    setApprovalLoading(true);
+    setRejectLoading(true);
+    setRejectError("");
     setError("");
     setSuccessNotice("");
+
     try {
       const res = await fetch(`/api/admin/blogs/${formData.id}/reject`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to revert article to draft");
-      setFormData((prev) => ({ ...prev, status: "DRAFT" }));
-      setSuccessNotice("Article status reverted to Draft.");
+      if (!res.ok) throw new Error(data.error || "Failed to reject article");
+
+      setFormData((prev) => ({
+        ...prev,
+        status: "DRAFT",
+        rejectionReason: reason,
+        rejectedBy: data.post?.rejectedBy || "Super Admin",
+        rejectedAt: data.post?.rejectedAt || new Date().toISOString(),
+      }));
+      setIsRejectModalOpen(false);
+      setSuccessNotice("Article returned to draft with revision instructions for author.");
       router.refresh();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to revert article to draft");
+      setRejectError(err instanceof Error ? err.message : "Failed to reject article");
     } finally {
-      setApprovalLoading(false);
+      setRejectLoading(false);
     }
   };
 
@@ -297,8 +319,11 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
   };
 
   // Submit Handler
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (
+    e?: React.FormEvent,
+    targetStatus?: "DRAFT" | "PENDING_APPROVAL" | "PUBLISHED" | "ARCHIVED"
+  ) => {
+    if (e) e.preventDefault();
     setError("");
 
     if (!formData.title || !formData.slug) {
@@ -308,6 +333,11 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
 
     setSaving(true);
     try {
+      const payload = {
+        ...formData,
+        ...(targetStatus ? { status: targetStatus } : {}),
+      };
+
       const url = isEditing
         ? `/api/admin/blogs/${formData.id}`
         : "/api/admin/blogs";
@@ -316,7 +346,7 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -386,16 +416,19 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={handleRejectToDraft}
-                disabled={approvalLoading || saving}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                onClick={() => {
+                  setIsRejectModalOpen(true);
+                  setRejectError("");
+                }}
+                disabled={approvalLoading || saving || rejectLoading}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-xs font-bold text-rose-700 hover:bg-rose-100 transition-colors cursor-pointer"
               >
-                <RotateCcw className="h-3.5 w-3.5 text-slate-500" /> Revert to Draft
+                <XCircle className="h-3.5 w-3.5 text-rose-600" /> Reject with Reason
               </button>
               <button
                 type="button"
                 onClick={handleApproveArticle}
-                disabled={approvalLoading || saving}
+                disabled={approvalLoading || saving || rejectLoading}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {approvalLoading ? (
@@ -406,8 +439,8 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                 Approve & Publish Live
               </button>
               <button
-                onClick={handleSubmit}
-                disabled={saving}
+                onClick={() => handleSubmit()}
+                disabled={saving || rejectLoading}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 disabled:opacity-50 transition-colors"
               >
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
@@ -416,29 +449,28 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
             </div>
           ) : currentUserRole === "MODERATOR" ? (
             <div className="flex items-center gap-2">
-              {formData.status === "PENDING_APPROVAL" ? (
-                <button
-                  onClick={handleSubmit}
-                  disabled={saving}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 disabled:opacity-50 transition-colors"
-                >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                  Submit for Approval
-                </button>
-              ) : (
-                <button
-                  onClick={handleSubmit}
-                  disabled={saving}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-navy-900 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-navy-950 disabled:opacity-50 transition-colors"
-                >
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                  Save Draft
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => handleSubmit(undefined, "DRAFT")}
+                disabled={saving}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 disabled:opacity-50 transition-colors cursor-pointer"
+              >
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                Save Draft
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSubmit(undefined, "PENDING_APPROVAL")}
+                disabled={saving}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 disabled:opacity-50 transition-colors cursor-pointer"
+              >
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                Submit for Approval
+              </button>
             </div>
           ) : (
             <button
-              onClick={handleSubmit}
+              onClick={() => handleSubmit()}
               disabled={saving}
               className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-orange-600 disabled:opacity-50 transition-colors"
             >
@@ -465,20 +497,68 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
             </span>
           </div>
           {currentUserRole === "SUPER_ADMIN" && isEditing && (
-            <button
-              type="button"
-              onClick={handleApproveArticle}
-              disabled={approvalLoading}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-emerald-700 transition-colors self-start sm:self-auto cursor-pointer"
-            >
-              {approvalLoading ? (
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              ) : (
-                <ShieldCheck className="h-3.5 w-3.5" />
-              )}
-              Approve & Publish Live
-            </button>
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRejectModalOpen(true);
+                  setRejectError("");
+                }}
+                disabled={approvalLoading || rejectLoading}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-white px-3 py-1.5 text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
+              >
+                <XCircle className="h-3.5 w-3.5" /> Reject
+              </button>
+              <button
+                type="button"
+                onClick={handleApproveArticle}
+                disabled={approvalLoading || rejectLoading}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white hover:bg-emerald-700 transition-colors cursor-pointer"
+              >
+                {approvalLoading ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                )}
+                Approve & Publish Live
+              </button>
+            </div>
           )}
+        </div>
+      )}
+
+      {/* Editorial Feedback Banner (Visible when revisions are requested) */}
+      {formData.status === "DRAFT" && formData.rejectionReason && (
+        <div className="rounded-3xl border border-rose-300 bg-rose-50/90 p-5 shadow-xs">
+          <div className="flex items-start gap-3.5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-700 border border-rose-200">
+              <AlertCircle className="h-5 w-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-sm font-bold text-rose-950">
+                  Revisions Requested by {formData.rejectedBy || "Super Admin"}
+                </h3>
+                {formData.rejectedAt && (
+                  <span className="text-[11px] font-medium text-rose-600">
+                    {new Date(formData.rejectedAt).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                )}
+              </div>
+              <div className="mt-2 text-xs text-rose-900 whitespace-pre-wrap rounded-2xl bg-white/95 p-3.5 border border-rose-200 font-medium leading-relaxed shadow-2xs">
+                {formData.rejectionReason}
+              </div>
+              <p className="mt-2 text-[11px] text-rose-700">
+                Please make the required revisions in the editor below. When finished, select <strong>&ldquo;Submit for Approval&rdquo;</strong> to resubmit to the Super Admin.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
@@ -1065,6 +1145,19 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
           </div>
         </div>
       )}
+
+      {/* Reject Modal with Reason */}
+      <RejectModal
+        isOpen={isRejectModalOpen}
+        postTitle={formData.title}
+        loading={rejectLoading}
+        errorMessage={rejectError}
+        onConfirm={handleExecuteReject}
+        onClose={() => {
+          setIsRejectModalOpen(false);
+          setRejectError("");
+        }}
+      />
     </div>
   );
 }

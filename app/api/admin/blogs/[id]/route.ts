@@ -30,7 +30,25 @@ export async function GET(req: Request, context: RouteContext) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ post });
+    // Safely retrieve rejection feedback if available
+    let rejectionInfo: any = {};
+    try {
+      const rawRows: any = await prisma.$queryRaw`SELECT rejectionReason, rejectedBy, rejectedAt FROM blog_posts WHERE id = ${id} LIMIT 1`;
+      if (Array.isArray(rawRows) && rawRows.length > 0) {
+        rejectionInfo = rawRows[0];
+      }
+    } catch {
+      // safe fallback
+    }
+
+    return NextResponse.json({
+      post: {
+        ...post,
+        rejectionReason: rejectionInfo.rejectionReason ?? (post as any).rejectionReason ?? null,
+        rejectedBy: rejectionInfo.rejectedBy ?? (post as any).rejectedBy ?? null,
+        rejectedAt: rejectionInfo.rejectedAt ? new Date(rejectionInfo.rejectedAt).toISOString() : ((post as any).rejectedAt ?? null),
+      },
+    });
   } catch (error) {
     console.error("[Get Blog Error]:", error);
     return NextResponse.json({ error: "Failed to get blog post" }, { status: 500 });
@@ -122,6 +140,18 @@ export async function PUT(req: Request, context: RouteContext) {
         ...(featured !== undefined && { featured: Boolean(featured) }),
       },
     });
+
+    if (resolvedStatus === "PENDING_APPROVAL") {
+      try {
+        await prisma.$executeRaw`
+          UPDATE blog_posts 
+          SET rejectionReason = NULL, rejectedBy = NULL, rejectedAt = NULL 
+          WHERE id = ${id}
+        `;
+      } catch {
+        // safe fallback
+      }
+    }
 
     revalidatePath("/blog");
     revalidatePath(`/blog/${updated.slug}`);

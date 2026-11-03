@@ -42,14 +42,6 @@ if (!globalForPrisma.hasLoggedDbConnection) {
         // Fallback if URL parsing is not applicable
       }
       console.log(`✅ [Database] Successfully connected to ${dbInfo} via Prisma.`);
-      // Ensure mustChangePassword column exists in admin_users table (idempotent)
-      prisma
-        .$executeRawUnsafe(
-          "ALTER TABLE `admin_users` ADD COLUMN `mustChangePassword` TINYINT(1) NOT NULL DEFAULT 0;"
-        )
-        .catch(() => {
-          // Column already exists, safe to ignore
-        });
     })
     .catch((err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);

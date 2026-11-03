@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ConfirmModal from "@/components/admin/ConfirmModal";
+import RejectModal from "@/components/admin/RejectModal";
 import {
   FileText,
   PlusCircle,
@@ -18,6 +19,7 @@ import {
   AlertCircle,
   ShieldCheck,
   RotateCcw,
+  XCircle,
 } from "lucide-react";
 
 interface BlogPost {
@@ -33,6 +35,9 @@ interface BlogPost {
   viewCount: number;
   publishedAt: string | null;
   createdAt: string;
+  rejectionReason?: string | null;
+  rejectedBy?: string | null;
+  rejectedAt?: string | null;
   author: {
     name: string;
     email: string;
@@ -70,6 +75,15 @@ export default function AdminBlogsPage() {
   // Quick approve modal state
   const [approvePostTarget, setApprovePostTarget] = useState<{ id: string; title: string } | null>(null);
   const [approveLoading, setApproveLoading] = useState(false);
+
+  // Rejection modal state
+  const [rejectPostTarget, setRejectPostTarget] = useState<{
+    id: string;
+    title: string;
+    authorName?: string;
+  } | null>(null);
+  const [rejectLoading, setRejectLoading] = useState(false);
+  const [rejectError, setRejectError] = useState("");
 
   useEffect(() => {
     fetchPosts();
@@ -144,7 +158,14 @@ export default function AdminBlogsPage() {
         setPosts((prev) =>
           prev.map((p) =>
             p.id === approvePostTarget.id
-              ? { ...p, status: "PUBLISHED", publishedAt: new Date().toISOString() }
+              ? {
+                  ...p,
+                  status: "PUBLISHED",
+                  publishedAt: new Date().toISOString(),
+                  rejectionReason: null,
+                  rejectedBy: null,
+                  rejectedAt: null,
+                }
               : p
           )
         );
@@ -155,6 +176,44 @@ export default function AdminBlogsPage() {
       console.error("Failed to approve post:", err);
     } finally {
       setApproveLoading(false);
+    }
+  };
+
+  const executeRejectPost = async (reason: string) => {
+    if (!rejectPostTarget) return;
+    setRejectLoading(true);
+    setRejectError("");
+
+    try {
+      const res = await fetch(`/api/admin/blogs/${rejectPostTarget.id}/reject`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to reject post.");
+      }
+
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === rejectPostTarget.id
+            ? {
+                ...p,
+                status: "DRAFT",
+                rejectionReason: reason,
+                rejectedBy: data.post?.rejectedBy || "Super Admin",
+                rejectedAt: data.post?.rejectedAt || new Date().toISOString(),
+              }
+            : p
+        )
+      );
+      setRejectPostTarget(null);
+      fetchPosts();
+    } catch (err: unknown) {
+      setRejectError(err instanceof Error ? err.message : "Failed to reject post.");
+    } finally {
+      setRejectLoading(false);
     }
   };
 
@@ -414,6 +473,14 @@ export default function AdminBlogsPage() {
                           <p className="text-[11px] text-slate-400 font-mono truncate">
                             /blog/{post.slug}
                           </p>
+                          {post.status === "DRAFT" && post.rejectionReason && (
+                            <div className="mt-1.5 flex items-start gap-1 rounded-lg bg-rose-50 border border-rose-200/70 px-2 py-1 text-[10px] text-rose-800">
+                              <AlertCircle className="h-3 w-3 shrink-0 text-rose-600 mt-0.5" />
+                              <span className="line-clamp-1">
+                                <strong className="text-rose-900">Revision requested:</strong> {post.rejectionReason}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -434,9 +501,20 @@ export default function AdminBlogsPage() {
                           Pending Approval
                         </span>
                       ) : post.status === "DRAFT" ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[10px] font-semibold text-slate-700">
-                          Draft
-                        </span>
+                        <div className="flex flex-col gap-1 items-start">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[10px] font-semibold text-slate-700">
+                            Draft
+                          </span>
+                          {post.rejectionReason && (
+                            <span
+                              title={`Revision requested by ${post.rejectedBy || "Super Admin"}: ${post.rejectionReason}`}
+                              className="inline-flex items-center gap-1 rounded-md bg-rose-50 border border-rose-200 px-1.5 py-0.5 text-[9px] font-bold text-rose-700"
+                            >
+                              <AlertCircle className="h-2.5 w-2.5 text-rose-600" />
+                              Needs Revision
+                            </span>
+                          )}
+                        </div>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[10px] font-semibold text-slate-500">
                           Archived
@@ -469,15 +547,31 @@ export default function AdminBlogsPage() {
                     </td>
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5">
-                        {/* Quick 1-click Approve for Super Admin on Pending posts */}
+                        {/* Super Admin Review actions on Pending posts */}
                         {userRole === "SUPER_ADMIN" && post.status === "PENDING_APPROVAL" && (
-                          <button
-                            onClick={() => setApprovePostTarget({ id: post.id, title: post.title })}
-                            title="Approve & Publish to Live Site"
-                            className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-700 border border-emerald-200 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer"
-                          >
-                            <ShieldCheck className="h-3.5 w-3.5" /> Approve
-                          </button>
+                          <>
+                            <button
+                              onClick={() => setApprovePostTarget({ id: post.id, title: post.title })}
+                              title="Approve & Publish to Live Site"
+                              className="inline-flex items-center gap-1 rounded-lg bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-700 border border-emerald-200 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer"
+                            >
+                              <ShieldCheck className="h-3.5 w-3.5" /> Approve
+                            </button>
+                            <button
+                              onClick={() => {
+                                setRejectPostTarget({
+                                  id: post.id,
+                                  title: post.title,
+                                  authorName: post.author?.name,
+                                });
+                                setRejectError("");
+                              }}
+                              title="Reject with Revision Notes"
+                              className="inline-flex items-center gap-1 rounded-lg bg-rose-50 px-2 py-1 text-[11px] font-bold text-rose-700 border border-rose-200 hover:bg-rose-600 hover:text-white transition-colors cursor-pointer"
+                            >
+                              <XCircle className="h-3.5 w-3.5" /> Reject
+                            </button>
+                          </>
                         )}
 
                         {post.status === "PUBLISHED" && (
@@ -538,6 +632,20 @@ export default function AdminBlogsPage() {
         loading={approveLoading}
         onConfirm={executeApprovePost}
         onClose={() => setApprovePostTarget(null)}
+      />
+
+      {/* Reject Blog Modal with Reason */}
+      <RejectModal
+        isOpen={Boolean(rejectPostTarget)}
+        postTitle={rejectPostTarget?.title}
+        authorName={rejectPostTarget?.authorName}
+        loading={rejectLoading}
+        errorMessage={rejectError}
+        onConfirm={executeRejectPost}
+        onClose={() => {
+          setRejectPostTarget(null);
+          setRejectError("");
+        }}
       />
 
       {/* Confirm Delete Blog Modal */}

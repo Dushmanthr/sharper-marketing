@@ -39,6 +39,9 @@ export default function EditBlogPage() {
           status: raw.status || "DRAFT",
           featured: Boolean(raw.featured),
           content: Array.isArray(raw.content) ? raw.content : [],
+          rejectionReason: raw.rejectionReason || null,
+          rejectedBy: raw.rejectedBy || null,
+          rejectedAt: raw.rejectedAt || null,
         };
 
         setPost(formatted);

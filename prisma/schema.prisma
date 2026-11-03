@@ -137,6 +137,11 @@ model BlogPost {
   authorId        String
   author          AdminUser   @relation(fields: [authorId], references: [id])
 
+  // Rejection & Review metadata
+  rejectionReason String?     @db.Text
+  rejectedBy      String?
+  rejectedAt      DateTime?
+
   publishedAt     DateTime?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
