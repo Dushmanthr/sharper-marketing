@@ -38,11 +38,17 @@ interface BlogPost {
   rejectionReason?: string | null;
   rejectedBy?: string | null;
   rejectedAt?: string | null;
+  authorId?: string;
   author: {
+    id?: string;
     name: string;
     email: string;
     role?: "SUPER_ADMIN" | "MODERATOR" | string;
   };
+  lastEditedById?: string | null;
+  lastEditedByName?: string | null;
+  lastEditedByRole?: string | null;
+  lastEditedAt?: string | null;
 }
 
 interface StatusCounts {
@@ -427,7 +433,7 @@ export default function AdminBlogsPage() {
                 <th className="py-3.5 px-4">Article</th>
                 <th className="py-3.5 px-4">Category</th>
                 <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4">Author</th>
+                <th className="py-3.5 px-4">Author & Editor</th>
                 <th className="py-3.5 px-4">Read Time</th>
                 <th className="py-3.5 px-4">Published Date</th>
                 <th className="py-3.5 px-4 text-right">Actions</th>
@@ -522,12 +528,47 @@ export default function AdminBlogsPage() {
                       )}
                     </td>
                     <td className="py-3.5 px-4 whitespace-nowrap">
-                      <div className="flex flex-col">
-                        <span className="font-medium text-slate-700">{post.author?.name || "Admin"}</span>
-                        {post.author?.role === "MODERATOR" && (
-                          <span className="inline-flex items-center w-fit rounded-sm bg-purple-50 px-1.5 py-0.2 text-[9px] font-bold text-purple-700 uppercase tracking-wider">
-                            Moderator
-                          </span>
+                      <div className="flex flex-col gap-1">
+                        {/* Blog Creator */}
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] text-slate-400 font-medium">By:</span>
+                          <span className="font-semibold text-slate-700">{post.author?.name || "Admin"}</span>
+                          {post.author?.role === "MODERATOR" ? (
+                            <span className="inline-flex items-center rounded-sm bg-purple-50 px-1 py-0.2 text-[8px] font-bold text-purple-700 border border-purple-200 uppercase">
+                              Mod
+                            </span>
+                          ) : post.author?.role === "SUPER_ADMIN" ? (
+                            <span className="inline-flex items-center rounded-sm bg-blue-50 px-1 py-0.2 text-[8px] font-bold text-blue-700 border border-blue-200 uppercase">
+                              Admin
+                            </span>
+                          ) : null}
+                        </div>
+
+                        {/* Last Edit Tracker */}
+                        {post.lastEditedByName ? (
+                          <div className="flex items-center gap-1 text-[10px]">
+                            <span className="text-slate-400">Edited by:</span>
+                            {post.lastEditedById && (post.author?.id || post.authorId) && post.lastEditedById !== (post.author?.id || post.authorId) ? (
+                              <span
+                                title={post.lastEditedAt ? `Last edit: ${new Date(post.lastEditedAt).toLocaleString("en-GB")}` : undefined}
+                                className="inline-flex items-center gap-1 rounded bg-amber-50 border border-amber-200 px-1.5 py-0.2 font-semibold text-amber-800"
+                              >
+                                {post.lastEditedByName}
+                                {post.lastEditedByRole === "MODERATOR" && (
+                                  <span className="text-[8px] font-bold uppercase text-amber-600">(Mod)</span>
+                                )}
+                              </span>
+                            ) : (
+                              <span
+                                title={post.lastEditedAt ? `Last edit: ${new Date(post.lastEditedAt).toLocaleString("en-GB")}` : undefined}
+                                className="text-slate-500 font-medium"
+                              >
+                                {post.lastEditedByName}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-[9px] text-slate-400 italic">No edits yet</span>
                         )}
                       </div>
                     </td>

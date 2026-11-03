@@ -42,6 +42,11 @@ export default function EditBlogPage() {
           rejectionReason: raw.rejectionReason || null,
           rejectedBy: raw.rejectedBy || null,
           rejectedAt: raw.rejectedAt || null,
+          author: raw.author || null,
+          lastEditedById: raw.lastEditedById || null,
+          lastEditedByName: raw.lastEditedByName || null,
+          lastEditedByRole: raw.lastEditedByRole || null,
+          lastEditedAt: raw.lastEditedAt || null,
         };
 
         setPost(formatted);

@@ -55,6 +55,16 @@ export interface BlogFormData {
   rejectionReason?: string | null;
   rejectedBy?: string | null;
   rejectedAt?: string | null;
+  author?: {
+    id?: string;
+    name: string;
+    email?: string;
+    role?: string;
+  } | null;
+  lastEditedById?: string | null;
+  lastEditedByName?: string | null;
+  lastEditedByRole?: string | null;
+  lastEditedAt?: string | null;
 }
 
 interface BlogEditorProps {
@@ -383,8 +393,33 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
               {isEditing ? "Edit Article" : "Create New Strategic Article"}
             </h1>
             <p className="text-xs text-slate-500">
-              {isEditing ? `Editing /blog/${formData.slug}` : "Draft and publish to the live knowledge base"}
-            </p>
+              {isEditing ? `Editing /blog/${formData.slug}` : "Draft and publish to the live knowledge base"}</p>
+
+            {isEditing && (
+              <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500 mt-1">
+                <span>By: <strong className="text-slate-700">{formData.author?.name || "Admin"}</strong></span>
+                {formData.author?.role === "MODERATOR" && (
+                  <span className="rounded bg-purple-50 px-1 py-0.2 text-[8px] font-bold text-purple-700 uppercase">
+                    Mod
+                  </span>
+                )}
+                <span>•</span>
+                {formData.lastEditedByName ? (
+                  <span>
+                    Last edit:{" "}
+                    <strong className={formData.lastEditedById && formData.author?.id && formData.lastEditedById !== formData.author?.id ? "text-amber-800 font-semibold" : "text-slate-700"}>
+                      {formData.lastEditedByName}
+                      {formData.lastEditedByRole === "MODERATOR" ? " (Mod)" : ""}
+                    </strong>
+                    {formData.lastEditedAt && ` on ${new Date(formData.lastEditedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}`}
+                  </span>
+                ) : (
+                  <span className="italic text-slate-400">No edits yet</span>
+                )}
+              </div>
+            )}
+
+
           </div>
         </div>
 
@@ -555,8 +590,8 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                 {formData.rejectionReason}
               </div>
               <p className="mt-2 text-[11px] text-rose-700">
-                Please make the required revisions in the editor below. When finished, select <strong>&ldquo;Submit for Approval&rdquo;</strong> to resubmit to the Super Admin.
-              </p>
+                Please make the required revisions in the editor below. When finished, select <strong>&ldquo;Submit for Approval&rdquo;</strong> to resubmit to the Super Admin.</p>
+  
             </div>
           </div>
         </div>
@@ -648,8 +683,8 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                     Article Sections Builder
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Structure content into headings, paragraphs, and strategic key takeaways.
-                  </p>
+                    Structure content into headings, paragraphs, and strategic key takeaways.</p>
+      
                 </div>
                 <button
                   type="button"
@@ -757,8 +792,8 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                       <Info className="h-3.5 w-3.5 text-amber-600" /> Moderator Workflow
                     </div>
                     <p className="text-amber-800 leading-relaxed">
-                      Articles submitted for approval go to Super Admin for verification. Once approved, they will appear automatically on the live website.
-                    </p>
+                      Articles submitted for approval go to Super Admin for verification. Once approved, they will appear automatically on the live website.</p>
+        
                   </div>
                 </>
               ) : (
@@ -790,8 +825,8 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                         <Clock className="h-3.5 w-3.5 text-amber-600" /> Awaiting Super Admin Review
                       </div>
                       <p className="text-amber-800 leading-relaxed">
-                        This article is currently pending approval. Approving it will immediately publish it to the live website.
-                      </p>
+                        This article is currently pending approval. Approving it will immediately publish it to the live website.</p>
+          
                       {isEditing && (
                         <div className="flex flex-col gap-1.5 pt-1">
                           <button
@@ -955,11 +990,11 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                       </div>
                       <div>
                         <p className="text-xs font-bold text-navy-900">
-                          Click or drag & drop to upload image
-                        </p>
+                          Click or drag & drop to upload image</p>
+            
                         <p className="mt-0.5 text-[11px] text-slate-400">
-                          PNG, JPG, WEBP, SVG or AVIF (up to 10MB)
-                        </p>
+                          PNG, JPG, WEBP, SVG or AVIF (up to 10MB)</p>
+            
                       </div>
                     </>
                   )}
@@ -1109,8 +1144,8 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
 
           <div className="rounded-2xl border-l-4 border-orange-500 bg-slate-50 p-5 mb-8">
             <p className="font-display text-base font-medium text-navy-900">
-              {formData.excerpt || "Article excerpt will appear here..."}
-            </p>
+              {formData.excerpt || "Article excerpt will appear here..."}</p>
+
           </div>
 
           <div className="space-y-8">
@@ -1121,8 +1156,8 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                 </h2>
                 {sec.paragraphs.map((p, pIdx) => (
                   <p key={pIdx} className="text-sm leading-relaxed text-slate-700">
-                    {p}
-                  </p>
+                    {p}</p>
+      
                 ))}
 
                 {sec.keyTakeaways && sec.keyTakeaways.length > 0 && (

@@ -137,6 +137,12 @@ model BlogPost {
   authorId        String
   author          AdminUser   @relation(fields: [authorId], references: [id])
 
+  // Last editor metadata
+  lastEditedById   String?
+  lastEditedByName String?
+  lastEditedByRole String?
+  lastEditedAt     DateTime?
+
   // Rejection & Review metadata
   rejectionReason String?     @db.Text
   rejectedBy      String?
