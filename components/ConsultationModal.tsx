@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -22,15 +22,35 @@ import { trackEvent } from "@/lib/analytics";
 
 type TabMode = "consultation" | "quotation" | "audit";
 
-const timezones = [
-  { value: "Europe/London", label: "London (GMT/BST)" },
-  { value: "Europe/Paris", label: "Central Europe (CET)" },
-  { value: "America/New_York", label: "US East (EST)" },
-  { value: "America/Los_Angeles", label: "US West (PST)" },
-  { value: "Asia/Dubai", label: "Gulf Standard (GST)" },
-  { value: "Asia/Singapore", label: "Singapore / HK (SGT)" },
-  { value: "Asia/Kolkata", label: "India (IST)" },
-  { value: "Australia/Sydney", label: "Australia (AEST)" },
+const standardTimezones = [
+  { value: "Europe/London", city: "London", region: "UK (GMT / BST)" },
+  { value: "Europe/Paris", city: "Paris / Berlin / Rome", region: "Europe (CET / CEST)" },
+  { value: "Europe/Dublin", city: "Dublin", region: "Ireland (IST)" },
+  { value: "America/New_York", city: "New York / Toronto", region: "US & Canada (EST / EDT)" },
+  { value: "America/Chicago", city: "Chicago / Dallas", region: "US & Canada (CST / CDT)" },
+  { value: "America/Denver", city: "Denver / Phoenix", region: "US & Canada (MST / MDT)" },
+  { value: "America/Los_Angeles", city: "Los Angeles / Vancouver", region: "US & Canada (PST / PDT)" },
+  { value: "Asia/Dubai", city: "Dubai / Abu Dhabi", region: "Gulf Standard (GST, GMT+4)" },
+  { value: "Asia/Riyadh", city: "Riyadh", region: "Saudi Arabia (AST, GMT+3)" },
+  { value: "Asia/Singapore", city: "Singapore / Hong Kong", region: "Asia (SGT / HKT, GMT+8)" },
+  { value: "Asia/Tokyo", city: "Tokyo / Seoul", region: "Japan & Korea (JST / KST, GMT+9)" },
+  { value: "Asia/Kolkata", city: "Mumbai / New Delhi", region: "India (IST, GMT+5:30)" },
+  { value: "Australia/Sydney", city: "Sydney / Melbourne", region: "Australia (AEST / AEDT)" },
+  { value: "Pacific/Auckland", city: "Auckland", region: "New Zealand (NZST / NZDT)" },
+  { value: "Africa/Johannesburg", city: "Johannesburg", region: "South Africa (SAST, GMT+2)" },
+];
+
+const timeSlots = [
+  "10:00 – 11:00 (Recommended)",
+  "11:00 – 12:00",
+  "12:00 – 13:00",
+  "13:00 – 14:00 (Early Afternoon)",
+  "14:00 – 15:00",
+  "15:00 – 16:00",
+  "16:00 – 17:00 (Late Afternoon)",
+  "17:00 – 18:00 (Evening Slot)",
+  "09:00 – 10:00 (Early Morning)",
+  "Flexible / Any Time",
 ];
 
 const budgetRanges = [
@@ -79,7 +99,36 @@ export default function ConsultationModal({
   // Consultation tab fields
   const [selectedService, setSelectedService] = useState(preselectedService || services[0].slug);
   const [preferredTimezone, setPreferredTimezone] = useState("Europe/London");
+  const [detectedTimezone, setDetectedTimezone] = useState<string>("");
   const [preferredDate, setPreferredDate] = useState("");
+  const [preferredTimeSlot, setPreferredTimeSlot] = useState(timeSlots[0]);
+
+  // Worldwide industrial standard: Auto-detect user timezone via browser Intl API
+  useEffect(() => {
+    try {
+      if (typeof Intl !== "undefined" && Intl.DateTimeFormat) {
+        const clientTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (clientTz) {
+          setDetectedTimezone(clientTz);
+          setPreferredTimezone(clientTz);
+        }
+      }
+    } catch {
+      // Graceful fallback to London UK
+    }
+  }, []);
+
+  const timezoneOptions = useMemo(() => {
+    const list = [...standardTimezones];
+    if (detectedTimezone && !list.some((item) => item.value === detectedTimezone)) {
+      list.unshift({
+        value: detectedTimezone,
+        city: detectedTimezone.replace(/_/g, " ").split("/").pop() || detectedTimezone,
+        region: "Your Local Timezone (Auto-detected)",
+      });
+    }
+    return list;
+  }, [detectedTimezone]);
 
   // Quotation tab fields
   const [selectedServices, setSelectedServices] = useState<string[]>([
@@ -139,9 +188,13 @@ export default function ConsultationModal({
           ? "Social Media Followers Increasing (FB, IG, TikTok)"
           : services.find((s) => s.slug === selectedService)?.title || selectedService;
       subject = `Strategy Consultation Request: ${srv}`;
+      const bookingTiming = preferredDate
+        ? `${preferredDate} at ${preferredTimeSlot}`
+        : `Flexible / Earliest available (${preferredTimeSlot})`;
+
       messageBody = `CONSULTATION BOOKING DETAILS:
 Service: ${srv}
-Preferred Date/Time: ${preferredDate || "Earliest available"}
+Preferred Date & Time: ${bookingTiming}
 Preferred Timezone: ${preferredTimezone}
 Company: ${company || "Not specified"}
 Website: ${website || "Not specified"}
@@ -183,7 +236,9 @@ Notes / Competitors: ${notes || "None"}`;
       ...(tab === "consultation"
         ? {
             preferredTimezone,
-            preferredDate: preferredDate.trim() || undefined,
+            preferredDate: preferredDate.trim()
+              ? `${preferredDate} (${preferredTimeSlot})`
+              : undefined,
           }
         : tab === "quotation"
         ? {
@@ -394,34 +449,68 @@ Notes / Competitors: ${notes || "None"}`;
                         </select>
                       </div>
 
+                      {/* Auto-detected International Timezone */}
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700 flex items-center gap-1.5">
+                            <Globe2 className="h-3.5 w-3.5 text-orange-500" /> Client Timezone
+                          </label>
+                          {detectedTimezone && (
+                            <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
+                              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                              Auto-detected
+                            </span>
+                          )}
+                        </div>
+                        <select
+                          value={preferredTimezone}
+                          onChange={(e) => setPreferredTimezone(e.target.value)}
+                          className="mt-1.5 w-full rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
+                        >
+                          {timezoneOptions.map((tz) => (
+                            <option key={tz.value} value={tz.value}>
+                              {tz.city} · {tz.region}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Interactive Calendar Date Picker & Time Slot Picker */}
                       <div className="grid gap-3 sm:grid-cols-2">
                         <div className="min-w-0">
-                          <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700">
-                            Your Timezone
+                          <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700 flex items-center gap-1.5">
+                            <Calendar className="h-3.5 w-3.5 text-orange-500" /> Preferred Date
+                          </label>
+                          <input
+                            type="date"
+                            min={new Date().toISOString().split("T")[0]}
+                            value={preferredDate}
+                            onChange={(e) => setPreferredDate(e.target.value)}
+                            className="mt-1.5 w-full min-w-0 rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
+                          />
+                          <span className="mt-1 block text-[10px] text-ink-muted">
+                            Select date (Today onwards)
+                          </span>
+                        </div>
+
+                        <div className="min-w-0">
+                          <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700 flex items-center gap-1.5">
+                            <Clock className="h-3.5 w-3.5 text-orange-500" /> Preferred Time Slot
                           </label>
                           <select
-                            value={preferredTimezone}
-                            onChange={(e) => setPreferredTimezone(e.target.value)}
-                            className="mt-1.5 w-full min-w-0 rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                            value={preferredTimeSlot}
+                            onChange={(e) => setPreferredTimeSlot(e.target.value)}
+                            className="mt-1.5 w-full min-w-0 rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
                           >
-                            {timezones.map((tz) => (
-                              <option key={tz.value} value={tz.value}>
-                                {tz.label}
+                            {timeSlots.map((slot) => (
+                              <option key={slot} value={slot}>
+                                {slot}
                               </option>
                             ))}
                           </select>
-                        </div>
-                        <div className="min-w-0">
-                          <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700">
-                            Preferred Day / Time
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="e.g. Next Tuesday morning"
-                            value={preferredDate}
-                            onChange={(e) => setPreferredDate(e.target.value)}
-                            className="mt-1.5 w-full min-w-0 rounded-xl border border-navy-200 bg-white px-3.5 py-2.5 text-sm text-navy-900 placeholder:text-navy-400 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
-                          />
+                          <span className="mt-1 block text-[10px] text-ink-muted">
+                            Local time in your timezone
+                          </span>
                         </div>
                       </div>
                     </div>
