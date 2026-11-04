@@ -1,0 +1,45 @@
+# Development stack with hot reload:
+#   docker compose -f docker-compose.dev.yml up --build
+name: sharper-marketing-dev
+
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sharper_marketing
+      MYSQL_USER: sharper
+      MYSQL_PASSWORD: sharper
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - db_data_dev:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: mysql://sharper:sharper@db:3306/sharper_marketing
+      JWT_SECRET: dev-only-secret
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy && npm run dev -- -H 0.0.0.0"
+    volumes:
+      - .:/app
+      # Keep the container's node_modules/.next rather than the host's
+      - /app/node_modules
+      - /app/.next
+
+volumes:
+  db_data_dev:

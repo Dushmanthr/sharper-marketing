@@ -1,0 +1,136 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time; never cancel one that is mid-flight.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ghcr.io
+  # Must be lowercase for GHCR.
+  IMAGE: ghcr.io/sharper-labs-it/sharper-marketing
+
+jobs:
+  build:
+    name: Build & push images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # NEXT_PUBLIC_* are public by design (inlined into the browser bundle), so
+      # they are stored as repository *Variables*, not Secrets.
+      - name: Build & push app image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: runner
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL }}
+            NEXT_PUBLIC_EMAILJS_SERVICE_ID=${{ vars.NEXT_PUBLIC_EMAILJS_SERVICE_ID }}
+            NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=${{ vars.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID }}
+            NEXT_PUBLIC_EMAILJS_ACK_TEMPLATE_ID=${{ vars.NEXT_PUBLIC_EMAILJS_ACK_TEMPLATE_ID }}
+            NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=${{ vars.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY }}
+            NEXT_PUBLIC_SHEETS_WEBAPP_URL=${{ vars.NEXT_PUBLIC_SHEETS_WEBAPP_URL }}
+            NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=${{ vars.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build & push migrate image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: migrate
+          push: true
+          tags: |
+            ${{ env.IMAGE }}-migrate:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL }}
+          cache-from: type=gha
+
+  deploy:
+    name: Deploy to VPS
+    needs: build
+    runs-on: ubuntu-latest
+    # Add required reviewers to this environment in GitHub for a manual approval gate.
+    environment:
+      name: production
+      url: https://marketing.sharper-labs.com
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Upload compose file & deploy script
+        env:
+          HOST: ${{ secrets.VPS_HOST }}
+          USER: ${{ secrets.VPS_USER }}
+          PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          SSH="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p ${PORT:-22}"
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -P "${PORT:-22}" \
+            deploy/docker-compose.prod.yml deploy/deploy.sh \
+            "$USER@$HOST:/var/www/sharper-marketing/"
+          $SSH "$USER@$HOST" 'chmod +x /var/www/sharper-marketing/deploy.sh'
+
+      - name: Deploy
+        env:
+          HOST: ${{ secrets.VPS_HOST }}
+          USER: ${{ secrets.VPS_USER }}
+          PORT: ${{ secrets.VPS_PORT }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.sha }}
+        run: |
+          # The short-lived job token is piped over SSH (never in argv/logs) to
+          # let the VPS pull the private images, then the login is removed.
+          printf '%s' "$GHCR_TOKEN" | ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p "${PORT:-22}" \
+            "$USER@$HOST" \
+            "docker login ghcr.io -u '$GHCR_USER' --password-stdin >/dev/null \
+             && /var/www/sharper-marketing/deploy.sh '$TAG'; rc=\$?; docker logout ghcr.io >/dev/null; exit \$rc"
+
+      - name: Smoke test
+        run: |
+          for i in $(seq 1 10); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' https://marketing.sharper-labs.com/ || true)
+            [ "$code" = "200" ] && echo "OK" && exit 0
+            sleep 5
+          done
+          echo "Site did not return 200" >&2; exit 1
+
+      - name: Cleanup SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
