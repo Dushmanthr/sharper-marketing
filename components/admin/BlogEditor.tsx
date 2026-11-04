@@ -308,7 +308,7 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
   };
 
   const updateSectionParagraphs = (idx: number, text: string) => {
-    const paragraphs = text.split("\n\n").filter((p) => p.trim().length > 0);
+    const paragraphs = text.split("\n\n");
     setFormData((prev) => {
       const content = [...prev.content];
       content[idx] = { ...content[idx], paragraphs };
@@ -317,7 +317,7 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
   };
 
   const updateSectionTakeaway = (idx: number, text: string) => {
-    const keyTakeaways = text.split("\n").filter((t) => t.trim().length > 0);
+    const keyTakeaways = text.split("\n");
     setFormData((prev) => {
       const content = [...prev.content];
       content[idx] = { ...content[idx], keyTakeaways };
@@ -348,8 +348,16 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
 
     setSaving(true);
     try {
+      const cleanedContent = formData.content.map((sec) => ({
+        ...sec,
+        paragraphs: sec.paragraphs.map((p) => p.trim()).filter((p) => p.length > 0),
+        keyTakeaways: (sec.keyTakeaways || []).map((t) => t.trim()).filter((t) => t.length > 0),
+      }));
+
       const payload = {
+
         ...formData,
+        content: cleanedContent,
         ...(targetStatus ? { status: targetStatus } : {}),
       };
 
@@ -751,7 +759,7 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                       Key Takeaways / Bullet Highlights (One per line)
                     </label>
                     <textarea
-                      rows={2}
+                      rows={3}
                       value={(sec.keyTakeaways || []).join("\n")}
                       onChange={(e) => updateSectionTakeaway(idx, e.target.value)}
                       placeholder="Takeaway bullet point 1&#10;Takeaway bullet point 2"
@@ -1159,19 +1167,19 @@ export default function BlogEditor({ initialData, isEditing = false }: BlogEdito
                 <h2 className="font-display text-xl font-bold text-navy-900">
                   {i + 1}. {sec.heading}
                 </h2>
-                {sec.paragraphs.map((p, pIdx) => (
+                {sec.paragraphs.filter((p) => p.trim().length > 0).map((p, pIdx) => (
                   <p key={pIdx} className="text-sm leading-relaxed text-slate-700">
                     {p}</p>
       
                 ))}
 
-                {sec.keyTakeaways && sec.keyTakeaways.length > 0 && (
+                {sec.keyTakeaways && sec.keyTakeaways.some((t) => t.trim().length > 0) && (
                   <div className="rounded-2xl bg-navy-900 p-5 text-white my-4">
                     <span className="text-xs font-bold uppercase tracking-wider text-orange-400 block mb-2">
                       Key Takeaways
                     </span>
                     <ul className="space-y-1.5 text-xs text-slate-200">
-                      {sec.keyTakeaways.map((t, tIdx) => (
+                      {sec.keyTakeaways.filter((t) => t.trim().length > 0).map((t, tIdx) => (
                         <li key={tIdx} className="flex items-start gap-2">
                           <span className="text-orange-400 font-bold">•</span>
                           <span>{t}</span>
