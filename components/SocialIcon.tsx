@@ -2,6 +2,8 @@
  * Brand social icons as inline SVG.
  * Handles official vectors, including multi-colour chromatic TikTok branding.
  */
+import Image from "next/image";
+
 type IconName = "facebook" | "instagram" | "youtube" | "linkedin" | "tiktok";
 
 type IconDef = {
@@ -73,6 +75,20 @@ export default function SocialIcon({
   name: string;
   className?: string;
 }) {
+  if (name === "facebook") {
+    return (
+      <Image
+        src="/images/facebook.jpg"
+        alt="Facebook"
+        width={24}
+        height={24}
+        className={`rounded-full object-cover shrink-0 ${className || ""}`}
+        aria-hidden="true"
+        unoptimized
+      />
+    );
+  }
+
   const icon = icons[name as IconName];
   if (!icon) return null;
   return (
