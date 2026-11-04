@@ -46,9 +46,15 @@ export async function POST(req: Request) {
     // Safely parse preferred date if provided and valid ISO/timestamp
     let safePreferredDate: Date | null = null;
     if (preferredDate) {
-      const parsed = new Date(preferredDate);
-      if (!isNaN(parsed.getTime())) {
-        safePreferredDate = parsed;
+      const datePart = String(preferredDate).split(" ")[0];
+      const parsedDate = new Date(datePart);
+      if (!isNaN(parsedDate.getTime())) {
+        safePreferredDate = parsedDate;
+      } else {
+        const rawParsed = new Date(preferredDate);
+        if (!isNaN(rawParsed.getTime())) {
+          safePreferredDate = rawParsed;
+        }
       }
     }
 

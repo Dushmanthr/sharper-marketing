@@ -917,7 +917,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Scaling countryside hotel bookings, Courtyard dining, and high-ticket Tithe Barn weddings with heritage branding and frictionless reservation flows.",
     image: "/images/restaurant/hero-estate.jpg",
-    video: "/videos/video1.mp4",
+
     clientDomain: "greenhavenestate.co.uk",
     websiteUrl: "https://greenhavenestate.co.uk",
     demoUrl: "/demos/modern-restaurant",
@@ -976,7 +976,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "Scaling high-ticket architectural stone & timber furniture sales with real-time 360° WebGL customisation, tactile swatches, and a frictionless checkout flow.",
     image: "/images/furniture/hero.jpg",
-    video: "/videos/video1.mp4",
+
     clientDomain: "stoneandtimber-atelier.co.uk",
     websiteUrl: "https://stoneandtimber-atelier.co.uk",
     demoUrl: "/demos/furniture-house",
@@ -1035,7 +1035,7 @@ export const caseStudies: CaseStudy[] = [
     summary:
       "How an elite athletic club scaled membership acquisitions by +280% with real-time floor occupancy telemetry, 3D kinetic barbell visualisers, and an interactive body transformation ROI engine.",
     image: "/images/fitness/hero-gym.jpg",
-    video: "/videos/video1.mp4",
+
     clientDomain: "ironpulse-fitness.com",
     websiteUrl: "https://fitnessplus.lk",
     demoUrl: "/demos/smart-agriculture",

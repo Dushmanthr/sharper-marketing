@@ -21,6 +21,9 @@ export async function POST(req: Request, context: RouteContext) {
   const { id } = await context.params;
 
   try {
+    const body = await req.json().catch(() => ({}));
+    const reason = typeof body?.reason === "string" ? body.reason.trim() : "";
+
     const existing = await prisma.blogPost.findUnique({ where: { id } });
     if (!existing) {
       return NextResponse.json({ error: "Article not found." }, { status: 404 });
@@ -38,10 +41,30 @@ export async function POST(req: Request, context: RouteContext) {
       },
     });
 
+    // Safely record rejection reason and reviewer metadata
+    const finalReason = reason || "Revision requested by Super Admin.";
+    const reviewerName = session.name || "Super Admin";
+    try {
+      await prisma.$executeRaw`
+        UPDATE blog_posts 
+        SET rejectionReason = ${finalReason}, 
+            rejectedBy = ${reviewerName}, 
+            rejectedAt = NOW() 
+        WHERE id = ${id}
+      `;
+    } catch {
+      // safe fallback
+    }
+
     return NextResponse.json({
       success: true,
-      message: "Article status reverted to draft.",
-      post: updated,
+      message: "Article returned to author with revision feedback.",
+      post: {
+        ...updated,
+        rejectionReason: finalReason,
+        rejectedBy: reviewerName,
+        rejectedAt: new Date().toISOString(),
+      },
     });
   } catch (error) {
     console.error("[Reject Blog Error]:", error);

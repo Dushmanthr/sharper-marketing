@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
+import { prisma, ensureEditorColumnsExist } from "@/lib/prisma";
 import { getSessionAdmin, hasAdminPanelAccess, isSuperAdmin } from "@/lib/auth";
 import type { PostStatus } from "@prisma/client";
 
@@ -19,6 +19,7 @@ export async function GET(req: Request, context: RouteContext) {
   const { id } = await context.params;
 
   try {
+    await ensureEditorColumnsExist().catch(() => {});
     const post = await prisma.blogPost.findUnique({
       where: { id },
       include: {
@@ -30,7 +31,29 @@ export async function GET(req: Request, context: RouteContext) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ post });
+    // Safely retrieve rejection feedback if available
+    let rejectionInfo: any = {};
+    try {
+      const rawRows: any = await prisma.$queryRaw`SELECT rejectionReason, rejectedBy, rejectedAt, lastEditedById, lastEditedByName, lastEditedByRole, lastEditedAt FROM blog_posts WHERE id = ${id} LIMIT 1`;
+      if (Array.isArray(rawRows) && rawRows.length > 0) {
+        rejectionInfo = rawRows[0];
+      }
+    } catch {
+      // safe fallback
+    }
+
+    return NextResponse.json({
+      post: {
+        ...post,
+        rejectionReason: rejectionInfo.rejectionReason ?? (post as any).rejectionReason ?? null,
+        rejectedBy: rejectionInfo.rejectedBy ?? (post as any).rejectedBy ?? null,
+        rejectedAt: rejectionInfo.rejectedAt ? new Date(rejectionInfo.rejectedAt) : ((post as any).rejectedAt ? new Date((post as any).rejectedAt) : null),
+        lastEditedById: rejectionInfo.lastEditedById ?? (post as any).lastEditedById ?? null,
+        lastEditedByName: rejectionInfo.lastEditedByName ?? (post as any).lastEditedByName ?? null,
+        lastEditedByRole: rejectionInfo.lastEditedByRole ?? (post as any).lastEditedByRole ?? null,
+        lastEditedAt: rejectionInfo.lastEditedAt ? new Date(rejectionInfo.lastEditedAt) : ((post as any).lastEditedAt ? new Date((post as any).lastEditedAt) : null),
+      },
+    });
   } catch (error) {
     console.error("[Get Blog Error]:", error);
     return NextResponse.json({ error: "Failed to get blog post" }, { status: 500 });
@@ -123,7 +146,40 @@ export async function PUT(req: Request, context: RouteContext) {
       },
     });
 
+    if (resolvedStatus === "PENDING_APPROVAL") {
+      try {
+        await prisma.$executeRaw`
+          UPDATE blog_posts 
+          SET rejectionReason = NULL, rejectedBy = NULL, rejectedAt = NULL 
+          WHERE id = ${id}
+        `;
+      } catch {
+        // safe fallback
+      }
+    }
+
+
     revalidatePath("/blog");
+    // Safely record who performed this edit
+    const editorId = session.id;
+    const editorName = session.name || "Admin";
+    const editorRole = session.role || "MODERATOR";
+    const editTimestamp = new Date();
+
+    try {
+      await ensureEditorColumnsExist().catch(() => {});
+      await prisma.$executeRaw`
+        UPDATE blog_posts 
+        SET lastEditedById = ${editorId}, 
+            lastEditedByName = ${editorName}, 
+            lastEditedByRole = ${editorRole}, 
+            lastEditedAt = ${editTimestamp} 
+        WHERE id = ${id}
+      `;
+    } catch (trackErr) {
+      console.warn("Could not track last editor:", trackErr);
+    }
+
     revalidatePath(`/blog/${updated.slug}`);
     if (existing.slug !== updated.slug) {
       revalidatePath(`/blog/${existing.slug}`);
@@ -132,7 +188,13 @@ export async function PUT(req: Request, context: RouteContext) {
 
     return NextResponse.json({
       success: true,
-      post: updated,
+      post: {
+        ...updated,
+        lastEditedById: editorId,
+        lastEditedByName: editorName,
+        lastEditedByRole: editorRole,
+        lastEditedAt: editTimestamp.toISOString(),
+      },
       requiresApproval: !superAdminUser && resolvedStatus === ("PENDING_APPROVAL" as PostStatus),
     });
   } catch (error) {
@@ -159,6 +221,7 @@ export async function DELETE(req: Request, context: RouteContext) {
   try {
     const existing = await prisma.blogPost.findUnique({ where: { id } });
     await prisma.blogPost.delete({ where: { id } });
+
 
     revalidatePath("/blog");
     if (existing) {

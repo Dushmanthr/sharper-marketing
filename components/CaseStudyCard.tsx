@@ -113,6 +113,14 @@ export default function CaseStudyCard({
                 <span className="hidden xs:inline">Preview</span>
               </span>
             )
+          ) : study.demoUrl ? (
+            <span className="flex items-center gap-1 text-[9px] font-semibold text-orange-600">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
+              </span>
+              <span className="hidden xs:inline">Interactive Demo</span>
+            </span>
           ) : null}
         </div>
       </div>
@@ -236,7 +244,7 @@ export default function CaseStudyCard({
           )}
         </div>
 
-        {/* CTA Footer with Detail Link & External Production Link */}
+        {/* CTA Footer with Demonstration / Detail Link */}
         <div className="mt-4 pt-3 border-t border-navy-50 flex items-center justify-between">
           {onSelect ? (
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-navy-800 transition-colors duration-200 group-hover:text-orange-600">

@@ -3,16 +3,15 @@
 import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Lock,
   Mail,
   ArrowRight,
   Loader2,
   AlertCircle,
-  ShieldCheck,
   Shield,
   FileText,
-  KeyRound,
 } from "lucide-react";
 
 type PortalRole = "SUPER_ADMIN" | "MODERATOR";
@@ -77,24 +76,22 @@ function LoginForm() {
     }
   };
 
-  // Helper to prefill demo credentials
-  const fillCredentials = (userEmail: string, userPass: string) => {
-    setEmail(userEmail);
-    setPassword(userPass);
-    setError("");
-  };
 
   return (
     <div className="w-full max-w-md">
       {/* Brand Card Header */}
       <div className="mb-6 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-orange-400 font-bold text-xl shadow-xl">
-          SL
-        </div>
-        <h1 className="mt-4 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
-          Sharper Labs Marketing
-        </h1>
-        <p className="mt-1 text-xs uppercase tracking-wider font-semibold text-orange-400">
+        <Link href="/" className="inline-block transition-transform duration-200 hover:scale-[1.02]">
+          <Image
+            src="/logo/logo.svg"
+            alt="Sharper Labs Marketing"
+            width={200}
+            height={62}
+            priority
+            className="mx-auto h-12 sm:h-14 w-auto object-contain drop-shadow-md"
+          />
+        </Link>
+        <p className="mt-3 text-xs uppercase tracking-wider font-semibold text-orange-400">
           Management & Editorial Console
         </p>
       </div>
@@ -219,28 +216,6 @@ function LoginForm() {
           </button>
         </form>
 
-        {/* Quick Credential Helper Banner */}
-        <div className="mt-6 rounded-2xl border border-slate-100 bg-slate-50 p-3.5">
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Seed Account
-            </span>
-            <button
-              type="button"
-              onClick={() =>
-                portal === "SUPER_ADMIN"
-                  ? fillCredentials("admin@sharper-labs.com", "AdminSharper2026!")
-                  : fillCredentials("moderator@sharper-labs.com", "ModeratorSharper2026!")
-              }
-              className="text-[10px] font-bold text-orange-600 hover:underline cursor-pointer"
-            >
-              Fill Credentials
-            </button>
-          </div>
-          <p className="mt-1 font-mono text-[11px] text-slate-700">
-            {portal === "SUPER_ADMIN" ? "admin@sharper-labs.com" : "moderator@sharper-labs.com"}
-          </p>
-        </div>
       </div>
 
       {/* Back to Live Site link */}
