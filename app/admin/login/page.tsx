@@ -10,10 +10,8 @@ import {
   ArrowRight,
   Loader2,
   AlertCircle,
-  ShieldCheck,
   Shield,
   FileText,
-  KeyRound,
 } from "lucide-react";
 
 type PortalRole = "SUPER_ADMIN" | "MODERATOR";
@@ -78,12 +76,6 @@ function LoginForm() {
     }
   };
 
-  // Helper to prefill demo credentials
-  const fillCredentials = (userEmail: string, userPass: string) => {
-    setEmail(userEmail);
-    setPassword(userPass);
-    setError("");
-  };
 
   return (
     <div className="w-full max-w-md">
@@ -224,28 +216,6 @@ function LoginForm() {
           </button>
         </form>
 
-        {/* Quick Credential Helper Banner */}
-        <div className="mt-6 rounded-2xl border border-slate-100 bg-slate-50 p-3.5">
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> Seed Account
-            </span>
-            <button
-              type="button"
-              onClick={() =>
-                portal === "SUPER_ADMIN"
-                  ? fillCredentials("admin@sharper-labs.com", "AdminSharper2026!")
-                  : fillCredentials("moderator@sharper-labs.com", "ModeratorSharper2026!")
-              }
-              className="text-[10px] font-bold text-orange-600 hover:underline cursor-pointer"
-            >
-              Fill Credentials
-            </button>
-          </div>
-          <p className="mt-1 font-mono text-[11px] text-slate-700">
-            {portal === "SUPER_ADMIN" ? "admin@sharper-labs.com" : "moderator@sharper-labs.com"}
-          </p>
-        </div>
       </div>
 
       {/* Back to Live Site link */}
