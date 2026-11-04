@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
   // otherwise default to standard dynamic Next.js server to support backend API routes.
   ...(process.env.NEXT_STATIC_EXPORT === "true" ? { output: "export" } : {}),
 
+  // Self-contained server bundle for Docker (.next/standalone). Opt-in so the
+  // cPanel static export and regular builds are unaffected.
+  ...(process.env.NEXT_OUTPUT === "standalone" ? { output: "standalone" } : {}),
+
   // Every route is emitted as `route/index.html` so Apache serves it directly
   // without rewrite rules.
   trailingSlash: true,

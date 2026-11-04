@@ -1,0 +1,94 @@
+# Production stack for the shared Hostinger VPS. Lives on the server at
+# /var/www/sharper-marketing/docker-compose.prod.yml and is copied there by the
+# GitHub Actions deploy job. Images are built in CI and pulled from GHCR, so the
+# VPS never spends CPU/RAM on builds (the other apps on it are unaffected).
+#
+# Isolation from the other apps (eioi_*, tvk-*):
+#   - unique compose project name  -> unique container/network/volume names
+#   - own private network + own MySQL (no shared DB, no host DB port)
+#   - the only host port is 127.0.0.1:${APP_PORT} (loopback, host nginx proxies it)
+#   - memory limits so this stack cannot starve its neighbours
+name: sharper-marketing
+
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    command:
+      - --innodb-buffer-pool-size=128M
+      - --max-connections=50
+      - --performance-schema=OFF
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set in .env}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-sharper_marketing}
+      MYSQL_USER: ${MYSQL_USER:-sharper}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set in .env}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks: [internal]
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  migrate:
+    image: ${REGISTRY_IMAGE:?}-migrate:${IMAGE_TAG:?}
+    environment:
+      DATABASE_URL: mysql://${MYSQL_USER:-sharper}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE:-sharper_marketing}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    networks: [internal]
+
+  app:
+    image: ${REGISTRY_IMAGE:?}:${IMAGE_TAG:?}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${APP_PORT:-3010}:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: mysql://${MYSQL_USER:-sharper}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE:-sharper_marketing}
+      JWT_SECRET: ${JWT_SECRET:?set in .env}
+      CONTACT_RECIPIENT_EMAIL: ${CONTACT_RECIPIENT_EMAIL:-}
+      NOREPLY_FROM_EMAIL: ${NOREPLY_FROM_EMAIL:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - uploads:/app/public/uploads
+    networks: [internal]
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: [ALL]
+    deploy:
+      resources:
+        limits:
+          memory: 768m
+    logging: *logging
+
+volumes:
+  db_data:
+  uploads:
+
+networks:
+  internal:
