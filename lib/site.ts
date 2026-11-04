@@ -64,8 +64,8 @@ export const offices = {
 } as const;
 
 export const socials = [
-  { label: "Facebook", href: "https://www.facebook.com/share/18jbEi6M2e/?mibextid=wwXIfr", icon: "facebook" },
-  { label: "Instagram", href: "https://www.instagram.com/sharper.labs?igh=NmVnN2liMG1pMGVw", icon: "instagram" },
+  { label: "Facebook", href: "https://www.facebook.com/share/1JfCABhZiV/?mibextid=wwXIfr", icon: "facebook" },
+  { label: "Instagram", href: "https://www.instagram.com/sharperlabs_marketing?vrfl=Z29rODY2NDFjY2M5", icon: "instagram" },
   { label: "YouTube", href: "https://youtube.com/@sharperlabs?si=RqhdQEFYp2yBcMbi", icon: "youtube" },
   { label: "LinkedIn", href: "https://www.linkedin.com/company/sharperlabshranlegal/", icon: "linkedin" },
 ] as const;
