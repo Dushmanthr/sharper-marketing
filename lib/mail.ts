@@ -121,7 +121,7 @@ export async function sendEnquiryEmails(data: SendEnquiryEmailsParams) {
                 ${data.type}
               </span>
               <h1 style="margin: 10px 0 2px 0; font-size: 20px; font-weight: 700; color: #0f172a;">New Inbound Lead Submission</h1>
-              <p style="margin: 0; font-size: 12px; color: #64748b;">Received: ${timeString} (London Time)</p>
+              <p style="margin: 0; font-size: 12px; color: #64748b;">Received: ${timeString} (UK Time)</p>
             </div>
 
             <!-- Prospect Contact Details -->
@@ -247,7 +247,7 @@ export async function sendEnquiryEmails(data: SendEnquiryEmailsParams) {
 
             <!-- Company Signoff -->
             <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid #f1f5f9; font-size: 13px; color: #64748b; line-height: 1.5;">
-              <p style="margin: 0; font-weight: 600; color: #0f172a;">Sharper Labs Advisory Practice</p>
+              <p style="margin: 0; font-weight: 600; color: #0f172a;">Sharper Labs HR & Legal Consultancy</p>
               <p style="margin: 2px 0 0 0; font-size: 12px; color: #64748b;">London & Hertfordshire, United Kingdom</p>
               <p style="margin: 2px 0 0 0; font-size: 12px;">
                 <a href="https://dev.sharper-labs.com/marketing/" style="color: #ea580c; text-decoration: none;">sharper-labs.com/marketing</a>
