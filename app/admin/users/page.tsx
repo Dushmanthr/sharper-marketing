@@ -32,6 +32,8 @@ interface AdminUserItem {
   role: "SUPER_ADMIN" | "MODERATOR";
   isActive: boolean;
   mustChangePassword?: boolean;
+  isEmailVerified?: boolean;
+  emailVerifiedAt?: string | null;
   createdAt: string;
   updatedAt: string;
   _count?: {
@@ -69,6 +71,7 @@ export default function AdminUsersPage() {
 
   // Action loading IDs
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+  const [resendingId, setResendingId] = useState<string | null>(null);
 
   useEffect(() => {
     // 1. Verify Super Admin authorization
@@ -185,7 +188,7 @@ export default function AdminUsersPage() {
 
   // Execute Status Toggle from Modal
   const executeToggleActive = async () => {
-    if (!statusConfirmUser) return;
+    if (!statusConfirmUser || confirmLoading) return;
     const target = statusConfirmUser;
     const nextStatus = !target.isActive;
 
@@ -248,6 +251,25 @@ export default function AdminUsersPage() {
     }
   };
 
+  // Resend Email Verification
+  const handleResendVerification = async (userId: string, userEmail: string) => {
+    setResendingId(userId);
+    setError("");
+    try {
+      const res = await fetch(`/api/admin/users/${userId}/resend-verification`, {
+        method: "POST",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to resend verification email.");
+      setSuccessMsg(`Verification email successfully sent to ${userEmail}.`);
+      setTimeout(() => setSuccessMsg(""), 5000);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Error resending verification email.");
+    } finally {
+      setResendingId(null);
+    }
+  };
+
   // Trigger Delete Modal
   const promptDeleteUser = (user: AdminUserItem) => {
     setError("");
@@ -265,7 +287,7 @@ export default function AdminUsersPage() {
 
   // Execute Delete from Modal
   const executeDeleteUser = async () => {
-    if (!deleteConfirmUser) return;
+    if (!deleteConfirmUser || confirmLoading) return;
     const target = deleteConfirmUser;
 
     setConfirmLoading(true);
@@ -275,15 +297,17 @@ export default function AdminUsersPage() {
         method: "DELETE",
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to delete account.");
+      const data = await res.json().catch(() => ({}));
+      // If deleted successfully OR already removed from DB (404), cleanly remove from UI
+      if (res.ok || res.status === 404 || data?.alreadyDeleted) {
+        setUsers((prev) => prev.filter((u) => u.id !== target.id));
+        setSuccessMsg(data?.message || `Account "${target.name}" has been permanently removed.`);
+        setTimeout(() => setSuccessMsg(""), 5000);
+        setDeleteConfirmUser(null);
+        return;
       }
 
-      setUsers((prev) => prev.filter((u) => u.id !== target.id));
-      setSuccessMsg(`Account "${target.name}" has been permanently removed.`);
-      setTimeout(() => setSuccessMsg(""), 5000);
-      setDeleteConfirmUser(null);
+      throw new Error(data.error || "Failed to delete account.");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error deleting account.");
     } finally {
@@ -434,6 +458,7 @@ export default function AdminUsersPage() {
               <tr>
                 <th className="py-3 px-4">User Details</th>
                 <th className="py-3 px-4">Role & Access</th>
+                <th className="py-3 px-4">Email Status</th>
                 <th className="py-3 px-4">Status</th>
                 <th className="py-3 px-4">Articles</th>
                 <th className="py-3 px-4">Created Date</th>
@@ -443,14 +468,14 @@ export default function AdminUsersPage() {
             <tbody className="divide-y divide-slate-100 font-medium">
               {loading && users.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     <Loader2 className="mx-auto h-6 w-6 animate-spin text-orange-500 mb-2" />
                     Loading team accounts...
                   </td>
                 </tr>
               ) : filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     No accounts found matching your query.
                   </td>
                 </tr>
@@ -510,6 +535,36 @@ export default function AdminUsersPage() {
                             </span>
                           )}
                         </div>
+                      </td>
+
+                      {/* Email Verification Status */}
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        {user.isEmailVerified ? (
+                          <span
+                            className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200"
+                            title={user.emailVerifiedAt ? `Verified on ${new Date(user.emailVerifiedAt).toLocaleDateString("en-GB")}` : "Email Verified"}
+                          >
+                            <CheckCircle2 className="h-3 w-3 text-emerald-600" /> Verified
+                          </span>
+                        ) : (
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 border border-amber-200"
+                              title="Email verification pending"
+                            >
+                              <AlertCircle className="h-3 w-3 text-amber-600" /> Unverified
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleResendVerification(user.id, user.email)}
+                              disabled={resendingId === user.id}
+                              className="text-[10px] font-bold text-orange-600 hover:text-orange-700 hover:underline cursor-pointer disabled:opacity-50"
+                              title="Resend verification link to this email"
+                            >
+                              {resendingId === user.id ? "Sending..." : "Resend"}
+                            </button>
+                          </div>
+                        )}
                       </td>
 
                       {/* Status Toggle */}
@@ -671,7 +726,7 @@ export default function AdminUsersPage() {
               {/* Email */}
               <div>
                 <label className="block text-xs font-semibold text-navy-900 mb-1.5">
-                  Email Address (Login Username)
+                  Email Address (Verification &amp; Notifications)
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -684,6 +739,9 @@ export default function AdminUsersPage() {
                     className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-xs text-navy-900 placeholder-slate-400 focus:border-orange-500 focus:bg-white focus:outline-hidden"
                   />
                 </div>
+                <p className="mt-1 text-[11px] text-slate-400">
+                  Must be an active, deliverable email. An activation link will be automatically sent upon creation.
+                </p>
               </div>
 
               {/* Role Selection */}

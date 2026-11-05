@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 import { prisma, ensureEditorColumnsExist } from "@/lib/prisma";
 import { getSessionAdmin, hasAdminPanelAccess, isSuperAdmin } from "@/lib/auth";
 import type { PostStatus } from "@prisma/client";
+import { sendBlogSubmittedForReviewEmail } from "@/lib/mail";
+import { site } from "@/lib/site";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -155,6 +157,31 @@ export async function PUT(req: Request, context: RouteContext) {
         `;
       } catch {
         // safe fallback
+      }
+
+      if (existing.status !== "PENDING_APPROVAL") {
+        (async () => {
+          try {
+            const superAdmins = await prisma.adminUser.findMany({
+              where: { role: "SUPER_ADMIN", isActive: true },
+              select: { email: true },
+            });
+            const recipientEmails = superAdmins.map((sa) => sa.email).filter(Boolean);
+            if (recipientEmails.length > 0) {
+              await sendBlogSubmittedForReviewEmail({
+                postTitle: updated.title,
+                postId: updated.id,
+                postCategory: updated.category,
+                moderatorName: session.name || "Moderator",
+                moderatorEmail: session.email,
+                superAdminEmails: recipientEmails,
+                appUrl: site.url,
+              });
+            }
+          } catch (mailErr) {
+            console.error("[Blog Review Notification Error]:", mailErr);
+          }
+        })().catch(console.error);
       }
     }
 

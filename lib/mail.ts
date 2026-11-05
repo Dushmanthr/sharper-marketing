@@ -329,3 +329,330 @@ export async function sendEnquiryEmails(data: SendEnquiryEmailsParams) {
 
   return { success: false, reason: "NO_PROVIDER_AVAILABLE" };
 }
+
+/**
+ * Generic single-email dispatcher supporting SMTP (Nodemailer) with Resend fallback.
+ */
+export async function sendEmail({
+  to,
+  subject,
+  html,
+  replyTo,
+}: {
+  to: string | string[];
+  subject: string;
+  html: string;
+  replyTo?: string;
+}): Promise<{ success: boolean; reason?: string }> {
+  const recipients = Array.isArray(to) ? to.map((e) => e.trim()).filter(Boolean) : [to.trim()];
+  if (recipients.length === 0) {
+    return { success: false, reason: "NO_RECIPIENT" };
+  }
+
+  if (!transporter && !resend) {
+    console.warn(`[Mail] Skip sending "${subject}" to [${recipients.join(", ")}]: Neither SMTP nor Resend configured.`);
+    return { success: false, reason: "NOT_CONFIGURED" };
+  }
+
+  // 1. Try SMTP Transporter
+  if (transporter) {
+    try {
+      await transporter.sendMail({
+        from: NOREPLY_EMAIL,
+        to: recipients.join(", "),
+        replyTo: replyTo || RECIPIENT_EMAIL,
+        subject,
+        html,
+      });
+      return { success: true };
+    } catch (smtpErr) {
+      console.warn("[SMTP Mail] Failed, attempting fallback if available:", smtpErr);
+      if (!resend) return { success: false, reason: "SMTP_FAILED" };
+    }
+  }
+
+  // 2. Try Resend API
+  if (resend) {
+    try {
+      const res = await resend.emails.send({
+        from: NOREPLY_EMAIL,
+        to: recipients,
+        replyTo: replyTo || RECIPIENT_EMAIL,
+        subject,
+        html,
+      });
+      if (res.error) {
+        console.warn("[Resend Mail] API returned error:", res.error);
+        return { success: false, reason: res.error.message };
+      }
+      return { success: true };
+    } catch (resendErr) {
+      console.warn("[Resend Mail] Dispatch error:", resendErr);
+      return { success: false, reason: "RESEND_FAILED" };
+    }
+  }
+
+  return { success: false, reason: "NO_PROVIDER_AVAILABLE" };
+}
+
+/**
+ * 1. Email Verification Link Email
+ */
+export async function sendVerificationEmail({
+  email,
+  name,
+  token,
+  appUrl,
+}: {
+  email: string;
+  name: string;
+  token: string;
+  appUrl: string;
+}) {
+  const cleanUrl = appUrl.replace(/\/+$/, "");
+  const verifyLink = `${cleanUrl}/admin/verify-email?token=${encodeURIComponent(token)}`;
+  const safeName = escapeHtml(name);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 24px; color: #1e293b;">
+      <div style="max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+        <div style="background-color: #0b1528; padding: 24px 32px; border-bottom: 2px solid #ea580c;">
+          <h2 style="margin: 0; color: #ffffff; font-size: 18px; font-weight: 700; letter-spacing: -0.02em;">Sharper Labs Marketing</h2>
+          <span style="color: #ea580c; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">Account Security & Verification</span>
+        </div>
+        <div style="padding: 32px;">
+          <h1 style="font-size: 20px; font-weight: 800; color: #0b1528; margin-top: 0;">Verify Your Email Address</h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #475569;">
+            Hello <strong>${safeName}</strong>,<br><br>
+            Your account has been provisioned on the Sharper Labs Editorial & Management Console. Please verify your email address to enable article review notifications, editorial alerts, and account communications.
+          </p>
+          <div style="text-align: center; margin: 32px 0;">
+            <a href="${verifyLink}" style="display: inline-block; background-color: #ea580c; color: #ffffff; padding: 13px 28px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none; box-shadow: 0 2px 6px rgba(234,88,12,0.3);">
+              Verify Email Address &rarr;
+            </a>
+          </div>
+          <p style="font-size: 12px; line-height: 1.5; color: #64748b;">
+            This link is valid for 48 hours. If the button above does not work, copy and paste this URL into your browser:<br>
+            <a href="${verifyLink}" style="color: #ea580c; word-break: break-all;">${verifyLink}</a>
+          </p>
+        </div>
+        <div style="background-color: #f1f5f9; padding: 16px 32px; font-size: 11px; color: #94a3b8; border-top: 1px solid #e2e8f0; text-align: center;">
+          Sharper Labs Marketing · Confero House, 333 Edgware Road, London, NW9 6TD
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject: "Action Required: Verify your Sharper Labs email address",
+    html,
+  });
+}
+
+/**
+ * 2. Moderator Submits Article for Super Admin Review
+ */
+export async function sendBlogSubmittedForReviewEmail({
+  postTitle,
+  postId,
+  postCategory,
+  moderatorName,
+  moderatorEmail,
+  superAdminEmails,
+  appUrl,
+}: {
+  postTitle: string;
+  postId: string;
+  postCategory: string;
+  moderatorName: string;
+  moderatorEmail: string;
+  superAdminEmails: string[];
+  appUrl: string;
+}) {
+  if (!superAdminEmails || superAdminEmails.length === 0) return { success: false, reason: "NO_SUPER_ADMINS" };
+
+  const cleanUrl = appUrl.replace(/\/+$/, "");
+  const reviewLink = `${cleanUrl}/admin/blogs/${encodeURIComponent(postId)}`;
+  const safeTitle = escapeHtml(postTitle);
+  const safeMod = escapeHtml(moderatorName);
+  const safeCategory = escapeHtml(postCategory);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 24px; color: #1e293b;">
+      <div style="max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+        <div style="background-color: #0b1528; padding: 24px 32px; border-bottom: 2px solid #f59e0b;">
+          <h2 style="margin: 0; color: #ffffff; font-size: 18px; font-weight: 700;">Sharper Labs Marketing</h2>
+          <span style="color: #f59e0b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">Editorial Review Queue</span>
+        </div>
+        <div style="padding: 32px;">
+          <div style="display: inline-block; background-color: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-bottom: 12px;">
+            Awaiting Super Admin Approval
+          </div>
+          <h1 style="font-size: 20px; font-weight: 800; color: #0b1528; margin-top: 0; line-height: 1.3;">
+            &ldquo;${safeTitle}&rdquo;
+          </h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #475569;">
+            Moderator <strong>${safeMod}</strong> (<a href="mailto:${escapeHtml(moderatorEmail)}" style="color: #475569;">${escapeHtml(moderatorEmail)}</a>) has submitted a strategic article for your review in <strong>${safeCategory}</strong>.
+          </p>
+          <div style="text-align: center; margin: 28px 0;">
+            <a href="${reviewLink}" style="display: inline-block; background-color: #0b1528; color: #ffffff; padding: 13px 28px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">
+              Open Article in Review Console &rarr;
+            </a>
+          </div>
+        </div>
+        <div style="background-color: #f1f5f9; padding: 16px 32px; font-size: 11px; color: #94a3b8; border-top: 1px solid #e2e8f0; text-align: center;">
+          Automated Notification · Sharper Labs Marketing Editorial Console
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({
+    to: superAdminEmails,
+    subject: `[Action Required] Blog Submitted for Review: "${postTitle}"`,
+    html,
+  });
+}
+
+/**
+ * 3. Super Admin Approves Article -> Notify Moderator
+ */
+export async function sendBlogApprovedEmail({
+  postTitle,
+  postSlug,
+  authorEmail,
+  authorName,
+  appUrl,
+}: {
+  postTitle: string;
+  postSlug: string;
+  authorEmail: string;
+  authorName: string;
+  appUrl: string;
+}) {
+  const cleanUrl = appUrl.replace(/\/+$/, "");
+  const liveUrl = `${cleanUrl}/blog/${encodeURIComponent(postSlug)}`;
+  const safeTitle = escapeHtml(postTitle);
+  const safeAuthor = escapeHtml(authorName);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 24px; color: #1e293b;">
+      <div style="max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+        <div style="background-color: #0b1528; padding: 24px 32px; border-bottom: 2px solid #10b981;">
+          <h2 style="margin: 0; color: #ffffff; font-size: 18px; font-weight: 700;">Sharper Labs Marketing</h2>
+          <span style="color: #10b981; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">Publication Live</span>
+        </div>
+        <div style="padding: 32px;">
+          <div style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-bottom: 12px;">
+            Article Approved & Published
+          </div>
+          <h1 style="font-size: 20px; font-weight: 800; color: #0b1528; margin-top: 0; line-height: 1.3;">
+            Congratulations, ${safeAuthor}!
+          </h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #475569;">
+            Your article <strong>&ldquo;${safeTitle}&rdquo;</strong> has been reviewed and approved by Super Admin. It is now published live on the website.
+          </p>
+          <div style="text-align: center; margin: 28px 0;">
+            <a href="${liveUrl}" target="_blank" style="display: inline-block; background-color: #10b981; color: #ffffff; padding: 13px 28px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">
+              View Live Article on /blog &rarr;
+            </a>
+          </div>
+        </div>
+        <div style="background-color: #f1f5f9; padding: 16px 32px; font-size: 11px; color: #94a3b8; border-top: 1px solid #e2e8f0; text-align: center;">
+          Sharper Labs Marketing Editorial Console
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({
+    to: authorEmail,
+    subject: `[Published] Your article "${postTitle}" is now live!`,
+    html,
+  });
+}
+
+/**
+ * 4. Super Admin Rejects Article with Feedback -> Notify Moderator
+ */
+export async function sendBlogRejectedEmail({
+  postTitle,
+  postId,
+  authorEmail,
+  authorName,
+  reason,
+  reviewerName,
+  appUrl,
+}: {
+  postTitle: string;
+  postId: string;
+  authorEmail: string;
+  authorName: string;
+  reason: string;
+  reviewerName: string;
+  appUrl: string;
+}) {
+  const cleanUrl = appUrl.replace(/\/+$/, "");
+  const editLink = `${cleanUrl}/admin/blogs/${encodeURIComponent(postId)}`;
+  const safeTitle = escapeHtml(postTitle);
+  const safeAuthor = escapeHtml(authorName);
+  const safeReason = escapeHtml(reason);
+  const safeReviewer = escapeHtml(reviewerName);
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="utf-8"></head>
+    <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; margin: 0; padding: 24px; color: #1e293b;">
+      <div style="max-width: 580px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+        <div style="background-color: #0b1528; padding: 24px 32px; border-bottom: 2px solid #f43f5e;">
+          <h2 style="margin: 0; color: #ffffff; font-size: 18px; font-weight: 700;">Sharper Labs Marketing</h2>
+          <span style="color: #f43f5e; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;">Editorial Revision Requested</span>
+        </div>
+        <div style="padding: 32px;">
+          <div style="display: inline-block; background-color: #ffe4e6; color: #9f1239; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; margin-bottom: 12px;">
+            Returned to Draft for Revisions
+          </div>
+          <h1 style="font-size: 20px; font-weight: 800; color: #0b1528; margin-top: 0; line-height: 1.3;">
+            Feedback on &ldquo;${safeTitle}&rdquo;
+          </h1>
+          <p style="font-size: 14px; line-height: 1.6; color: #475569;">
+            Hello <strong>${safeAuthor}</strong>,<br>
+            Your article was reviewed by <strong>${safeReviewer}</strong> and returned to draft with the following instructions:
+          </p>
+          <div style="background-color: #f8fafc; border-left: 4px solid #f43f5e; padding: 16px; margin: 20px 0; border-radius: 0 8px 8px 0; font-size: 13px; line-height: 1.6; color: #334155;">
+            ${safeReason.replace(/\n/g, "<br>")}
+          </div>
+          <div style="text-align: center; margin: 28px 0;">
+            <a href="${editLink}" style="display: inline-block; background-color: #0b1528; color: #ffffff; padding: 13px 28px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">
+              Resume Editing in Admin Console &rarr;
+            </a>
+          </div>
+        </div>
+        <div style="background-color: #f1f5f9; padding: 16px 32px; font-size: 11px; color: #94a3b8; border-top: 1px solid #e2e8f0; text-align: center;">
+          Sharper Labs Marketing Editorial Console
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({
+    to: authorEmail,
+    subject: `[Revision Needed] Feedback on "${postTitle}"`,
+    html,
+  });
+}

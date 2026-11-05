@@ -83,7 +83,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-GB" className={`${inter.variable} ${sora.variable} h-full`}>
+    <html lang="en-GB" data-scroll-behavior="smooth" className={`${inter.variable} ${sora.variable} h-full`}>
       <head />
       <body className="min-h-full bg-white text-ink antialiased">
         <JsonLd data={[organizationJsonLd(), websiteJsonLd(), localBusinessJsonLd()]} />

@@ -150,7 +150,11 @@ export async function DELETE(req: Request, context: RouteContext) {
     });
 
     if (!targetUser) {
-      return NextResponse.json({ error: "User not found." }, { status: 404 });
+      return NextResponse.json({
+        success: true,
+        alreadyDeleted: true,
+        message: "Account has already been removed or does not exist.",
+      });
     }
 
     // Prevent deleting the only remaining Super Admin

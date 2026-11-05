@@ -79,6 +79,66 @@ export async function ensureEditorColumnsExist(): Promise<void> {
   return editorColumnsEnsured;
 }
 
+let verificationColumnsEnsured: Promise<void> | null = null;
+
+/**
+ * Ensures email verification columns (isEmailVerified, emailVerifiedAt, verificationToken, verificationExpiresAt)
+ * exist in the MySQL database without disrupting any existing user data.
+ */
+export async function ensureVerificationColumnsExist(): Promise<void> {
+  if (verificationColumnsEnsured) {
+    return verificationColumnsEnsured;
+  }
+
+  verificationColumnsEnsured = (async () => {
+    try {
+      const rows: any = await prisma.$queryRawUnsafe(
+        "SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'admin_users'"
+      );
+      const existingCols = new Set(
+        Array.isArray(rows)
+          ? rows.map((r: any) => String(r.COLUMN_NAME || r.column_name || ""))
+          : []
+      );
+
+      if (existingCols.size > 0) {
+        if (!existingCols.has("isEmailVerified")) {
+          await prisma.$executeRawUnsafe(
+            "ALTER TABLE admin_users ADD COLUMN isEmailVerified TINYINT(1) NOT NULL DEFAULT 0"
+          );
+          console.log("✅ [Database] Added missing column 'isEmailVerified' to admin_users.");
+          // Pre-verify default seed accounts so existing admin accounts are unaffected
+          await prisma.$executeRawUnsafe(
+            "UPDATE admin_users SET isEmailVerified = 1 WHERE email IN ('admin@sharper-labs.com', 'moderator@sharper-labs.com')"
+          ).catch(() => {});
+        }
+        if (!existingCols.has("emailVerifiedAt")) {
+          await prisma.$executeRawUnsafe(
+            "ALTER TABLE admin_users ADD COLUMN emailVerifiedAt DATETIME(3) NULL"
+          );
+          console.log("✅ [Database] Added missing column 'emailVerifiedAt' to admin_users.");
+        }
+        if (!existingCols.has("verificationToken")) {
+          await prisma.$executeRawUnsafe(
+            "ALTER TABLE admin_users ADD COLUMN verificationToken VARCHAR(191) NULL"
+          );
+          console.log("✅ [Database] Added missing column 'verificationToken' to admin_users.");
+        }
+        if (!existingCols.has("verificationExpiresAt")) {
+          await prisma.$executeRawUnsafe(
+            "ALTER TABLE admin_users ADD COLUMN verificationExpiresAt DATETIME(3) NULL"
+          );
+          console.log("✅ [Database] Added missing column 'verificationExpiresAt' to admin_users.");
+        }
+      }
+    } catch (colErr) {
+      console.warn("⚠️ [Database] Verification column sync check:", colErr);
+    }
+  })();
+
+  return verificationColumnsEnsured;
+}
+
 // Log database connection once on server startup / initial load (non-blocking)
 if (!globalForPrisma.hasLoggedDbConnection) {
   globalForPrisma.hasLoggedDbConnection = true;
@@ -99,8 +159,11 @@ if (!globalForPrisma.hasLoggedDbConnection) {
       }
       console.log(`✅ [Database] Successfully connected to ${dbInfo} via Prisma.`);
 
-      // Self-heal/ensure editor tracking columns exist in the database
-      await ensureEditorColumnsExist().catch(() => {});
+      // Self-heal/ensure editor tracking columns and verification columns exist in the database
+      await Promise.all([
+        ensureEditorColumnsExist().catch(() => {}),
+        ensureVerificationColumnsExist().catch(() => {}),
+      ]);
     })
     .catch((err: unknown) => {
       const msg = err instanceof Error ? err.message : String(err);
