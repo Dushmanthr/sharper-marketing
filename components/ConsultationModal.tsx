@@ -14,6 +14,7 @@ import {
   Loader2,
   AlertCircle,
   Send,
+  PhoneCall,
 } from "lucide-react";
 import { services, site } from "@/lib/site";
 import { countries, defaultCountry, getCountryByIso } from "@/lib/countries";
@@ -50,6 +51,25 @@ const timeSlots = [
   "16:00 – 17:00 (Late Afternoon)",
   "17:00 – 18:00 (Evening Slot)",
   "09:00 – 10:00 (Early Morning)",
+  "Flexible / Any Time",
+];
+
+const backupDayOptions = [
+  "None (Try primary slot only)",
+  "Saturday (Weekend)",
+  "Sunday (Weekend)",
+  "Any Weekend Day (Sat or Sun)",
+  "Next Business Day",
+  "Any Day (Earliest available)",
+];
+
+const backupTimeSlots = [
+  "10:00 – 12:00 (Morning)",
+  "12:00 – 14:00 (Midday)",
+  "14:00 – 16:00 (Afternoon)",
+  "16:00 – 18:00 (Late Afternoon)",
+  "18:00 – 20:00 (Evening)",
+  "Same time as primary slot",
   "Flexible / Any Time",
 ];
 
@@ -102,6 +122,8 @@ export default function ConsultationModal({
   const [detectedTimezone, setDetectedTimezone] = useState<string>("");
   const [preferredDate, setPreferredDate] = useState("");
   const [preferredTimeSlot, setPreferredTimeSlot] = useState(timeSlots[0]);
+  const [backupDay, setBackupDay] = useState(backupDayOptions[0]);
+  const [backupTimeSlot, setBackupTimeSlot] = useState(backupTimeSlots[0]);
 
   // Worldwide industrial standard: Auto-detect user timezone via browser Intl API
   useEffect(() => {
@@ -180,6 +202,8 @@ export default function ConsultationModal({
     const fullPhone = `${country.dial} ${phone.trim()}`;
 
     let subject = "Consultation Booking";
+    const hasBackup = backupDay && backupDay !== backupDayOptions[0];
+    const backupSlotFormatted = hasBackup ? `${backupDay} at ${backupTimeSlot}` : "";
     let messageBody = "";
 
     if (tab === "consultation") {
@@ -194,7 +218,7 @@ export default function ConsultationModal({
 
       messageBody = `CONSULTATION BOOKING DETAILS:
 Service: ${srv}
-Preferred Date & Time: ${bookingTiming}
+Preferred Date & Time: ${bookingTiming}${hasBackup ? `\nBackup Callback Slot (If unreachable): ${backupSlotFormatted}` : ""}
 Preferred Timezone: ${preferredTimezone}
 Company: ${company || "Not specified"}
 Website: ${website || "Not specified"}
@@ -237,7 +261,7 @@ Notes / Competitors: ${notes || "None"}`;
         ? {
             preferredTimezone,
             preferredDate: preferredDate.trim()
-              ? `${preferredDate} (${preferredTimeSlot})`
+              ? `${preferredDate} (${preferredTimeSlot})${hasBackup ? ` | Backup: ${backupSlotFormatted}` : ""}`
               : undefined,
           }
         : tab === "quotation"
@@ -259,7 +283,7 @@ Notes / Competitors: ${notes || "None"}`;
 
       // Trigger analytics tracking events
       if (tab === "consultation") {
-        trackEvent("consultation_booked", { service: selectedService, timezone: preferredTimezone });
+        trackEvent("consultation_booked", { service: selectedService, timezone: preferredTimezone, backup_slot: hasBackup ? backupSlotFormatted : "none" });
       } else if (tab === "quotation") {
         trackEvent("quotation_requested", { budget, services: selectedServices.join(",") });
       } else {
@@ -279,6 +303,8 @@ Notes / Competitors: ${notes || "None"}`;
   const resetAndClose = () => {
     setSubmitted(false);
     setError("");
+    setBackupDay(backupDayOptions[0]);
+    setBackupTimeSlot(backupTimeSlots[0]);
     onClose();
   };
 
@@ -492,7 +518,7 @@ Notes / Competitors: ${notes || "None"}`;
                             className="mt-1.5 w-full min-w-0 rounded-xl border border-navy-200 bg-white px-3 py-2.5 sm:px-3.5 text-base sm:text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 cursor-pointer min-h-[42px]"
                           />
                           <span className="mt-1 block text-[10px] text-ink-muted">
-                            Select date (Today onwards)
+                            Weekdays & Weekends available
                           </span>
                         </div>
 
@@ -515,6 +541,73 @@ Notes / Competitors: ${notes || "None"}`;
                             Local time in your timezone
                           </span>
                         </div>
+                      </div>
+
+                      {/* Backup Callback Slot (If Unreachable) */}
+                      <div>
+                        <div className="flex flex-wrap items-center justify-between gap-1 mb-1.5">
+                          <label className="block text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-navy-700 flex items-center gap-1.5">
+                            <PhoneCall className="h-3.5 w-3.5 text-orange-500 shrink-0" /> If Unreachable: Backup Callback
+                          </label>
+                          <span className="text-[10px] text-ink-muted font-normal">
+                            Optional (Inc. Weekends)
+                          </span>
+                        </div>
+
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          <div className="min-w-0">
+                            <label className="block text-[11px] font-medium text-navy-700 mb-1 flex items-center gap-1">
+                              <Calendar className="h-3 w-3 text-orange-500 shrink-0" /> Backup Day
+                            </label>
+                            <select
+                              value={backupDay}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setBackupDay(val);
+                                if (val === backupDayOptions[0]) {
+                                  setBackupTimeSlot(backupTimeSlots[0]);
+                                }
+                              }}
+                              className="w-full min-w-0 rounded-xl border border-navy-200 bg-white px-3 py-2.5 sm:px-3.5 text-base sm:text-sm text-navy-900 shadow-2xs outline-none transition-colors focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 cursor-pointer min-h-[42px]"
+                            >
+                              {backupDayOptions.map((day) => (
+                                <option key={day} value={day}>
+                                  {day}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="min-w-0">
+                            <label className="block text-[11px] font-medium text-navy-700 mb-1 flex items-center gap-1">
+                              <Clock className="h-3 w-3 text-orange-500 shrink-0" /> Backup Time Slot
+                            </label>
+                            <select
+                              value={backupTimeSlot}
+                              disabled={backupDay === backupDayOptions[0]}
+                              onChange={(e) => setBackupTimeSlot(e.target.value)}
+                              className={`w-full min-w-0 rounded-xl border border-navy-200 bg-white px-3 py-2.5 sm:px-3.5 text-base sm:text-sm text-navy-900 shadow-2xs outline-none transition-colors min-h-[42px] ${
+                                backupDay === backupDayOptions[0]
+                                  ? "bg-surface-muted/70 text-navy-400 cursor-not-allowed opacity-60"
+                                  : "cursor-pointer focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                              }`}
+                            >
+                              {backupDay === backupDayOptions[0] ? (
+                                <option value="">N/A (Select day first)</option>
+                              ) : (
+                                backupTimeSlots.map((slot) => (
+                                  <option key={slot} value={slot}>
+                                    {slot}
+                                  </option>
+                                ))
+                              )}
+                            </select>
+                          </div>
+                        </div>
+
+                        <span className="mt-1 block text-[10px] text-ink-muted">
+                          If you miss our first call, our consultant will retry on this day and time.
+                        </span>
                       </div>
                     </div>
                   )}
@@ -565,6 +658,7 @@ Notes / Competitors: ${notes || "None"}`;
                           ))}
                         </select>
                       </div>
+
                     </div>
                   )}
 
