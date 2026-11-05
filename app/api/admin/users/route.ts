@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import crypto from "crypto";
+import { prisma, ensureVerificationColumnsExist } from "@/lib/prisma";
 import { getSessionAdmin, isSuperAdmin, hashPassword } from "@/lib/auth";
+import { sendVerificationEmail } from "@/lib/mail";
+import { site } from "@/lib/site";
 import type { AdminRole } from "@prisma/client";
 
 /**
@@ -22,6 +25,7 @@ export async function GET() {
   }
 
   try {
+    await ensureVerificationColumnsExist().catch(() => {});
     const users = await prisma.adminUser.findMany({
       orderBy: { createdAt: "desc" },
       select: {
@@ -38,19 +42,29 @@ export async function GET() {
       },
     });
 
-    // Attach mustChangePassword flag safely
-    let usersWithFlags = users.map((u) => ({ ...u, mustChangePassword: false }));
+    // Attach mustChangePassword and isEmailVerified flags safely
+    let usersWithFlags = users.map((u) => ({
+      ...u,
+      mustChangePassword: false,
+      isEmailVerified: false,
+      emailVerifiedAt: null as string | null,
+    }));
     try {
-      const rawFlags: any = await prisma.$queryRaw`SELECT id, mustChangePassword FROM admin_users`;
+      const rawFlags: any = await prisma.$queryRaw`SELECT id, mustChangePassword, isEmailVerified, emailVerifiedAt FROM admin_users`;
       if (Array.isArray(rawFlags)) {
-        const flagMap = new Map<string, boolean>();
+        const flagMap = new Map<string, any>();
         rawFlags.forEach((r: any) => {
-          flagMap.set(r.id, Boolean(r.mustChangePassword));
+          flagMap.set(r.id, r);
         });
-        usersWithFlags = users.map((u) => ({
-          ...u,
-          mustChangePassword: flagMap.get(u.id) ?? false,
-        }));
+        usersWithFlags = users.map((u) => {
+          const raw = flagMap.get(u.id);
+          return {
+            ...u,
+            mustChangePassword: Boolean(raw?.mustChangePassword),
+            isEmailVerified: Boolean(raw?.isEmailVerified),
+            emailVerifiedAt: raw?.emailVerifiedAt ? new Date(raw.emailVerifiedAt).toISOString() : null,
+          };
+        });
       }
     } catch {
       // safe fallback
@@ -98,12 +112,23 @@ export async function POST(req: Request) {
     const cleanEmail = String(email).trim().toLowerCase();
     const cleanName = String(name).trim();
 
+    // Strict RFC email validation to ensure notifications can be delivered
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    if (!emailRegex.test(cleanEmail)) {
+      return NextResponse.json(
+        { error: "Please enter a valid email address (e.g. name@company.com) so editorial notifications can be delivered." },
+        { status: 400 }
+      );
+    }
+
     if (password.length < 6) {
       return NextResponse.json(
         { error: "Password must be at least 6 characters long." },
         { status: 400 }
       );
     }
+
+    await ensureVerificationColumnsExist().catch(() => {});
 
     // Check email uniqueness
     const existing = await prisma.adminUser.findUnique({
@@ -119,6 +144,8 @@ export async function POST(req: Request) {
 
     // Hash secure password with bcrypt
     const passwordHash = await hashPassword(password);
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const verificationExpiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000); // 48 hours
 
     const newUser = await prisma.adminUser.create({
       data: {
@@ -138,14 +165,31 @@ export async function POST(req: Request) {
       },
     });
 
-    // Enforce password change on first login for the newly provisioned account
+    // Enforce password change and token setup safely
     try {
-      await prisma.$executeRaw`UPDATE admin_users SET mustChangePassword = 1 WHERE id = ${newUser.id}`;
+      await prisma.$executeRaw`UPDATE admin_users SET mustChangePassword = 1, isEmailVerified = 0, verificationToken = ${verificationToken}, verificationExpiresAt = ${verificationExpiresAt} WHERE id = ${newUser.id}`;
     } catch {
       // safe fallback
     }
 
-    return NextResponse.json({ success: true, user: { ...newUser, mustChangePassword: true } }, { status: 201 });
+    // Automatically dispatch verification email in background (non-blocking)
+    sendVerificationEmail({
+      email: cleanEmail,
+      name: cleanName,
+      token: verificationToken,
+      appUrl: site.url,
+    }).catch((mailErr) => {
+      console.warn("[Admin Users POST] Verification email background dispatch warning:", mailErr);
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        user: { ...newUser, mustChangePassword: true, isEmailVerified: false },
+        message: `Account created! Verification email has been sent to ${cleanEmail}.`,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("[Create User Error]:", error);
     return NextResponse.json(

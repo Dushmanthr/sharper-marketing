@@ -5,17 +5,19 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   const session = await getSessionAdmin();
   if (!session) {
-    return NextResponse.json({ authenticated: false }, { status: 401 });
+    return NextResponse.json({ authenticated: false, admin: null }, { status: 200 });
   }
 
   let mustChangePassword = session.mustChangePassword ?? false;
+  let isEmailVerified = true;
   try {
-    const dbRows: any = await prisma.$queryRaw`SELECT mustChangePassword, isActive FROM admin_users WHERE id = ${session.id} LIMIT 1`;
+    const dbRows: any = await prisma.$queryRaw`SELECT mustChangePassword, isActive, isEmailVerified FROM admin_users WHERE id = ${session.id} LIMIT 1`;
     if (Array.isArray(dbRows) && dbRows.length > 0) {
       if (!dbRows[0]?.isActive) {
-        return NextResponse.json({ authenticated: false, error: "Account is inactive" }, { status: 401 });
+        return NextResponse.json({ authenticated: false, error: "Account is inactive", admin: null }, { status: 200 });
       }
       mustChangePassword = Boolean(dbRows[0]?.mustChangePassword);
+      isEmailVerified = Boolean(dbRows[0]?.isEmailVerified);
     }
   } catch {
     // fallback to session token value
@@ -26,6 +28,7 @@ export async function GET() {
     admin: {
       ...session,
       mustChangePassword,
+      isEmailVerified,
     },
   });
 }

@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getSessionAdmin, isSuperAdmin } from "@/lib/auth";
 import type { PostStatus } from "@prisma/client";
+import { sendBlogApprovedEmail } from "@/lib/mail";
+import { site } from "@/lib/site";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -54,6 +56,16 @@ export async function POST(req: Request, context: RouteContext) {
     revalidatePath("/blog");
     revalidatePath(`/blog/${updated.slug}`);
     revalidatePath("/sitemap.xml");
+
+    if (updated.author?.email) {
+      sendBlogApprovedEmail({
+        postTitle: updated.title,
+        postSlug: updated.slug,
+        authorEmail: updated.author.email,
+        authorName: updated.author.name || "Author",
+        appUrl: site.url,
+      }).catch((mailErr) => console.error("[Blog Approved Notification Error]:", mailErr));
+    }
 
     return NextResponse.json({
       success: true,
